@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">TickTee for Android</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_login">Sign In</string>
+
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign In</string>
+
+
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="login_message">Welcome to TickTee</string>
+
+    <string name="login_notice">Please log in to track your progress</string>
+    <string name="notice">Notice</string>
+    <string name="ok">OK</string>
+    <string name="menu_logout">Sign out</string>
+    <string name="projects_summary">Project Summary</string>
+    <string name="total_projects">Total:</string>
+    <string name="on_progress">On Progress</string>
+    <string name="overdue">Overdue</string>
+    <string name="complete">Complete</string>
+
+</resources>
