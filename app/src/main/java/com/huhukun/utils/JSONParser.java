@@ -29,7 +29,7 @@ public class JSONParser {
 
 
 
-    public static JSONObject getJSONFromUrlViaPost(String url, List<NameValuePair> headers, List<NameValuePair> params) {
+    public static String getStringFromUrlViaPost(String url, List<NameValuePair> headers, List<NameValuePair> params) {
 
         InputStream is = null;
         JSONObject jObj = null;
@@ -72,18 +72,11 @@ public class JSONParser {
             Log.e("Buffer Error", "Error converting result " + e.toString());
         }
 
-        // try parse the string to a JSON object
-        try {
-            jObj = new JSONObject(json);
-        } catch (JSONException e) {
-            Log.e("JSON Parser", "Error parsing data " + e.toString());
-        }
-
-        // return JSON String
-        return jObj;
+        // return String
+        return json;
     }
 
-    public static JSONObject getJSONFromUrlViaGet(String urlString, List<NameValuePair> headers, List<NameValuePair> params) {
+    public static String getStringFromUrlViaGet(String urlString, List<NameValuePair> headers, List<NameValuePair> params) {
 
         InputStream is = null;
         JSONObject jObj = null;
@@ -91,9 +84,10 @@ public class JSONParser {
         // Making HTTP request
         try {
             Uri.Builder uriBuilder = Uri.parse(urlString).buildUpon();
-
-            for (NameValuePair nvp : params) {
-                uriBuilder.appendQueryParameter(nvp.getName(), nvp.getValue());
+            if (params != null) {
+                for (NameValuePair nvp : params) {
+                    uriBuilder.appendQueryParameter(nvp.getName(), nvp.getValue());
+                }
             }
             // defaultHttpClient
             DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -128,14 +122,8 @@ public class JSONParser {
             Log.e("Buffer Error", "Error converting result " + e.toString());
         }
 
-        // try parse the string to a JSON object
-        try {
-            jObj = new JSONObject(json);
-        } catch (JSONException e) {
-            Log.e("JSON Parser", "Error parsing data " + e.toString());
-        }
 
-        // return JSON String
-        return jObj;
+        // return String
+        return json;
     }
 }

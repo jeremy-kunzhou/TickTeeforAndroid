@@ -25,7 +25,46 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.huhukun.tickteeforandroid.MainActivity" />
         </activity>
+        <activity
+            android:name=".ItemListActivity"
+            android:label="@string/title_item_list"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.huhukun.tickteeforandroid.MainActivity" />
+        </activity>
+        <activity
+            android:name=".ItemDetailActivity"
+            android:label="@string/title_item_detail"
+            android:parentActivityName=".ItemListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.huhukun.tickteeforandroid.ItemListActivity" />
+        </activity>
+        <activity
+            android:name=".ProjectListActivity"
+            android:label="@string/title_project_list"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.huhukun.tickteeforandroid.MainActivity" />
+        </activity>
+        <activity
+            android:name=".ProjectDetailActivity"
+            android:label="@string/title_project_detail"
+            android:parentActivityName=".ProjectListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.huhukun.tickteeforandroid.ProjectListActivity" />
+        </activity>
+        <activity
+            android:name=".IntroActivity"
+            android:label="@string/title_activity_intro"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.huhukun.tickteeforandroid.MainActivity" />
+        </activity>
     </application>
-
 
 </manifest>

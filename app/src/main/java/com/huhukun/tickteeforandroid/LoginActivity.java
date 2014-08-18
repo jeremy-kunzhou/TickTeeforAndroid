@@ -95,10 +95,9 @@ public class LoginActivity extends Activity{
     }
 
     private void autoComplete(){
-        SharedPreferences settings = getSharedPreferences(MainActivity.APP_TAG, 0);
-        if (settings.contains(PREF_EMAIL) && settings.getString(PREF_EMAIL, null) != null)
+        if (MainActivity.appSetting.contains(PREF_EMAIL) && MainActivity.appSetting.getString(PREF_EMAIL, null) != null)
         {
-            mEmailView.setText(settings.getString(PREF_EMAIL, ""));
+            mEmailView.setText(MainActivity.appSetting.getString(PREF_EMAIL, ""));
         }
 
     }
@@ -237,13 +236,13 @@ public class LoginActivity extends Activity{
             loginInfo.add(new BasicNameValuePair("email", mEmail));
             loginInfo.add(new BasicNameValuePair("password", mPassword));
 
-            JSONObject json = JSONParser.getJSONFromUrlViaPost(LOGIN_URL, null, loginInfo);
 
-            Log.d(MainActivity.APP_TAG, json.toString());
 
             boolean result = false;
             try {
+                JSONObject json = new JSONObject(JSONParser.getStringFromUrlViaPost(LOGIN_URL, null, loginInfo));
 
+                Log.d(MainActivity.APP_TAG, json.toString());
                 if (!json.has("success")) {
                     String email = json.getJSONObject("user").getString("email");
                     String auth_token = json.getJSONObject("user").getString("auth_token");

@@ -7,7 +7,17 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:orientation="vertical"
+    android:background="@color/background"
+    android:id="@+id/main_activity"
     tools:context=".MainActivity">
+
+    <ProgressBar
+        android:id="@+id/loading_progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone"/>
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -19,16 +29,22 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/projects_summary"
-            android:gravity="center_vertical|center_horizontal"
             android:layout_marginTop="10dp"
-            />
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/btnAddProject"
+            android:layout_toStartOf="@+id/btnAddProject"
+            android:gravity="start" />
 
         <Button
+            android:id="@id/btnAddProject"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="+"
-            android:layout_alignParentStart="false"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+
+            />
     </RelativeLayout>
 
 
@@ -39,29 +55,36 @@
 
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:background="#87CEEB">
+                android:background="#87CEEB"
+                android:onClick="llTotalClick">
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="fill_parent"
                     android:text="@string/total_projects"
-                    android:layout_marginTop="30dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_weight="1"
-
-                    android:textSize="@dimen/summary_text_size" />
+                    android:layout_weight="0.6"
+                    android:textSize="@dimen/summary_text_size"
+                    android:gravity="center_vertical|start"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="fill_parent"
                     android:id="@+id/tvTotal"
-                    android:layout_margin="30dp"
-                    android:textSize="@dimen/summary_text_size" />
+                    android:layout_margin="0dp"
+                    android:textSize="@dimen/summary_text_size"
+                    android:text="333"
+                    android:gravity="center_vertical|end"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp" />
 
             </LinearLayout>
 
@@ -74,21 +97,27 @@
 
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="fill_parent"
                     android:text="@string/on_progress"
-                    android:layout_marginTop="30dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_weight="1"
-                    android:textSize="@dimen/summary_text_size" />
+                    android:layout_weight="0.6"
+                    android:textSize="@dimen/summary_text_size"
+                    android:gravity="center_vertical|start"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="30dp"
+                    android:layout_height="fill_parent"
+                    android:layout_margin="0dp"
 
                     android:id="@+id/tvOnProgress"
                     android:text="200"
-                    android:textSize="@dimen/summary_text_size"  />
+                    android:textSize="@dimen/summary_text_size"
+                    android:gravity="center_vertical|end"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -101,20 +130,27 @@
 
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="fill_parent"
                     android:text="@string/overdue"
-                    android:layout_marginTop="30dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_weight="1"
-                    android:textSize="@dimen/summary_text_size"  />
+                    android:layout_weight="0.6"
+                    android:textSize="@dimen/summary_text_size"
+                    android:gravity="center_vertical|start"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="fill_parent"
 
-                    android:layout_margin="30dp"
+                    android:layout_margin="0dp"
                     android:id="@+id/tvOverdue"
-                    android:textSize="@dimen/summary_text_size" />
+                    android:textSize="@dimen/summary_text_size"
+                    android:text="555"
+                    android:gravity="center_vertical|end"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -127,20 +163,26 @@
 
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="fill_parent"
                     android:text="@string/complete"
-                    android:layout_marginTop="30dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_weight="1"
-                    android:textSize="@dimen/summary_text_size"  />
+                    android:layout_weight="0.6"
+                    android:textSize="@dimen/summary_text_size"
+                    android:gravity="center_vertical|start"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="30dp"
+                    android:layout_height="fill_parent"
+                    android:layout_margin="0dp"
                     android:id="@+id/tvComplete"
                     android:text="200"
-                    android:textSize="@dimen/summary_text_size"  />
+                    android:textSize="@dimen/summary_text_size"
+                    android:gravity="center_vertical|end"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp" />
             </LinearLayout>
 
         </LinearLayout>
