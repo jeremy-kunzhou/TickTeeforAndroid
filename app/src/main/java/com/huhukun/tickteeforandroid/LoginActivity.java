@@ -1,33 +1,28 @@
 package com.huhukun.tickteeforandroid;
 
+import android.accounts.Account;
+import android.accounts.AccountAuthenticatorActivity;
+import android.accounts.AccountManager;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.Activity;
-import android.app.LoaderManager.LoaderCallbacks;
-import android.content.ContentResolver;
-import android.content.CursorLoader;
-import android.content.Loader;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build.VERSION;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.huhukun.tickteeforandroid.network.WebApiConstants;
 import com.huhukun.utils.JSONParser;
 
 import org.apache.http.NameValuePair;
@@ -43,12 +38,10 @@ import java.util.List;
  * A login screen that offers login via email/password.
 
  */
-public class LoginActivity extends Activity{
+public class LoginActivity extends AccountAuthenticatorActivity{
 
-    public  static  final String PREF_EMAIL = "email";
-    public  static  final String PREF_TOKEN = "auth_token";
 
-    private static final String LOGIN_URL = "http://192.168.2.3:3000/users/sign_in.json";
+
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -95,9 +88,10 @@ public class LoginActivity extends Activity{
     }
 
     private void autoComplete(){
-        if (MainActivity.appSetting.contains(PREF_EMAIL) && MainActivity.appSetting.getString(PREF_EMAIL, null) != null)
+
+        if (TickTeeAndroid.appSetting != null && TickTeeAndroid.appSetting.contains(App_Constants.PREF_EMAIL) && TickTeeAndroid.appSetting.getString(App_Constants.PREF_EMAIL, null) != null)
         {
-            mEmailView.setText(MainActivity.appSetting.getString(PREF_EMAIL, ""));
+            mEmailView.setText(TickTeeAndroid.appSetting.getString(App_Constants.PREF_EMAIL, ""));
         }
 
     }
@@ -218,7 +212,7 @@ public class LoginActivity extends Activity{
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    public class UserLoginTask extends AsyncTask<Void, Void, Intent > {
 
         private final String mEmail;
         private final String mPassword;
@@ -229,7 +223,7 @@ public class LoginActivity extends Activity{
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
+        protected Intent  doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
 
             List<NameValuePair> loginInfo = new ArrayList<NameValuePair>(2);
@@ -240,21 +234,22 @@ public class LoginActivity extends Activity{
 
             boolean result = false;
             try {
-                JSONObject json = new JSONObject(JSONParser.getStringFromUrlViaPost(LOGIN_URL, null, loginInfo));
+                JSONObject json = new JSONObject(JSONParser.getStringFromUrlViaPost(WebApiConstants.LOGIN_URL, null, loginInfo));
 
-                Log.d(MainActivity.APP_TAG, json.toString());
+                Log.d(App_Constants.APP_TAG, json.toString());
                 if (!json.has("success")) {
                     String email = json.getJSONObject("user").getString("email");
                     String auth_token = json.getJSONObject("user").getString("auth_token");
                     Log.d("JSON", email + auth_token);
 
-                    SharedPreferences settings = getSharedPreferences(MainActivity.APP_TAG, 0);
-                    SharedPreferences.Editor editor = settings.edit();
-                    editor.putString(PREF_EMAIL, email);
-                    editor.putString(PREF_TOKEN, auth_token);
-                    editor.commit();
+                    final Intent res = new Intent();
+                    res.putExtra(AccountManager.KEY_ACCOUNT_NAME, mEmail);
+                    res.putExtra(AccountManager.KEY_ACCOUNT_TYPE, App_Constants.ACCOUNT_TYPE);
+                    res.putExtra(AccountManager.KEY_AUTHTOKEN, auth_token);
+                    res.putExtra(App_Constants.PREF_PASSWORD, mPassword);
+                    return res;
 
-                    result = true;
+
                 }
             } catch (JSONException e)
             {
@@ -262,15 +257,34 @@ public class LoginActivity extends Activity{
             }
 
 
-            return result;
+            return null;
         }
 
         @Override
-        protected void onPostExecute(final Boolean success) {
+        protected void onPostExecute(final Intent intent) {
             mAuthTask = null;
             showProgress(false);
 
-            if (success) {
+            if (intent != null) {
+                String email = intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+                String accountPassword = intent.getStringExtra(App_Constants.PREF_PASSWORD);
+                String auth_token = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
+                SharedPreferences settings = getSharedPreferences(App_Constants.APP_TAG, 0);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString(App_Constants.PREF_EMAIL, email);
+                editor.putString(App_Constants.PREF_TOKEN, auth_token);
+                editor.commit();
+                final Account account = new Account(email, intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE));
+
+
+                AccountManager accountManager = AccountManager.get(LoginActivity.this);
+
+                accountManager.addAccountExplicitly(account, accountPassword, null);
+                accountManager.setAuthToken(account, App_Constants.AUTHTOKEN_TYPE, auth_token);
+
+
+                setAccountAuthenticatorResult(intent.getExtras());
+                setResult(RESULT_OK, intent);
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

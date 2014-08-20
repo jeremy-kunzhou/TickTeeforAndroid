@@ -2,7 +2,6 @@ package com.huhukun.tickteeforandroid;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,7 +43,7 @@ public class IntroActivity extends Activity {
     protected void onResume(){
         super.onResume();
 
-        if (MainActivity.appSetting.getString(LoginActivity.PREF_TOKEN, null) != null)
+        if (TickTeeAndroid.appSetting.getString(App_Constants.PREF_TOKEN, null) != null)
         {
             finish();
         }

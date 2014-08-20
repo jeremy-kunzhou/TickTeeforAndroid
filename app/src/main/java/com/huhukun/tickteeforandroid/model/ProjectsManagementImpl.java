@@ -1,17 +1,14 @@
 package com.huhukun.tickteeforandroid.model;
 
-import android.content.SharedPreferences;
-import android.util.Log;
-
-import com.huhukun.tickteeforandroid.LoginActivity;
-import com.huhukun.tickteeforandroid.MainActivity;
+import com.huhukun.tickteeforandroid.App_Constants;
+import com.huhukun.tickteeforandroid.TickTeeAndroid;
+import com.huhukun.tickteeforandroid.network.WebApiConstants;
 import com.huhukun.utils.JSONParser;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -23,7 +20,6 @@ import java.util.List;
 public class ProjectsManagementImpl implements IProjectsManagement {
 
 
-    private static final String projectListUrl = "http://192.168.2.3:3000/api/v1/projects.json";
 
     private static IProjectsManagement projectsManagement = new ProjectsManagementImpl();
 
@@ -42,15 +38,15 @@ public class ProjectsManagementImpl implements IProjectsManagement {
     public void SyncProjects() throws JSONException, ParseException {
         if (isSync) return;
         projects.clear();
-        String email = MainActivity.appSetting.getString(LoginActivity.PREF_EMAIL, null);
-        String token = MainActivity.appSetting.getString(LoginActivity.PREF_TOKEN, null);
+        String email = TickTeeAndroid.appSetting.getString(App_Constants.PREF_EMAIL, null);
+        String token = TickTeeAndroid.appSetting.getString(App_Constants.PREF_TOKEN, null);
 
         List<NameValuePair> headers = new ArrayList<NameValuePair>(2);
         headers.add(new BasicNameValuePair("X_API_EMAIL", email));
         headers.add(new BasicNameValuePair("X_API_TOKEN", token));
 
 
-        JSONArray projectsJson = new JSONArray(JSONParser.getStringFromUrlViaGet(projectListUrl, headers, null));
+        JSONArray projectsJson = new JSONArray(JSONParser.getStringFromUrlViaGet(WebApiConstants.PROJECTS_URL, headers, null));
         for (int i = 0; i < projectsJson.length(); i++) {
 
             projects.add(new Project(projectsJson.getJSONObject(i)));

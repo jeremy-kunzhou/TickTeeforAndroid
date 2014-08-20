@@ -1,22 +1,31 @@
 package com.huhukun.tickteeforandroid.model;
 
+import com.huhukun.tickteeforandroid.network.WebApiConstants;
+import com.huhukun.utils.FormatHelper;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  * Created by kun on 18/08/2014.
  */
 public class Project {
+    public void setSyncMode(SyncMode syncMode) {
+        this.syncMode = syncMode;
+    }
 
-    public static final DateFormat utcFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-    public static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    public enum AlertType{
+    public enum SyncMode {
+        I,
+        U,
+        D
+
+    }
+
+    public enum AlertType {
         OFF,
         PER_DAY,
         EVERY_MONDAY,
@@ -27,6 +36,7 @@ public class Project {
         EVERY_SATURDAY,
         EVERY_SUNDAY
     }
+
 
     private long id;
     private String name;
@@ -42,6 +52,51 @@ public class Project {
     private AlertType alertType;
     private Date createdTime;
     private Date lastUpdateTime;
+
+    private long projectsId;
+    private Date transDate;
+    private long requestId;
+    private int httpResult;
+    private SyncMode syncMode;
+
+    public SyncMode getSyncMode() {
+        return syncMode;
+    }
+
+    public long getProjectsId() {
+        return projectsId;
+    }
+
+    public void setProjectsId(long projectsId) {
+        this.projectsId = projectsId;
+    }
+
+    public Date getTransDate() {
+        return transDate;
+    }
+
+    public void setTransDate(Date transDate) {
+        this.transDate = transDate;
+    }
+
+    public long getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(long requestId) {
+        this.requestId = requestId;
+    }
+
+    public int getHttpResult() {
+        return httpResult;
+    }
+
+    public void setHttpResult(int httpResult) {
+        this.httpResult = httpResult;
+    }
+
+
+
 
     public long getId() {
         return id;
@@ -155,15 +210,15 @@ public class Project {
         this.lastUpdateTime = lastUpdateTime;
     }
 
-    public Project (JSONObject json) throws JSONException, ParseException {
-        this.id = json.getLong("id");
-        this.name = json.getString("name");
-        this.description = json.getString("description");
-        this.startDate = dateFormat.parse(json.getString("start_at"));
-        this.endDate = dateFormat.parse(json.getString("end_at"));
+    public Project(JSONObject json) throws JSONException, ParseException {
+        this.id = json.getLong(WebApiConstants.PARAM_PROJECTS_ID);
+        this.name = json.getString(WebApiConstants.PARAM_NAME);
+        this.description = json.getString(WebApiConstants.PARAM_DESCRIPTION);
+        this.startDate = FormatHelper.dateFormat.parse(json.getString("start_at"));
+        this.endDate = FormatHelper.dateFormat.parse(json.getString("end_at"));
         this.expectedProgress = new BigDecimal(json.getString("expected_progress"));
         this.currentProgress = new BigDecimal(json.getString("current_progress"));
-        this.createdTime = utcFormat.parse(json.getString("created_at"));
-        this.lastUpdateTime = utcFormat.parse(json.getString("updated_at"));
+        this.createdTime = FormatHelper.utcFormat.parse(json.getString("created_at"));
+        this.lastUpdateTime = FormatHelper.utcFormat.parse(json.getString("updated_at"));
     }
 }

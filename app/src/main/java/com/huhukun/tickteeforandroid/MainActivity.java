@@ -26,8 +26,7 @@ import java.util.Locale;
 
 public class MainActivity extends ActionBarActivity {
 
-    public static final String APP_TAG = "TICKTEE";
-    public static SharedPreferences appSetting;
+
     private TextView tvTotal;
     private TextView tvOnProgress;
     private TextView tvOverdue;
@@ -39,7 +38,6 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        appSetting = getSharedPreferences(APP_TAG, 0);
 
         Log.d("ddd", Locale.getDefault().toString());
 
@@ -55,7 +53,7 @@ public class MainActivity extends ActionBarActivity {
         tvComplete.setText("0");
         tvOverdue.setText("0");
 
-        if (appSetting.getString(LoginActivity.PREF_TOKEN, null) == null)
+        if (TickTeeAndroid.appSetting.getString(App_Constants.PREF_TOKEN, null) == null)
         {
             showIntroActivity();
         }
@@ -70,7 +68,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onResume(){
         super.onResume();
-        if (appSetting.getString(LoginActivity.PREF_TOKEN, null) == null)
+        if (TickTeeAndroid.appSetting.getString(App_Constants.PREF_TOKEN, null) == null)
         {
             showIntroActivity();
         }
@@ -143,14 +141,14 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void prepareMenu(Menu menu) {
-        if (appSetting.getString(LoginActivity.PREF_TOKEN, null) == null)
+        if (TickTeeAndroid.appSetting.getString(App_Constants.PREF_TOKEN, null) == null)
         {
-            Log.d(APP_TAG, "show log in");
+            Log.d(App_Constants.APP_TAG, "show log in");
             menu.findItem(R.id.menu_login).setVisible(true);
             menu.findItem(R.id.menu_logout).setVisible(false);
         }else
         {
-            Log.d(APP_TAG, "show log out");
+            Log.d(App_Constants.APP_TAG, "show log out");
             menu.findItem(R.id.menu_login).setVisible(false);
             menu.findItem(R.id.menu_logout).setVisible(true);
         }
@@ -166,8 +164,8 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private  void logout() {
-        SharedPreferences.Editor editor = appSetting.edit();
-        editor.putString(LoginActivity.PREF_TOKEN, null);
+        SharedPreferences.Editor editor = TickTeeAndroid.appSetting.edit();
+        editor.putString(App_Constants.PREF_TOKEN, null);
         editor.commit();
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);

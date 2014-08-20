@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="account_type">com.ticktee.android</string>
     <string name="app_name">TickTee for Android</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
@@ -39,5 +40,11 @@
     <string name="created_at">Created At</string>
     <string name="last_update_at">Last Update At</string>
     <string name="description">Description</string>
+    <string name="pref_sync">pref_sync</string>
+    <string name="pref_sync_summ">pref_sync_summ</string>
+    <string name="pref_syncConnectionType">pref_syncConnectionType</string>
+    <string name="pref_syncConnectionTypes_default">pref_sdf_defa</string>
+    <string name="song_error_title">song error title</string>
+    <string name="song_remote_delete">song remot delete</string>
 
 </resources>
