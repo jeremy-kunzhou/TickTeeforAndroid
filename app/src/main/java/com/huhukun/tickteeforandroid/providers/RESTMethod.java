@@ -43,31 +43,31 @@ public class RESTMethod {
         } catch ( AuthenticationFailureException e ) {
             String msg = "Authentication failed: Invalid credentials.";
             Log.i(TAG, msg, e);
-            restCommand.handleError( App_Constants.NON_HTTP_FALURE, false );
+            restCommand.handleError( App_Constants.NON_HTTP_FAILURE, false );
             throw e;
         } catch (NetworkSystemException e) {
             String msg = "Error configuring http request.";
             Log.e(TAG, msg, e);
-            restCommand.handleError( App_Constants.NON_HTTP_FALURE, false );
+            restCommand.handleError( App_Constants.NON_HTTP_FAILURE, false );
             throw e;
         } catch (DeviceConnectionException e) {
             String msg = "RESTCommand failed to execute: "
                     + "Cannot connect to network.";
             Log.i(TAG, msg, e);
-            retry = restCommand.handleError( App_Constants.NON_HTTP_FALURE, true );
+            retry = restCommand.handleError( App_Constants.NON_HTTP_FAILURE, true );
             e.setRetry( retry );
             throw e;
         } catch ( WebServiceFailedException e ) {
             String msg = "RESTCommand failed to execute: "
                     + "Error returned from web service.";
             Log.e(TAG, msg, e);
-            restCommand.handleError( App_Constants.NON_HTTP_FALURE, false );
+            restCommand.handleError( App_Constants.NON_HTTP_FAILURE, false );
             throw e;
         } catch ( Exception e ) {
             String msg = "RESTCommand failed to execute: "
                     + "Unhandled exception with call to web service.";
             Log.e(TAG, msg, e);
-            restCommand.handleError( App_Constants.NON_HTTP_FALURE, false );
+            restCommand.handleError( App_Constants.NON_HTTP_FAILURE, false );
             throw new WebServiceFailedException( msg, e );
         }
 

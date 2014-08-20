@@ -29,7 +29,7 @@ import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.*;
  */
 public class TickteeProvider extends ContentProvider {
 
-    private static final String TAG = "RestfulProvider";
+    private static final String TAG = "TickteeProvider";
 
     /** The MIME type of a directory of songs */
     private static final String CONTENT_TYPE

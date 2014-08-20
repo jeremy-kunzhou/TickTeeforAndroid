@@ -280,7 +280,7 @@ public class LoginActivity extends AccountAuthenticatorActivity{
                 AccountManager accountManager = AccountManager.get(LoginActivity.this);
 
                 accountManager.addAccountExplicitly(account, accountPassword, null);
-                accountManager.setAuthToken(account, App_Constants.AUTHTOKEN_TYPE, auth_token);
+                accountManager.setAuthToken(account, App_Constants.AUTH_TOKEN_TYPE, auth_token);
 
 
                 setAccountAuthenticatorResult(intent.getExtras());

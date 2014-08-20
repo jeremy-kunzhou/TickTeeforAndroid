@@ -17,7 +17,7 @@ public class SqlOpenHelper extends SQLiteOpenHelper {
 
     public static class TableConstants {
         public static final String TABLE_NAME = "projects";
-        public static final String _ID = "id";
+        public static final String _ID = "_id";
         public static final String COL_PROJECT_ID = "project_id";
         public static final String COL_NAME = "name";
         public static final String COL_DESCRIPTION = "description";

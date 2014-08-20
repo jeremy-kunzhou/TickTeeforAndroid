@@ -6,7 +6,7 @@ package com.huhukun.tickteeforandroid;
 public class App_Constants {
     public static final String APP_TAG = "TICKTEE";
     public static final String ACCOUNT_TYPE = "com.huhukun.ticktee";
-    public static final String AUTHTOKEN_TYPE = "com.huhukun.ticktee";
+    public static final String AUTH_TOKEN_TYPE = "com.huhukun.ticktee";
     public static final String NEW_ACCOUNT = "new_account";
     public  static  final String PREF_EMAIL = "email";
     public  static  final String PREF_TOKEN = "auth_token";
@@ -17,7 +17,7 @@ public class App_Constants {
             "com.huhukun.ticktee";
 
     public static final int MAX_REQUEST_ATTEMPTS = 5;
-    public static final int NON_HTTP_FALURE = -1;
+    public static final int NON_HTTP_FAILURE = -1;
 
 
 
@@ -34,4 +34,5 @@ public class App_Constants {
 
     public static final String KEY_ERROR_MSG = "errorMsg";
 
+    public static final String ERROR_MSG_RECEIVER = "com.huhukun.ticktee.ERROR_MSG_RECEIVER";
 }

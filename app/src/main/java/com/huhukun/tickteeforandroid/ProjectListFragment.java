@@ -1,16 +1,36 @@
 package com.huhukun.tickteeforandroid;
 
 import android.app.Activity;
+import android.app.LoaderManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.CursorLoader;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.Loader;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.ListFragment;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.huhukun.tickteeforandroid.model.Project;
 import com.huhukun.tickteeforandroid.model.ProjectsManagementImpl;
+import com.huhukun.tickteeforandroid.providers.QueryTransactionInfo;
+import com.huhukun.tickteeforandroid.providers.TickteeProvider;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.*;
 
 /**
  * A list fragment representing a list of Projects. This fragment
@@ -21,7 +41,7 @@ import com.huhukun.tickteeforandroid.model.ProjectsManagementImpl;
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
  */
-public class ProjectListFragment extends ListFragment {
+public class ProjectListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     /**
      * The serialization (saved instance state) Bundle key representing the
@@ -39,6 +59,96 @@ public class ProjectListFragment extends ListFragment {
      * The current activated item position. Only used on tablets.
      */
     private int mActivatedPosition = ListView.INVALID_POSITION;
+
+    private static final String TAG = "RestfulActivity";
+
+    private static final int GET_FILTERED_SONGS = 1;
+
+    private static final String[] loaderColumns = new String[] {
+            TableConstants._ID,
+            TableConstants.COL_NAME,
+            TableConstants.COL_DESCRIPTION,
+            TableConstants.COL_TRANSACTING,
+            TableConstants.COL_STATUS,
+            TableConstants.COL_RESULT,
+            TableConstants.COL_TRANS_DATE };
+    private static final String[] adapterColumns = new String[] {
+            TableConstants.COL_NAME,
+            TableConstants.COL_DESCRIPTION,
+            TableConstants.COL_TRANSACTING };
+    private static final int[] to = new int[] {
+            R.id.row_project_title,
+            R.id.row_project_category,
+            R.id.row_project_progress };
+
+
+    private ExecutorService executorPool;
+
+    private long mUpdateId = 0;
+
+    SimpleCursorAdapter cursorAdapter;
+    LoaderManager loaderManager;
+    CursorLoader cursorLoader;
+
+    /**
+     * Create the CursorLoader and provide it with the
+     * filter data.
+     *
+     * @param id The ID whose loader is to be created.
+     * @param args Any arguments supplied by the caller.
+     */
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args)
+    {
+
+        // Mark as pending so the SyncAdapter knows to request
+        // new data from the REST API.
+        QueryTransactionInfo.getInstance().markPending();
+
+        switch (id) {
+            case GET_FILTERED_SONGS:
+                Uri baseUri;
+                String searchTitle = null;
+
+//                searchTitle = titleText.getText().toString();
+
+                if ( searchTitle == null || searchTitle.trim().length() == 0 ) {
+                    baseUri = TickteeProvider.CONTENT_URI;
+                } else {
+                    baseUri =
+                            Uri.withAppendedPath(TickteeProvider.CONTENT_URI_FILTERED,
+                                    Uri.encode(searchTitle) );
+                }
+
+                cursorLoader = new CursorLoader(
+                        getActivity(), baseUri, loaderColumns, null, null, null);
+
+                break;
+            default:
+                throw new IllegalStateException(
+                        "Cannot create Loader with id[" + id + "]" );
+        }
+
+        return cursorLoader;
+    }
+
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor)
+    {
+        if(cursorAdapter!=null && cursor!=null) {
+            cursorAdapter.swapCursor(cursor); //swap the new cursor in.
+        }
+    }
+
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader)
+    {
+        if(cursorAdapter!=null) {
+            cursorAdapter.swapCursor(null);
+        }
+    }
 
     /**
      * A callback interface that all activities containing this fragment must
@@ -74,9 +184,20 @@ public class ProjectListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
 
 
-        ListAdapter projectsAdapter = new ProjectListAdapter(getActivity(),
-                R.layout.row_project_list, ProjectsManagementImpl.getInstance().getAllProjects());
-        setListAdapter(projectsAdapter);
+
+        cursorAdapter =
+                new SimpleCursorAdapter(getActivity(), R.layout.row_project_list,
+                        null, adapterColumns, to, 0);
+
+        cursorAdapter.setViewBinder( new ListItemViewBinder() );
+        setListAdapter(cursorAdapter);
+
+        loaderManager = getLoaderManager();
+        loaderManager.initLoader(GET_FILTERED_SONGS, null, this);
+//
+//        ListAdapter projectsAdapter = new ProjectListAdapter(getActivity(),
+//                R.layout.row_project_list, ProjectsManagementImpl.getInstance().getAllProjects());
+//        setListAdapter(projectsAdapter);
     }
 
     @Override
@@ -111,9 +232,29 @@ public class ProjectListFragment extends ListFragment {
     }
 
     @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        TickTeeAndroid.getAppContext().registerReceiver(errorMsgReceiver,
+                new IntentFilter(App_Constants.ERROR_MSG_RECEIVER));
+
+        executorPool = Executors.newSingleThreadExecutor();
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        executorPool.shutdown();
+
+        TickTeeAndroid.getAppContext().unregisterReceiver(errorMsgReceiver);
+    }
+
+    @Override
     public void onListItemClick(ListView listView, View view, int position, long id) {
         super.onListItemClick(listView, view, position, id);
-
+        Log.d(TAG, "Select item");
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
         mCallbacks.onItemSelected(
@@ -150,4 +291,34 @@ public class ProjectListFragment extends ListFragment {
 
         mActivatedPosition = position;
     }
+
+    private class ListItemViewBinder implements SimpleCursorAdapter.ViewBinder {
+        @Override
+        public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+            Log.d(TAG, view.getId()+" "+columnIndex);
+            switch (view.getId()) {
+                case R.id.row_project_title:
+                    TextView tvName = (TextView) view;
+                    tvName.setText(cursor.getString(columnIndex));
+                    return true;
+            }
+            return false;
+        }
+    }
+
+    /**
+     * Receives and displays an error message if the REST request fails.
+     */
+    public BroadcastReceiver errorMsgReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent)
+        {
+            final String errorMsg =
+                    intent.getExtras().getString( App_Constants.KEY_ERROR_MSG );
+
+            Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT);
+
+        }
+
+    };
 }

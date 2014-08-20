@@ -113,17 +113,17 @@ public class RetrieveCommand extends RESTCommand {
             }
 
             try {
-                jsonObject = new JSONObject( respText );
-
-                // get the date of this download from the REST API
-                nextDownloadDate = jsonObject.getString(
-                        WebApiConstants.PARAM_NEXT_DOWNLOAD_DATE );
-
-                if ( Log.isLoggable( TAG, Log.INFO ) ) {
-                    Log.i( TAG, "get: nextDownloadDate[" + nextDownloadDate + "]" );
-                }
-
-                jsonArray = jsonObject.getJSONArray( WebApiConstants.PARAM_SONGS_LIST );
+//                jsonObject = new JSONObject( respText );
+//
+//                // get the date of this download from the REST API
+//                nextDownloadDate = jsonObject.getString(
+//                        WebApiConstants.PARAM_NEXT_DOWNLOAD_DATE );
+//
+//                if ( Log.isLoggable( TAG, Log.INFO ) ) {
+//                    Log.i( TAG, "get: nextDownloadDate[" + nextDownloadDate + "]" );
+//                }
+                Log.e( TAG, respText );
+                jsonArray = new JSONArray( respText );
 
                 details = new Project[jsonArray.length()];
                 for ( int i = 0; i < jsonArray.length(); i++ ) {
@@ -134,12 +134,12 @@ public class RetrieveCommand extends RESTCommand {
 
                     // REST API has a syncMode associated with each row:
                     // U: Update, I: Insert, D: Delete
-                    detail.setSyncMode( Project.SyncMode.valueOf(jObj.getString(
-                            WebApiConstants.PARAM_SYNC_MODE)) );
-                    detail.setTransDate(
-                            MyDateUtils.stringToDateForWS(jObj.getString(
-                                    WebApiConstants.PARAM_DATE_UPDATED)));
-
+//                    detail.setSyncMode( Project.SyncMode.valueOf(jObj.getString(
+//                            WebApiConstants.PARAM_SYNC_MODE)) );
+//                    detail.setTransDate(
+//                            MyDateUtils.stringToDateForWS(jObj.getString(
+//                                    WebApiConstants.PARAM_DATE_UPDATED)));
+                    detail.setSyncMode(Project.SyncMode.I);
                     details[i] = detail;
                 }
 

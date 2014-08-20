@@ -8,7 +8,6 @@ import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.SyncStateContract;
 import android.text.TextUtils;
 
 import com.huhukun.tickteeforandroid.App_Constants;
@@ -33,7 +32,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
     public Bundle addAccount(AccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures, Bundle options) throws NetworkErrorException {
         final Intent intent = new Intent(mContext, LoginActivity.class);
         intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
-        intent.putExtra(App_Constants.AUTHTOKEN_TYPE, authTokenType);
+        intent.putExtra(App_Constants.AUTH_TOKEN_TYPE, authTokenType);
         intent.putExtra(App_Constants.ACCOUNT_TYPE, accountType);
         intent.putExtra(App_Constants.NEW_ACCOUNT, true);
         intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
@@ -79,7 +78,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
         final Intent intent = new Intent(mContext, LoginActivity.class);
         intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
         intent.putExtra(App_Constants.ACCOUNT_TYPE, account.type);
-        intent.putExtra(App_Constants.AUTHTOKEN_TYPE, authTokenType);
+        intent.putExtra(App_Constants.AUTH_TOKEN_TYPE, authTokenType);
         final Bundle bundle = new Bundle();
         bundle.putParcelable(AccountManager.KEY_INTENT, intent);
         return bundle;

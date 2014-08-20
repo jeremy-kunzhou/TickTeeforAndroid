@@ -227,7 +227,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 requestId);
 
         values = new ContentValues();
-        values.put( TableConstants.COL_RESULT , App_Constants.NON_HTTP_FALURE );
+        values.put( TableConstants.COL_RESULT , App_Constants.NON_HTTP_FAILURE);
         values.put( TableConstants.COL_TRANSACTING,
                 App_Constants.TRANSACTION_COMPLETED );
         values.put( TableConstants.COL_TRY_COUNT,
