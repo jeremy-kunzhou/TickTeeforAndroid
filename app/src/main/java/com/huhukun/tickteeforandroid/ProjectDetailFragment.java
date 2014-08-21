@@ -1,5 +1,6 @@
 package com.huhukun.tickteeforandroid;
 
+import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Loader;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,7 +61,7 @@ public class ProjectDetailFragment extends Fragment implements LoaderManager.Loa
     private TextView tvProjectCurrentProgress;
     private TextView tvProjectCreatedAt;
     private TextView tvProjectLastUpdateAt;
-    private EditText etProjectDescription;
+    private TextView tvProjectDescription;
     private TextView tvSeekArcPercentage;
     private SeekArc seekArc;
 
@@ -122,8 +124,7 @@ public class ProjectDetailFragment extends Fragment implements LoaderManager.Loa
         tvProjectCurrentProgress = (TextView) rootView.findViewById(R.id.project_detail_current_progress);
         tvProjectCreatedAt = (TextView) rootView.findViewById(R.id.project_detail_created_at);
         tvProjectLastUpdateAt = (TextView) rootView.findViewById(R.id.project_detail_last_update_at);
-        etProjectDescription = (EditText) rootView.findViewById(R.id.project_detail_editText_description);
-        etProjectDescription.setMovementMethod(new ScrollingMovementMethod());
+        tvProjectDescription = (TextView) rootView.findViewById(R.id.project_detail_description);
         tvSeekArcPercentage = (TextView) rootView.findViewById(R.id.seekArcProgress);
         seekArc = (SeekArc) rootView.findViewById(R.id.seekArc);
 
@@ -176,6 +177,9 @@ public class ProjectDetailFragment extends Fragment implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+
+        ((InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE))
+                .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
         if (cursor.moveToFirst()) {
 
             try {
@@ -196,6 +200,7 @@ public class ProjectDetailFragment extends Fragment implements LoaderManager.Loa
     }
 
 
+
     private void showProjectDetail(Project project)
     {
         if (project != null)
@@ -208,7 +213,7 @@ public class ProjectDetailFragment extends Fragment implements LoaderManager.Loa
             tvProjectCurrentProgress.setText(mItem.getCurrentProgress().toPlainString());
             tvProjectCreatedAt.setText(FormatHelper.shortLocalDateTimeFormatter.format(mItem.getCreatedTime()));
             tvProjectLastUpdateAt.setText(FormatHelper.shortLocalDateTimeFormatter.format(mItem.getLastUpdateTime()));
-            etProjectDescription.setText(mItem.getDescription());
+            tvProjectDescription.setText(mItem.getDescription());
             startPercent =  (int)mItem.getExpectedProgress().doubleValue();
             seekArc.setStartAngle((int)(mItem.getExpectedProgress().doubleValue() / 100 * 360));
             tvSeekArcPercentage.setText(startPercent+"");
@@ -222,7 +227,7 @@ public class ProjectDetailFragment extends Fragment implements LoaderManager.Loa
             tvProjectCurrentProgress.setText("");
             tvProjectCreatedAt.setText("");
             tvProjectLastUpdateAt.setText("");
-            etProjectDescription.setText("");
+            tvProjectDescription.setText("");
         }
     }
 

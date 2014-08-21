@@ -8,12 +8,10 @@
     android:textIsSelectable="true"
     android:orientation="vertical"
     tools:context=".ProjectDetailFragment"
-    android:background="@color/background"
-    >
-
+    android:background="@color/background">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
@@ -22,12 +20,12 @@
     <FrameLayout
         android:id="@+id/seekArcContainer"
         android:layout_width="match_parent"
-        android:layout_height="163dp">
+        android:layout_height="150dp">
 
         <com.huhukun.tickteeforandroid.UILibrary.SeekArc
             android:id="@+id/seekArc"
-            android:layout_width="match_parent"
-            android:layout_height="163dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_gravity="center"
             android:padding="30dp"
             seekarc:rotation="180"
@@ -44,50 +42,21 @@
             android:textSize="40sp" />
     </FrameLayout>
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="40sp"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/description"
-        android:padding="5sp"
-        android:background="@drawable/bottom_border"
-        android:textColor="@color/main_color"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:gravity="bottom"  />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:inputType="textMultiLine"
-        android:ems="10"
-        android:id="@+id/project_detail_editText_description"
-        android:maxLines="5"
-        android:scrollbars="vertical"
-        android:text="hjhjh"
-        android:gravity="start|top" />
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="right">
-
-
-
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-
-
-
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="40sp"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/start_at"
+                android:text="@string/description"
                 android:padding="5sp"
                 android:background="@drawable/bottom_border"
                 android:textColor="@color/main_color"
@@ -102,23 +71,83 @@
                 android:layout_weight="1"
                 android:padding="10sp"
                 android:gravity="center_vertical|start"
-                android:id="@+id/project_detail_start_at"
+                android:id="@+id/project_detail_description"
                 android:text="fdd"
                 android:textColor="#000000" />
 
 
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="40sp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/start_at"
+                    android:padding="5sp"
+                    android:background="@drawable/bottom_border"
+                    android:textColor="@color/main_color"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:gravity="bottom"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="40sp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/end_at"
+                    android:padding="5sp"
+                    android:background="@drawable/bottom_border"
+                    android:textColor="@color/main_color"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:gravity="bottom"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="40sp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_weight="1"
+                    android:padding="10sp"
+                    android:gravity="center_vertical|start"
+                    android:id="@+id/project_detail_start_at"
+                    android:text="fdd"
+                    android:textColor="#000000" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="40sp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_weight="1"
+                    android:padding="10sp"
+                    android:gravity="center_vertical|start"
+                    android:id="@+id/project_detail_end_at"
+                    android:text="fdd"
+                    android:textColor="#000000" />
+            </LinearLayout>
+
+
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="40sp"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/end_at"
+                android:text="@string/created_at"
                 android:padding="5sp"
                 android:background="@drawable/bottom_border"
                 android:textColor="@color/main_color"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:gravity="bottom" />
-
 
             <TextView
                 android:layout_width="fill_parent"
@@ -127,7 +156,30 @@
                 android:layout_weight="1"
                 android:padding="10sp"
                 android:gravity="center_vertical|start"
-                android:id="@+id/project_detail_end_at"
+                android:id="@+id/project_detail_created_at"
+                android:text="fdd"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="40sp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/last_update_at"
+                android:padding="5sp"
+                android:background="@drawable/bottom_border"
+                android:textColor="@color/main_color"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:gravity="bottom" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="40sp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_weight="1"
+                android:padding="10sp"
+                android:gravity="center_vertical|start"
+                android:id="@+id/project_detail_last_update_at"
                 android:text="fdd"
                 android:textColor="#000000" />
 
@@ -141,7 +193,7 @@
                 android:textColor="@color/main_color"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:gravity="bottom"  />
+                android:gravity="bottom" />
 
             <TextView
                 android:layout_width="fill_parent"
@@ -165,7 +217,7 @@
                 android:textColor="@color/main_color"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:gravity="bottom"  />
+                android:gravity="bottom" />
 
             <TextView
                 android:layout_width="fill_parent"
@@ -175,55 +227,6 @@
                 android:padding="10sp"
                 android:gravity="center_vertical|start"
                 android:id="@+id/project_detail_current_progress"
-                android:text="fdd"
-                android:textColor="#000000" />
-
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="40sp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/created_at"
-                android:padding="5sp"
-                android:background="@drawable/bottom_border"
-                android:textColor="@color/main_color"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:gravity="bottom"  />
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="40sp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_weight="1"
-                android:padding="10sp"
-                android:gravity="center_vertical|start"
-                android:id="@+id/project_detail_created_at"
-                android:text="fdd"
-                android:textColor="#000000" />
-
-
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="40sp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/last_update_at"
-                android:padding="5sp"
-                android:background="@drawable/bottom_border"
-                android:textColor="@color/main_color"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:gravity="bottom"  />
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="40sp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_weight="1"
-                android:padding="10sp"
-                android:gravity="center_vertical|start"
-                android:id="@+id/project_detail_last_update_at"
                 android:text="fdd"
                 android:textColor="#000000" />
 
