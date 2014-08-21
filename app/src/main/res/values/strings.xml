@@ -46,5 +46,6 @@
     <string name="pref_syncConnectionTypes_default">pref_sdf_defa</string>
     <string name="song_error_title">song error title</string>
     <string name="song_remote_delete">song remot delete</string>
+    <string name="no_record_found">No Record Found!</string>
 
 </resources>

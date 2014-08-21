@@ -4,7 +4,8 @@ package com.huhukun.tickteeforandroid;
  * Created by kun on 19/08/2014.
  */
 public class App_Constants {
-    public static final String APP_TAG = "TICKTEE";
+    public static final String PREF_APP = "TICKTEE";
+    public static final String APP_TAG = "Ticktee_";
     public static final String ACCOUNT_TYPE = "com.huhukun.ticktee";
     public static final String AUTH_TOKEN_TYPE = "com.huhukun.ticktee";
     public static final String NEW_ACCOUNT = "new_account";

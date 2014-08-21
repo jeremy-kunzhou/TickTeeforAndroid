@@ -2,7 +2,6 @@ package com.huhukun.utils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -12,11 +11,14 @@ import java.util.TimeZone;
  */
 public class FormatHelper {
 
-    public static final DateFormat shortDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
-    public static final DateFormat shortDateTimeFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault());
+    public static final String SERVER_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    public static final String SERVER_DATE_FORMAT = "yyyy-MM-dd";
 
-    public static final DateFormat utcFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-    public static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    public static final DateFormat shortLocalDateFormatter = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
+    public static final DateFormat shortLocalDateTimeFormatter = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault());
+
+    public static final DateFormat serverDateTimeFormatter = new SimpleDateFormat(SERVER_DATETIME_FORMAT);
+    public static final DateFormat serverDateFormatter = new SimpleDateFormat(SERVER_DATE_FORMAT);
 
 
     public static String fromUTCtoTimeZoneDate(Date date, TimeZone timeZone)

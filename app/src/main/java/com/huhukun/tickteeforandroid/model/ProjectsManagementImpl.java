@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class ProjectsManagementImpl implements IProjectsManagement {
 
-
+    private static final String TAG = App_Constants.APP_TAG +"ProjectsManagementImpl";
 
     private static IProjectsManagement projectsManagement = new ProjectsManagementImpl();
 
@@ -79,7 +79,7 @@ public class ProjectsManagementImpl implements IProjectsManagement {
     public Project getProjectById(long id) {
         Project result = null;
         for (Project p : projects) {
-            if (p.getId() == id) {
+            if (p.getProjectId() == id) {
                 result = p;
                 break;
             }

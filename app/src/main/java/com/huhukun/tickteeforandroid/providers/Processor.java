@@ -17,6 +17,7 @@ import com.huhukun.tickteeforandroid.App_Constants;
 import com.huhukun.tickteeforandroid.TickTeeAndroid;
 import com.huhukun.tickteeforandroid.model.Project;
 import com.huhukun.tickteeforandroid.model.SqlOpenHelper;
+import com.huhukun.utils.FormatHelper;
 
 import java.util.ArrayList;
 
@@ -24,7 +25,7 @@ import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.*;
 
 public class Processor {
 
-    private static final String TAG = "Processor";
+    private static final String TAG = App_Constants.APP_TAG +"Processor";
 
     private static final Processor instance = new Processor();
 
@@ -82,7 +83,7 @@ public class Processor {
         int updateCount;
 
         values.put( TableConstants.COL_PROJECT_ID,
-                detail.getProjectsId() );
+                detail.getProjectId() );
         values.put( TableConstants.COL_NAME ,
                 detail.getName() );
         values.put( TableConstants.COL_DESCRIPTION,
@@ -129,7 +130,7 @@ public class Processor {
 
 
         prefs = TickTeeAndroid.getAppContext().getSharedPreferences(
-                App_Constants.APP_TAG, 0 );
+                App_Constants.PREF_APP, 0 );
         editor = prefs.edit();
 
         // Put the date of this download in SharedPreferences
@@ -153,24 +154,36 @@ public class Processor {
 
                         pendingUri = ContentUris.withAppendedId(
                                 TickteeProvider.CONTENT_URI_PROJECTS_QUERY_COMPLETED,
-                                detail.getProjectsId() );
+                                detail.getProjectId() );
 
                         updateOps.add(
                                 ContentProviderOperation.newUpdate(pendingUri)
-                                        .withValue( TableConstants.COL_NAME,
-                                                detail.getName() )
-                                        .withValue( TableConstants.COL_DESCRIPTION,
-                                                detail.getDescription() )
-                                        .withValue( TableConstants.COL_TRANS_DATE,
-                                                detail.getTransDate() )
-                                        .withValue( TableConstants.COL_RESULT,
-                                                result )
-                                        .withValue( TableConstants.COL_TRY_COUNT,
-                                                0 )
-                                        .withValue( TableConstants.COL_TRANSACTING,
-                                                App_Constants.TRANSACTION_COMPLETED )
-                                        .withValue( TableConstants.COL_STATUS,
-                                                MethodEnum.PUT.toString() )
+                                        .withValue(TableConstants.COL_NAME,
+                                                detail.getName())
+                                        .withValue(TableConstants.COL_DESCRIPTION,
+                                                detail.getDescription())
+                                        .withValue(TableConstants.COL_START_AT,
+                                                FormatHelper.serverDateFormatter.format(detail.getStartDate()))
+                                        .withValue(TableConstants.COL_END_AT,
+                                                FormatHelper.serverDateFormatter.format(detail.getEndDate()))
+                                        .withValue(TableConstants.COL_EXPECTED_PROGRESS,
+                                                detail.getExpectedProgress().toString())
+                                        .withValue(TableConstants.COL_CURRENT_PROGRESS,
+                                                detail.getCurrentProgress().toString())
+                                        .withValue(TableConstants.COL_CREATED_AT,
+                                                FormatHelper.serverDateTimeFormatter.format(detail.getCreatedTime()))
+                                        .withValue(TableConstants.COL_UPDATED_AT,
+                                                FormatHelper.serverDateTimeFormatter.format(detail.getLastUpdateTime()))
+                                        .withValue(TableConstants.COL_TRANS_DATE,
+                                                detail.getTransDate())
+                                        .withValue(TableConstants.COL_RESULT,
+                                                result)
+                                        .withValue(TableConstants.COL_TRY_COUNT,
+                                                0)
+                                        .withValue(TableConstants.COL_TRANSACTING,
+                                                App_Constants.TRANSACTION_COMPLETED)
+                                        .withValue(TableConstants.COL_STATUS,
+                                                MethodEnum.PUT.toString())
                                         .withYieldAllowed(true)
                                         .build());
 
@@ -182,13 +195,25 @@ public class Processor {
                         insertOps.add(
                                 ContentProviderOperation.newInsert(TickteeProvider.CONTENT_URI)
                                         .withValue( TableConstants.COL_PROJECT_ID,
-                                                detail.getProjectsId() )
+                                                detail.getProjectId() )
                                         .withValue( TableConstants.COL_NAME,
                                                 detail.getName() )
                                         .withValue( TableConstants.COL_DESCRIPTION,
                                                 detail.getDescription() )
-                                        .withValue( TableConstants.COL_TRANS_DATE,
-                                                detail.getTransDate() )
+                                        .withValue(TableConstants.COL_START_AT,
+                                                FormatHelper.serverDateFormatter.format(detail.getStartDate()))
+                                        .withValue(TableConstants.COL_END_AT,
+                                                FormatHelper.serverDateFormatter.format(detail.getEndDate()))
+                                        .withValue(TableConstants.COL_EXPECTED_PROGRESS,
+                                                detail.getExpectedProgress().toString())
+                                        .withValue(TableConstants.COL_CURRENT_PROGRESS,
+                                                detail.getCurrentProgress().toString())
+                                        .withValue(TableConstants.COL_CREATED_AT,
+                                                FormatHelper.serverDateTimeFormatter.format(detail.getCreatedTime()))
+                                        .withValue(TableConstants.COL_UPDATED_AT,
+                                                FormatHelper.serverDateTimeFormatter.format(detail.getLastUpdateTime()))
+                                        .withValue(TableConstants.COL_TRANS_DATE,
+                                                detail.getTransDate())
                                         .withValue( TableConstants.COL_RESULT,
                                                 result )
                                         .withValue( TableConstants.COL_TRY_COUNT,
@@ -207,7 +232,7 @@ public class Processor {
 
                         pendingUri = ContentUris.withAppendedId(
                                 TickteeProvider.CONTENT_URI_PROJECTS_QUERY_COMPLETED,
-                                detail.getProjectsId() );
+                                detail.getProjectId() );
 
                         deleteOps.add(
                                 ContentProviderOperation.newDelete(pendingUri)

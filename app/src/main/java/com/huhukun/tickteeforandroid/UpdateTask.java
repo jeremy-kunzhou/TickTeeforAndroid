@@ -1,7 +1,6 @@
 package com.huhukun.tickteeforandroid;
 import java.util.concurrent.Callable;
 
-import com.huhukun.tickteeforandroid.TickTeeAndroid;
 import com.huhukun.tickteeforandroid.model.SqlOpenHelper;
 import com.huhukun.tickteeforandroid.providers.TickteeProvider;
 
@@ -13,7 +12,7 @@ import android.util.Log;
 
 public class UpdateTask implements Callable<Boolean>{
 
-    private static final String TAG = "UpdateTask";
+    private static final String TAG = App_Constants.APP_TAG +"UpdateTask";
 
     private long mUpdateId;
     private String mTitle;

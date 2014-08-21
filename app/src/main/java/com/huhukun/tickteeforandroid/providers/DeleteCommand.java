@@ -27,7 +27,7 @@ import java.util.List;
 
 public class DeleteCommand extends RESTCommand {
 
-    private static final String TAG = "DeleteCommand";
+    private static final String TAG = App_Constants.APP_TAG +"DeleteCommand";
 
     private long requestId;
     private long projectId;

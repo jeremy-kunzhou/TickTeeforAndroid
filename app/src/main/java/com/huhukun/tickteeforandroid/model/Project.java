@@ -1,6 +1,7 @@
 package com.huhukun.tickteeforandroid.model;
 
-import com.huhukun.tickteeforandroid.network.WebApiConstants;
+import android.database.Cursor;
+
 import com.huhukun.utils.FormatHelper;
 
 import org.json.JSONException;
@@ -10,6 +11,8 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Date;
 
+import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants.*;
+import static com.huhukun.tickteeforandroid.network.WebApiConstants.*;
 /**
  * Created by kun on 18/08/2014.
  */
@@ -37,8 +40,8 @@ public class Project {
         EVERY_SUNDAY
     }
 
-
-    private long id;
+    private long _id;
+    private long projectId;
     private String name;
     private String description;
     private Date startDate;
@@ -53,57 +56,20 @@ public class Project {
     private Date createdTime;
     private Date lastUpdateTime;
 
-    private long projectsId;
-    private Date transDate;
-    private long requestId;
-    private int httpResult;
-    private SyncMode syncMode;
-
-    public SyncMode getSyncMode() {
-        return syncMode;
-    }
-
-    public long getProjectsId() {
-        return projectsId;
-    }
-
-    public void setProjectsId(long projectsId) {
-        this.projectsId = projectsId;
-    }
-
-    public Date getTransDate() {
-        return transDate;
-    }
-
-    public void setTransDate(Date transDate) {
-        this.transDate = transDate;
-    }
-
-    public long getRequestId() {
-        return requestId;
-    }
-
-    public void setRequestId(long requestId) {
-        this.requestId = requestId;
-    }
-
-    public int getHttpResult() {
-        return httpResult;
-    }
-
-    public void setHttpResult(int httpResult) {
-        this.httpResult = httpResult;
-    }
-
-
-
-
     public long getId() {
-        return id;
+        return _id;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setId(long _id) {
+        this._id = _id;
+    }
+
+    public long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(long projectId) {
+        this.projectId = projectId;
     }
 
     public String getName() {
@@ -210,15 +176,73 @@ public class Project {
         this.lastUpdateTime = lastUpdateTime;
     }
 
-    public Project(JSONObject json) throws JSONException, ParseException {
-        this.id = json.getLong(WebApiConstants.PARAM_PROJECTS_ID);
-        this.name = json.getString(WebApiConstants.PARAM_NAME);
-        this.description = json.getString(WebApiConstants.PARAM_DESCRIPTION);
-        this.startDate = FormatHelper.dateFormat.parse(json.getString("start_at"));
-        this.endDate = FormatHelper.dateFormat.parse(json.getString("end_at"));
-        this.expectedProgress = new BigDecimal(json.getString("expected_progress"));
-        this.currentProgress = new BigDecimal(json.getString("current_progress"));
-        this.createdTime = FormatHelper.utcFormat.parse(json.getString("created_at"));
-        this.lastUpdateTime = FormatHelper.utcFormat.parse(json.getString("updated_at"));
+//    private long projectsId;
+    private Date transDate;
+    private long requestId;
+    private int httpResult;
+    private SyncMode syncMode;
+
+//    public long getProjectsId() {
+//        return projectsId;
+//    }
+//
+//    public void setProjectsId(long projectsId) {
+//        this.projectsId = projectsId;
+//    }
+
+    public Date getTransDate() {
+        return transDate;
     }
+
+    public void setTransDate(Date transDate) {
+        this.transDate = transDate;
+    }
+
+    public long getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(long requestId) {
+        this.requestId = requestId;
+    }
+
+    public int getHttpResult() {
+        return httpResult;
+    }
+
+    public void setHttpResult(int httpResult) {
+        this.httpResult = httpResult;
+    }
+
+    public SyncMode getSyncMode() {
+        return syncMode;
+    }
+
+
+    public Project(JSONObject json) throws JSONException, ParseException {
+        this.projectId = json.getLong(PARAM_PROJECTS_ID);
+        this.name = json.getString(PARAM_NAME);
+        this.description = json.getString(PARAM_DESCRIPTION);
+        this.startDate = FormatHelper.serverDateFormatter.parse(json.getString(PARAM_START_AT));
+        this.endDate = FormatHelper.serverDateFormatter.parse(json.getString(PARAM_END_AT));
+        this.expectedProgress = new BigDecimal(json.getString(PARAM_EXPECTED_PROGRESS));
+        this.currentProgress = new BigDecimal(json.getString(PARAM_CURRENT_PROGRESS));
+        this.createdTime = FormatHelper.serverDateTimeFormatter.parse(json.getString(PARAM_CREATED_AT));
+        this.lastUpdateTime = FormatHelper.serverDateTimeFormatter.parse(json.getString(PARAM_UPDATED_AT));
+    }
+
+    public Project(Cursor cursor) throws ParseException {
+        this._id = cursor.getLong(cursor.getColumnIndex(_ID));
+        this.projectId = cursor.getLong(cursor.getColumnIndex(COL_PROJECT_ID));
+        this.name = cursor.getString(cursor.getColumnIndex(COL_NAME));
+        this.description = cursor.getString(cursor.getColumnIndex(COL_DESCRIPTION));
+        this.startDate = FormatHelper.serverDateFormatter.parse(cursor.getString(cursor.getColumnIndex(COL_START_AT)));
+        this.endDate = FormatHelper.serverDateFormatter.parse(cursor.getString(cursor.getColumnIndex(COL_END_AT)));
+        this.expectedProgress = new BigDecimal(cursor.getString(cursor.getColumnIndex(COL_EXPECTED_PROGRESS)));
+        this.currentProgress = new BigDecimal(cursor.getString(cursor.getColumnIndex(COL_CURRENT_PROGRESS)));
+        this.createdTime = FormatHelper.serverDateTimeFormatter.parse(cursor.getString(cursor.getColumnIndex(COL_CREATED_AT)));
+        this.lastUpdateTime = FormatHelper.serverDateTimeFormatter.parse(cursor.getString(cursor.getColumnIndex(COL_UPDATED_AT)));
+    }
+
+
 }

@@ -2,6 +2,7 @@ package com.huhukun.tickteeforandroid.providers;
 
 import android.os.Bundle;
 
+import com.huhukun.tickteeforandroid.App_Constants;
 import com.huhukun.tickteeforandroid.Exception.AuthenticationFailureException;
 import com.huhukun.tickteeforandroid.Exception.DeviceConnectionException;
 import com.huhukun.tickteeforandroid.Exception.NetworkSystemException;
@@ -15,7 +16,7 @@ import org.apache.http.params.HttpParams;
 
 public abstract class RESTCommand {
 
-    private static final String TAG = "RESTCommand";
+    private static final String TAG = App_Constants.APP_TAG +"RESTCommand";
 
     private static final int CONNECTION_TIMEOUT = 30 * 1000;
     protected static HttpClient mHttpClient;

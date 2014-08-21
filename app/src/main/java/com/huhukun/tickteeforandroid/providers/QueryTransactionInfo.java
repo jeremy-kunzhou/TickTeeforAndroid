@@ -11,7 +11,7 @@ import java.util.Calendar;
 
 public class QueryTransactionInfo {
 
-    private static String TAG = "QueryTransactionInfo";
+    private static final String TAG = App_Constants.APP_TAG +"QueryTransactionInfo";
 
     private static final QueryTransactionInfo instance = new QueryTransactionInfo();
 
@@ -135,7 +135,7 @@ public class QueryTransactionInfo {
                 long cutoffMillis;
 
                 prefs = TickTeeAndroid.getAppContext().getSharedPreferences(
-                        App_Constants.APP_TAG, 0 );
+                        App_Constants.PREF_APP, 0 );
 
                 dlMillis = prefs.getLong( App_Constants.PREFS_DOWNLOAD_DATE, 0 );
                 cutoffMillis = MyDateUtils.addToCurrent(Calendar.HOUR_OF_DAY, -1);

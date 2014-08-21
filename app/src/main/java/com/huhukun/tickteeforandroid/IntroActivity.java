@@ -10,7 +10,6 @@ import android.view.View;
 
 public class IntroActivity extends Activity {
 
-    MainActivity main;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

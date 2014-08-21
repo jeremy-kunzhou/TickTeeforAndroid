@@ -30,7 +30,7 @@ import java.util.List;
 
 public class RetrieveCommand extends RESTCommand {
 
-    private static final String TAG = "RetrieveCommand";
+    private static final String TAG = App_Constants.APP_TAG +"RetrieveCommand";
 
     @Override
     protected int handleRequest( String authToken )

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="wrap_content" android:orientation="vertical"
-    android:layout_width="fill_parent" android:id="@+id/row_project_list">
+    android:layout_width="fill_parent"  android:id="@+id/row_project_list">
 
     <TableRow android:layout_width="fill_parent"
         android:id="@+id/TableRow01"

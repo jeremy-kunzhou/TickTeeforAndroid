@@ -4,12 +4,14 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.huhukun.tickteeforandroid.App_Constants;
+
 /**
  * Created by kun on 19/08/2014.
  */
 public class SqlOpenHelper extends SQLiteOpenHelper {
 
-    private static final String TAG = "SqlOpenHelper";
+    private static final String TAG = App_Constants.APP_TAG +"SqlOpenHelper";
     public static final String DB_NAME = "projectsdb.sqlite";
     public static final int VERSION = 1;
 
@@ -20,6 +22,12 @@ public class SqlOpenHelper extends SQLiteOpenHelper {
         public static final String _ID = "_id";
         public static final String COL_PROJECT_ID = "project_id";
         public static final String COL_NAME = "name";
+        public static final String COL_START_AT = "start_at";
+        public static final String COL_END_AT = "end_at";
+        public static final String COL_EXPECTED_PROGRESS = "expected_progress";
+        public static final String COL_CURRENT_PROGRESS = "current_progress";
+        public static final String COL_CREATED_AT = "created_at";
+        public static final String COL_UPDATED_AT = "updated_at";
         public static final String COL_DESCRIPTION = "description";
         public static final String COL_STATUS = "status";
         public static final String COL_TRANSACTING = "transacting";
@@ -47,12 +55,18 @@ public class SqlOpenHelper extends SQLiteOpenHelper {
      * try_count: Number of times the sync operation has been attempted
      *   for this resource.
      */
-    private static final String SONGS_CREATE_TABLE =
+    private static final String PROJECTS_CREATE_TABLE =
             "CREATE TABLE " + TableConstants.TABLE_NAME + " ("
                     + TableConstants._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + TableConstants.COL_PROJECT_ID + " INTEGER, "
                     + TableConstants.COL_NAME + " TEXT, "
                     + TableConstants.COL_DESCRIPTION + " TEXT, "
+                    + TableConstants.COL_START_AT + " DATETIME, "
+                    + TableConstants.COL_END_AT + " DATETIME, "
+                    + TableConstants.COL_EXPECTED_PROGRESS + " TEXT, "
+                    + TableConstants.COL_CURRENT_PROGRESS + " TEXT, "
+                    + TableConstants.COL_CREATED_AT + " DATETIME, "
+                    + TableConstants.COL_UPDATED_AT + " DATETIME, "
                     + TableConstants.COL_STATUS + " TEXT, "
                     + TableConstants.COL_TRANSACTING + " INTEGER, "
                     + TableConstants.COL_RESULT + " INTEGER, "
@@ -72,7 +86,7 @@ public class SqlOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(SONGS_CREATE_TABLE);
+        db.execSQL(PROJECTS_CREATE_TABLE);
         db.execSQL(SONGS_CREATE_INDEX);
     }
 

@@ -17,7 +17,7 @@ import com.huhukun.tickteeforandroid.LoginActivity;
  * Created by kun on 19/08/2014.
  */
 public class Authenticator extends AbstractAccountAuthenticator {
-
+    private static final String TAG = App_Constants.APP_TAG +"Authenticator";
     private Context mContext;
     public Authenticator(Context context){
         super(context);

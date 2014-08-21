@@ -15,7 +15,7 @@ import org.apache.http.client.HttpClient;
 
 public class RESTMethod {
 
-    private static final String TAG = "RESTMethod";
+    private static final String TAG = App_Constants.APP_TAG +"RESTMethod";
 
     private static final RESTMethod instance = new RESTMethod();
 

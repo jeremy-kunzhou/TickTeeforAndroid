@@ -6,6 +6,12 @@ package com.huhukun.tickteeforandroid.network;
 public class WebApiConstants {
     public static final String PARAM_PROJECTS_ID = "id";
     public static final String PARAM_NAME = "name";
+    public static final String PARAM_START_AT = "start_at";
+    public static final String PARAM_END_AT = "end_at";
+    public static final String PARAM_EXPECTED_PROGRESS = "expected_progress";
+    public static final String PARAM_CURRENT_PROGRESS = "current_progress";
+    public static final String PARAM_CREATED_AT = "created_at";
+    public static final String PARAM_UPDATED_AT = "updated_at";
     public static final String PARAM_DESCRIPTION = "description";
     public static final String PARAM_DATE_UPDATED = "trans_date";
     public static final String PARAM_DOWNLOAD_DATE = "downloadDate";

@@ -14,19 +14,19 @@ import android.os.Bundle;
 import android.app.ListFragment;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.huhukun.tickteeforandroid.UILibrary.DatePickerFragment;
 import com.huhukun.tickteeforandroid.model.Project;
 import com.huhukun.tickteeforandroid.model.ProjectsManagementImpl;
 import com.huhukun.tickteeforandroid.providers.QueryTransactionInfo;
 import com.huhukun.tickteeforandroid.providers.TickteeProvider;
 
+import java.text.ParseException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -53,21 +53,28 @@ public class ProjectListFragment extends ListFragment implements LoaderManager.L
      * The fragment's current callback object, which is notified of list item
      * clicks.
      */
-    private Callbacks mCallbacks = sDummyCallbacks;
+    private Callbacks <Project> mCallbacks = sDummyCallbacks;
 
     /**
      * The current activated item position. Only used on tablets.
      */
     private int mActivatedPosition = ListView.INVALID_POSITION;
 
-    private static final String TAG = "RestfulActivity";
+    private static final String TAG = App_Constants.APP_TAG +"ProjectListFragment";
 
     private static final int GET_FILTERED_SONGS = 1;
 
     private static final String[] loaderColumns = new String[] {
             TableConstants._ID,
+            TableConstants.COL_PROJECT_ID,
             TableConstants.COL_NAME,
             TableConstants.COL_DESCRIPTION,
+            TableConstants.COL_START_AT,
+            TableConstants.COL_END_AT,
+            TableConstants.COL_EXPECTED_PROGRESS,
+            TableConstants.COL_CURRENT_PROGRESS,
+            TableConstants.COL_CREATED_AT,
+            TableConstants.COL_UPDATED_AT,
             TableConstants.COL_TRANSACTING,
             TableConstants.COL_STATUS,
             TableConstants.COL_RESULT,
@@ -155,20 +162,20 @@ public class ProjectListFragment extends ListFragment implements LoaderManager.L
      * implement. This mechanism allows activities to be notified of item
      * selections.
      */
-    public interface Callbacks {
+    public interface Callbacks <T>{
         /**
          * Callback for when an item has been selected.
          */
-        public void onItemSelected(String id);
+        public void onItemSelected(T t);
     }
 
     /**
      * A dummy implementation of the {@link Callbacks} interface that does
      * nothing. Used only when this fragment is not attached to an activity.
      */
-    private static Callbacks sDummyCallbacks = new Callbacks() {
+    private static Callbacks sDummyCallbacks = new Callbacks<Project>() {
         @Override
-        public void onItemSelected(String id) {
+        public void onItemSelected(Project id) {
         }
     };
 
@@ -257,8 +264,14 @@ public class ProjectListFragment extends ListFragment implements LoaderManager.L
         Log.d(TAG, "Select item");
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
-        mCallbacks.onItemSelected(
-                ProjectsManagementImpl.getInstance().getAllProjects().get(position).getId()+"");
+        final Cursor cursor;
+
+        cursor = (Cursor)listView.getItemAtPosition( position );
+        try {
+            mCallbacks.onItemSelected(new Project(cursor));
+        } catch (ParseException e) {
+            Log.e(TAG, e.toString());
+        }
     }
 
     @Override
@@ -291,6 +304,7 @@ public class ProjectListFragment extends ListFragment implements LoaderManager.L
 
         mActivatedPosition = position;
     }
+
 
     private class ListItemViewBinder implements SimpleCursorAdapter.ViewBinder {
         @Override

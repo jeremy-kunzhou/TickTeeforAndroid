@@ -11,7 +11,7 @@ import android.util.Log;
 
 public class DeleteTask  implements Callable<Boolean>{
 
-    private static final String TAG = "DeleteTask";
+    private static final String TAG = App_Constants.APP_TAG +"DeleteTask";
 
     private long mDeleteId;
 

@@ -8,6 +8,7 @@
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="horizontal"
     android:showDividers="middle"
+    android:background="@color/background"
     tools:context="com.huhukun.tickteeforandroid.ProjectListActivity">
 
     <!--

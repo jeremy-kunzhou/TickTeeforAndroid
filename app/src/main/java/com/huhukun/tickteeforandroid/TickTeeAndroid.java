@@ -15,7 +15,7 @@ public class TickTeeAndroid extends Application {
     public void onCreate(){
         super.onCreate();
         context = getApplicationContext();
-        appSetting = getSharedPreferences(App_Constants.APP_TAG, 0);
+        appSetting = getSharedPreferences(App_Constants.PREF_APP, 0);
 
     }
 

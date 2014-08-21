@@ -42,7 +42,7 @@ public class LoginActivity extends AccountAuthenticatorActivity{
 
 
 
-
+    private static final String TAG = App_Constants.APP_TAG +"LoginActivity";
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -236,7 +236,7 @@ public class LoginActivity extends AccountAuthenticatorActivity{
             try {
                 JSONObject json = new JSONObject(JSONParser.getStringFromUrlViaPost(WebApiConstants.LOGIN_URL, null, loginInfo));
 
-                Log.d(App_Constants.APP_TAG, json.toString());
+                Log.d(App_Constants.PREF_APP, json.toString());
                 if (!json.has("success")) {
                     String email = json.getJSONObject("user").getString("email");
                     String auth_token = json.getJSONObject("user").getString("auth_token");
@@ -269,7 +269,7 @@ public class LoginActivity extends AccountAuthenticatorActivity{
                 String email = intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
                 String accountPassword = intent.getStringExtra(App_Constants.PREF_PASSWORD);
                 String auth_token = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
-                SharedPreferences settings = getSharedPreferences(App_Constants.APP_TAG, 0);
+                SharedPreferences settings = getSharedPreferences(App_Constants.PREF_APP, 0);
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString(App_Constants.PREF_EMAIL, email);
                 editor.putString(App_Constants.PREF_TOKEN, auth_token);

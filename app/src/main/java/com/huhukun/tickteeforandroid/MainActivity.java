@@ -34,7 +34,7 @@ public class MainActivity extends ActionBarActivity {
     private View mProgressView;
     private ProjectsLoadingTask mProjectsLoadingTask = null;
 
-
+    private static final String TAG = App_Constants.APP_TAG +"MainActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,12 +143,12 @@ public class MainActivity extends ActionBarActivity {
     private void prepareMenu(Menu menu) {
         if (TickTeeAndroid.appSetting.getString(App_Constants.PREF_TOKEN, null) == null)
         {
-            Log.d(App_Constants.APP_TAG, "show log in");
+            Log.d(App_Constants.PREF_APP, "show log in");
             menu.findItem(R.id.menu_login).setVisible(true);
             menu.findItem(R.id.menu_logout).setVisible(false);
         }else
         {
-            Log.d(App_Constants.APP_TAG, "show log out");
+            Log.d(App_Constants.PREF_APP, "show log out");
             menu.findItem(R.id.menu_login).setVisible(false);
             menu.findItem(R.id.menu_logout).setVisible(true);
         }

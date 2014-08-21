@@ -13,7 +13,7 @@ import android.util.Log;
 
 public class InsertTask implements Callable<Boolean>{
 
-    private static final String TAG = "InsertTask";
+    private static final String TAG = App_Constants.APP_TAG +"InsertTask";
 
     private String mTitle;
     private String mArtist;

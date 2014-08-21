@@ -22,12 +22,19 @@ import com.huhukun.tickteeforandroid.Exception.WebServiceConnectionException;
 import com.huhukun.tickteeforandroid.Exception.WebServiceFailedException;
 import com.huhukun.tickteeforandroid.TickTeeAndroid;
 
-import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.*;
+import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants;
+import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants.COL_CREATED_AT;
+import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants.COL_CURRENT_PROGRESS;
+import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants.COL_END_AT;
+import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants.COL_EXPECTED_PROGRESS;
+import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants.COL_START_AT;
+import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants.COL_UPDATED_AT;
+
 /**
  * Created by kun on 20/08/2014.
  */
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
-    private static final String TAG = "SyncAdapter";
+    private static final String TAG = App_Constants.APP_TAG + "SyncAdapter";
 
     private final Context mContext;
     private final AccountManager mAccountManager;
@@ -38,7 +45,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             TableConstants.COL_PROJECT_ID,
             TableConstants.COL_NAME,
             TableConstants.COL_DESCRIPTION,
-            TableConstants.COL_STATUS };
+            TableConstants.COL_START_AT,
+            TableConstants.COL_END_AT,
+            TableConstants.COL_EXPECTED_PROGRESS,
+            TableConstants.COL_CURRENT_PROGRESS,
+            TableConstants.COL_CREATED_AT,
+            TableConstants.COL_UPDATED_AT,
+            TableConstants.COL_STATUS};
 
     public SyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
@@ -51,8 +64,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         ContentResolver cr = getContext().getContentResolver();
 
-        if ( Log.isLoggable( TAG, Log.INFO )) {
-            Log.e( TAG, "Performing sync operation." );
+        if (Log.isLoggable(TAG, Log.INFO)) {
+            Log.e(TAG, "Performing sync operation.");
         }
 
         RESTCommand restCommand;
@@ -62,32 +75,51 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
         Cursor cursor;
         cursor = cr.query(
-                TickteeProvider.CONTENT_URI_PROJECTS_PENDING, columns, null, null, null );
+                TickteeProvider.CONTENT_URI_PROJECTS_PENDING, columns, null, null, null);
 
         final int colId = cursor.getColumnIndex(TableConstants._ID);
         final int colProjectsId = cursor.getColumnIndex(TableConstants.COL_PROJECT_ID);
         final int colName = cursor.getColumnIndex(TableConstants.COL_NAME);
         final int colDescription = cursor.getColumnIndex(TableConstants.COL_DESCRIPTION);
+        final int colStartAt = cursor.getColumnIndex(COL_START_AT);
+        final int colEndAt = cursor.getColumnIndex(COL_END_AT);
+        final int colExpectedProgress = cursor.getColumnIndex(COL_EXPECTED_PROGRESS);
+        final int colCurrentProgress = cursor.getColumnIndex(COL_CURRENT_PROGRESS);
+        final int colCreatedAt = cursor.getColumnIndex(COL_CREATED_AT);
+        final int colUpdatedAt = cursor.getColumnIndex(COL_UPDATED_AT);
+
         final int colStatus = cursor.getColumnIndex(TableConstants.COL_STATUS);
 
         long id;
         long projectsId;
         String name;
         String description;
+        String startAt;
+        String endAt;
+        String expectedProgress;
+        String currentProgress;
+        String createdAt;
+        String updatedAt;
         String status;
 
         while (cursor.moveToNext()) {
 
-            id = cursor.getLong( colId );
-            projectsId = cursor.getLong( colProjectsId );
-            name = cursor.getString( colName );
-            description = cursor.getString( colDescription );
-            status = cursor.getString( colStatus );
+            id = cursor.getLong(colId);
+            projectsId = cursor.getLong(colProjectsId);
+            name = cursor.getString(colName);
+            description = cursor.getString(colDescription);
+            startAt = cursor.getString(colStartAt);
+            endAt = cursor.getString(colEndAt);
+            expectedProgress = cursor.getString(colExpectedProgress);
+            currentProgress = cursor.getString(colCurrentProgress);
+            createdAt = cursor.getString(colCreatedAt);
+            updatedAt = cursor.getString(colUpdatedAt);
+            status = cursor.getString(colStatus);
 
             try {
-                methodEnum = MethodEnum.valueOf( status );
-            } catch ( IllegalArgumentException e ) {
-                Log.e( TAG, "Cannot create MethodEnum: status[" + status + "]", e );
+                methodEnum = MethodEnum.valueOf(status);
+            } catch (IllegalArgumentException e) {
+                Log.e(TAG, "Cannot create MethodEnum: status[" + status + "]", e);
                 syncResult.databaseError = true;
                 clearTransacting(id);
 
@@ -97,28 +129,30 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             // If the row still exists and is still pending it will be
             // updated to transacting in-progress.
             pendingUri = ContentUris.withAppendedId(
-                    TickteeProvider.CONTENT_URI_PROJECTS_IN_PROGRESS, id );
-            count = cr.update( pendingUri, new ContentValues(), null, null );
+                    TickteeProvider.CONTENT_URI_PROJECTS_IN_PROGRESS, id);
+            count = cr.update(pendingUri, new ContentValues(), null, null);
 
-            if ( count > 0 ) {
-                switch ( methodEnum ) {
+            if (count > 0) {
+                switch (methodEnum) {
                     case POST:
-                        restCommand = new InsertCommand( id, name, description );
+                        restCommand = new InsertCommand(id, name, description, startAt,
+                                endAt, expectedProgress, currentProgress, createdAt, updatedAt);
                         break;
                     case PUT:
-                        restCommand = new UpdateCommand( id, projectsId, name, description );
+                        restCommand = new UpdateCommand(id, projectsId, name, description, startAt,
+                                endAt, expectedProgress, currentProgress, createdAt, updatedAt);
                         break;
                     case DELETE:
-                        restCommand = new DeleteCommand( id, projectsId );
+                        restCommand = new DeleteCommand(id, projectsId);
                         break;
                     default:
-                        Log.e( TAG, "Invalid REST method: methodEnum[" + methodEnum + "]" );
+                        Log.e(TAG, "Invalid REST method: methodEnum[" + methodEnum + "]");
                         syncResult.databaseError = true;
                         clearTransacting(id);
                         continue;
                 }
 
-                if ( !handleSync( restCommand, syncResult ) ) {
+                if (!handleSync(restCommand, syncResult)) {
                     break;
                 }
             }
@@ -128,14 +162,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         cursor.close();
 
         QueryTransactionInfo queryTransInfo = QueryTransactionInfo.getInstance();
-        if ( queryTransInfo.isRefreshOutstanding( true ) ) {
+        if (queryTransInfo.isRefreshOutstanding(true)) {
             queryTransInfo.markInProgress();
             restCommand = new RetrieveCommand();
-            handleSync( restCommand, syncResult );
+            handleSync(restCommand, syncResult);
         }
 
-        if ( Log.isLoggable( TAG, Log.INFO ) ) {
-            Log.e( TAG, "leaving onPerformSync" );
+        if (Log.isLoggable(TAG, Log.INFO)) {
+            Log.e(TAG, "leaving onPerformSync");
         }
     }
 
@@ -146,22 +180,21 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
      * Soft errors will result in exponential back-off.
      *
      * @param restCommand The command object to be executed.
-     * @param syncResult SyncAdapter-specific parameters. Here we use it to set
-     * soft and hard errors.
+     * @param syncResult  SyncAdapter-specific parameters. Here we use it to set
+     *                    soft and hard errors.
      * @return True if the call to the REST API was successful.
-     *         True if the call fails and request should be retried.
-     *         False if the call fails and request should NOT be retried.
+     * True if the call fails and request should be retried.
+     * False if the call fails and request should NOT be retried.
      */
-    private boolean handleSync( RESTCommand restCommand, SyncResult syncResult )
-    {
+    private boolean handleSync(RESTCommand restCommand, SyncResult syncResult) {
         try {
-            RESTMethod.getInstance().handleRequest( restCommand );
-        } catch ( WebServiceConnectionException e ) {
-            if( Log.isLoggable(TAG, Log.INFO)) {
-                Log.i( TAG, "Web service not available." );
+            RESTMethod.getInstance().handleRequest(restCommand);
+        } catch (WebServiceConnectionException e) {
+            if (Log.isLoggable(TAG, Log.INFO)) {
+                Log.i(TAG, "Web service not available.");
             }
 
-            if ( e.isRetry() ) {
+            if (e.isRetry()) {
                 // soft error
                 syncResult.stats.numIoExceptions = 1;
                 return true;
@@ -171,16 +204,16 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 return false;
             }
 
-        } catch ( WebServiceFailedException e ) {
-            if( Log.isLoggable( TAG, Log.INFO )) {
-                Log.i( TAG, "Error returned from web service." );
+        } catch (WebServiceFailedException e) {
+            if (Log.isLoggable(TAG, Log.INFO)) {
+                Log.i(TAG, "Error returned from web service.");
             }
             return true;
-        } catch ( DeviceConnectionException e ) {
-            if( Log.isLoggable( TAG, Log.INFO )) {
-                Log.i( TAG, "Device cannot connect to the network." );
+        } catch (DeviceConnectionException e) {
+            if (Log.isLoggable(TAG, Log.INFO)) {
+                Log.i(TAG, "Device cannot connect to the network.");
             }
-            if ( e.isRetry() ) {
+            if (e.isRetry()) {
                 // soft error
                 syncResult.stats.numIoExceptions = 1;
                 return true;
@@ -189,14 +222,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 syncResult.databaseError = true;
                 return false;
             }
-        } catch ( NetworkSystemException e ) {
-            Log.e( TAG, "Error configuring http request.", e );
+        } catch (NetworkSystemException e) {
+            Log.e(TAG, "Error configuring http request.", e);
             // hard error
             syncResult.databaseError = true;
             return false;
-        } catch ( AuthenticationFailureException e ) {
-            if( Log.isLoggable( TAG, Log.INFO )) {
-                Log.i( TAG, "Authentication failure.", e );
+        } catch (AuthenticationFailureException e) {
+            if (Log.isLoggable(TAG, Log.INFO)) {
+                Log.i(TAG, "Authentication failure.", e);
             }
             // hard error
             syncResult.stats.numAuthExceptions = 1;
@@ -212,10 +245,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
      * for this most likely bad data in the status column.
      *
      * @param requestId A value for the _ID column which will be used as the
-     * update key for the request that failed.
+     *                  update key for the request that failed.
      */
-    private void clearTransacting( long requestId )
-    {
+    private void clearTransacting(long requestId) {
         final ContentResolver cr =
                 TickTeeAndroid.getAppContext().getContentResolver();
         ContentValues values;
@@ -227,12 +259,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 requestId);
 
         values = new ContentValues();
-        values.put( TableConstants.COL_RESULT , App_Constants.NON_HTTP_FAILURE);
-        values.put( TableConstants.COL_TRANSACTING,
-                App_Constants.TRANSACTION_COMPLETED );
-        values.put( TableConstants.COL_TRY_COUNT,
-                0 );
+        values.put(TableConstants.COL_RESULT, App_Constants.NON_HTTP_FAILURE);
+        values.put(TableConstants.COL_TRANSACTING,
+                App_Constants.TRANSACTION_COMPLETED);
+        values.put(TableConstants.COL_TRY_COUNT,
+                0);
 
-        cr.update( uri, values, null, null );
+        cr.update(uri, values, null, null);
     }
 }

@@ -6,6 +6,8 @@ import android.app.Activity;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
+import com.huhukun.tickteeforandroid.model.Project;
+
 
 /**
  * An activity representing a list of Projects. This activity
@@ -24,7 +26,7 @@ import android.view.MenuItem;
  * to listen for item selections.
  */
 public class ProjectListActivity extends Activity
-        implements ProjectListFragment.Callbacks {
+        implements ProjectListFragment.Callbacks<Project> {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -78,13 +80,13 @@ public class ProjectListActivity extends Activity
      * indicating that the item with the given ID was selected.
      */
     @Override
-    public void onItemSelected(String id) {
+    public void onItemSelected(Project project) {
         if (mTwoPane) {
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
             // fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(ProjectDetailFragment.ARG_ITEM_ID, id);
+            arguments.putString(ProjectDetailFragment.ARG_ITEM_ID, project.getId()+"");
             ProjectDetailFragment fragment = new ProjectDetailFragment();
             fragment.setArguments(arguments);
             getFragmentManager().beginTransaction()
@@ -95,7 +97,7 @@ public class ProjectListActivity extends Activity
             // In single-pane mode, simply start the detail activity
             // for the selected item ID.
             Intent detailIntent = new Intent(this, ProjectDetailActivity.class);
-            detailIntent.putExtra(ProjectDetailFragment.ARG_ITEM_ID, id);
+            detailIntent.putExtra(ProjectDetailFragment.ARG_ITEM_ID, project.getId()+"");
             startActivity(detailIntent);
         }
     }

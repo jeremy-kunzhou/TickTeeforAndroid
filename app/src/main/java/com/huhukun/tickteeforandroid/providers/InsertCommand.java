@@ -27,17 +27,31 @@ import java.util.List;
 
 public class InsertCommand extends RESTCommand {
 
-    private static final String TAG = "InsertCommand";
+    private static final String TAG = App_Constants.APP_TAG +"InsertCommand";
 
     private long requestId;
     private String name;
     private String description;
+    private String startAt;
+    private String endAt;
+    private String expectedProgress;
+    private String currentProgress;
+    private String createdAt;
+    private String updatedAt;
 
-    public InsertCommand( long requestId, String name, String description )
+    public InsertCommand( long requestId, String name, String description, String startAt,
+                          String endAt, String expectedProgress, String currentProgress,
+                          String createdAt, String updatedAt )
     {
         this.requestId = requestId;
         this.name = name;
         this.description = description;
+        this.startAt = startAt;
+        this.endAt = endAt;
+        this.expectedProgress = expectedProgress;
+        this.currentProgress = currentProgress;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     @Override
@@ -61,6 +75,12 @@ public class InsertCommand extends RESTCommand {
 
         httpParams.add(new BasicNameValuePair(WebApiConstants.PARAM_NAME, name));
         httpParams.add(new BasicNameValuePair(WebApiConstants.PARAM_DESCRIPTION, description));
+        httpParams.add(new BasicNameValuePair(WebApiConstants.PARAM_START_AT, startAt));
+        httpParams.add(new BasicNameValuePair(WebApiConstants.PARAM_END_AT, endAt));
+        httpParams.add(new BasicNameValuePair(WebApiConstants.PARAM_EXPECTED_PROGRESS, expectedProgress));
+        httpParams.add(new BasicNameValuePair(WebApiConstants.PARAM_CURRENT_PROGRESS, currentProgress));
+        httpParams.add(new BasicNameValuePair(WebApiConstants.PARAM_CREATED_AT, createdAt));
+        httpParams.add(new BasicNameValuePair(WebApiConstants.PARAM_UPDATED_AT, updatedAt));
 
         String email = TickTeeAndroid.appSetting.getString(App_Constants.PREF_EMAIL, null);
         String token = TickTeeAndroid.appSetting.getString(App_Constants.PREF_TOKEN, null);
