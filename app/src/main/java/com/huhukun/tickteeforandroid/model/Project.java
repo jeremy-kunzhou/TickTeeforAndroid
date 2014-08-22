@@ -1,7 +1,9 @@
 package com.huhukun.tickteeforandroid.model;
 
 import android.database.Cursor;
+import android.util.Log;
 
+import com.huhukun.tickteeforandroid.App_Constants;
 import com.huhukun.utils.FormatHelper;
 
 import org.json.JSONException;
@@ -12,11 +14,12 @@ import java.text.ParseException;
 import java.util.Date;
 
 import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants.*;
-import static com.huhukun.tickteeforandroid.network.WebApiConstants.*;
+import static com.huhukun.tickteeforandroid.providers.WebApiConstants.*;
 /**
  * Created by kun on 18/08/2014.
  */
 public class Project {
+    private static final String TAG = App_Constants.APP_TAG +"Project";
     public void setSyncMode(SyncMode syncMode) {
         this.syncMode = syncMode;
     }
@@ -218,9 +221,12 @@ public class Project {
         return syncMode;
     }
 
+    public Project() {}
 
     public Project(JSONObject json) throws JSONException, ParseException {
+
         this.projectId = json.getLong(PARAM_PROJECTS_ID);
+        Log.d(TAG, "Make json "+ projectId);
         this.name = json.getString(PARAM_NAME);
         this.description = json.getString(PARAM_DESCRIPTION);
         this.startDate = FormatHelper.serverDateFormatter.parse(json.getString(PARAM_START_AT));
@@ -242,6 +248,21 @@ public class Project {
         this.currentProgress = new BigDecimal(cursor.getString(cursor.getColumnIndex(COL_CURRENT_PROGRESS)));
         this.createdTime = FormatHelper.serverDateTimeFormatter.parse(cursor.getString(cursor.getColumnIndex(COL_CREATED_AT)));
         this.lastUpdateTime = FormatHelper.serverDateTimeFormatter.parse(cursor.getString(cursor.getColumnIndex(COL_UPDATED_AT)));
+    }
+
+    public JSONObject toJson() throws JSONException {
+
+        JSONObject json = new JSONObject();
+        json.put(PARAM_PROJECTS_ID, this.getProjectId());
+        json.put(PARAM_NAME, this.getName());
+        json.put(PARAM_DESCRIPTION, this.getDescription());
+        json.put(PARAM_START_AT, FormatHelper.serverDateFormatter.format(this.getStartDate()));
+        json.put(PARAM_END_AT, FormatHelper.serverDateFormatter.format(this.getEndDate()));
+        json.put(PARAM_EXPECTED_PROGRESS, this.getExpectedProgress().toString());
+        json.put(PARAM_CURRENT_PROGRESS, this.getCurrentProgress().toString());
+        json.put(PARAM_CREATED_AT, FormatHelper.serverDateTimeFormatter.format(this.getCreatedTime()));
+        json.put(PARAM_UPDATED_AT, FormatHelper.serverDateTimeFormatter.format(this.getLastUpdateTime()));
+        return json;
     }
 
 

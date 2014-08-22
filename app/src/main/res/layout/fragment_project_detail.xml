@@ -10,13 +10,6 @@
     tools:context=".ProjectDetailFragment"
     android:background="@color/background">
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
-        android:id="@+id/project_detail_name" />
-
     <FrameLayout
         android:id="@+id/seekArcContainer"
         android:layout_width="match_parent"
@@ -66,7 +59,7 @@
 
             <TextView
                 android:layout_width="fill_parent"
-                android:layout_height="40sp"
+                android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_weight="1"
                 android:padding="10sp"

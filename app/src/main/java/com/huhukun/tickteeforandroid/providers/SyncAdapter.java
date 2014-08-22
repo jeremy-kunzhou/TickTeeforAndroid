@@ -15,12 +15,14 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.huhukun.tickteeforandroid.App_Constants;
-import com.huhukun.tickteeforandroid.Exception.AuthenticationFailureException;
-import com.huhukun.tickteeforandroid.Exception.DeviceConnectionException;
-import com.huhukun.tickteeforandroid.Exception.NetworkSystemException;
-import com.huhukun.tickteeforandroid.Exception.WebServiceConnectionException;
-import com.huhukun.tickteeforandroid.Exception.WebServiceFailedException;
+import com.huhukun.tickteeforandroid.exception.AuthenticationFailureException;
+import com.huhukun.tickteeforandroid.exception.DeviceConnectionException;
+import com.huhukun.tickteeforandroid.exception.NetworkSystemException;
+import com.huhukun.tickteeforandroid.exception.WebServiceConnectionException;
+import com.huhukun.tickteeforandroid.exception.WebServiceFailedException;
 import com.huhukun.tickteeforandroid.TickTeeAndroid;
+
+import org.json.JSONException;
 
 import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants;
 import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants.COL_CREATED_AT;
@@ -65,7 +67,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         ContentResolver cr = getContext().getContentResolver();
 
         if (Log.isLoggable(TAG, Log.INFO)) {
-            Log.e(TAG, "Performing sync operation.");
+            Log.i(TAG, "Performing sync operation.");
         }
 
         RESTCommand restCommand;
@@ -107,6 +109,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             id = cursor.getLong(colId);
             projectsId = cursor.getLong(colProjectsId);
             name = cursor.getString(colName);
+            Log.d(TAG, "Prepare for sync project id "+projectsId+" "+name);
+
             description = cursor.getString(colDescription);
             startAt = cursor.getString(colStartAt);
             endAt = cursor.getString(colEndAt);
@@ -133,23 +137,32 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             count = cr.update(pendingUri, new ContentValues(), null, null);
 
             if (count > 0) {
-                switch (methodEnum) {
-                    case POST:
-                        restCommand = new InsertCommand(id, name, description, startAt,
-                                endAt, expectedProgress, currentProgress, createdAt, updatedAt);
-                        break;
-                    case PUT:
-                        restCommand = new UpdateCommand(id, projectsId, name, description, startAt,
-                                endAt, expectedProgress, currentProgress, createdAt, updatedAt);
-                        break;
-                    case DELETE:
-                        restCommand = new DeleteCommand(id, projectsId);
-                        break;
-                    default:
-                        Log.e(TAG, "Invalid REST method: methodEnum[" + methodEnum + "]");
-                        syncResult.databaseError = true;
-                        clearTransacting(id);
-                        continue;
+                try {
+                    switch (methodEnum) {
+                        case POST:
+                            restCommand = new InsertCommand(id, name, description, startAt,
+                                    endAt, expectedProgress, currentProgress, createdAt, updatedAt);
+                            break;
+                        case PUT:
+
+                                restCommand = new UpdateCommand(id, projectsId, name, description, startAt,
+                                        endAt, expectedProgress, currentProgress, createdAt, updatedAt);
+
+                            break;
+                        case DELETE:
+                            restCommand = new DeleteCommand(id, projectsId);
+                            break;
+                        default:
+                            Log.e(TAG, "Invalid REST method: methodEnum[" + methodEnum + "]");
+                            syncResult.databaseError = true;
+                            clearTransacting(id);
+                            continue;
+                    }
+                } catch (JSONException e) {
+                    Log.e(TAG, "JSON_EXCEPTION, Invalid REST method: methodEnum[" + methodEnum + "]");
+                    syncResult.databaseError = true;
+                    clearTransacting(id);
+                    continue;
                 }
 
                 if (!handleSync(restCommand, syncResult)) {
@@ -169,7 +182,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         }
 
         if (Log.isLoggable(TAG, Log.INFO)) {
-            Log.e(TAG, "leaving onPerformSync");
+            Log.i(TAG, "leaving onPerformSync");
         }
     }
 

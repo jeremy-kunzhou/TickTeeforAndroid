@@ -1,4 +1,4 @@
-package com.huhukun.tickteeforandroid.DAL;
+package com.huhukun.tickteeforandroid.auth;
 
 import android.accounts.AbstractAccountAuthenticator;
 import android.accounts.Account;

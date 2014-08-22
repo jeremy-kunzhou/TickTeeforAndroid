@@ -39,7 +39,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.d("ddd", Locale.getDefault().toString());
+        Log.d(TAG, Locale.getDefault().toString());
 
         setContentView(R.layout.activity_main);
         mProgressView = findViewById(R.id.loading_progress);
@@ -53,15 +53,6 @@ public class MainActivity extends ActionBarActivity {
         tvComplete.setText("0");
         tvOverdue.setText("0");
 
-        if (TickTeeAndroid.appSetting.getString(App_Constants.PREF_TOKEN, null) == null)
-        {
-            showIntroActivity();
-        }
-        else
-        {
-            syncProject();
-        }
-
 
     }
 
@@ -72,10 +63,6 @@ public class MainActivity extends ActionBarActivity {
         {
             showIntroActivity();
         }
-        else
-        {
-            syncProject();
-        }
     }
 
 
@@ -83,7 +70,6 @@ public class MainActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        this.prepareMenu(menu);
 
         return true;
     }
@@ -143,19 +129,23 @@ public class MainActivity extends ActionBarActivity {
     private void prepareMenu(Menu menu) {
         if (TickTeeAndroid.appSetting.getString(App_Constants.PREF_TOKEN, null) == null)
         {
-            Log.d(App_Constants.PREF_APP, "show log in");
             menu.findItem(R.id.menu_login).setVisible(true);
             menu.findItem(R.id.menu_logout).setVisible(false);
         }else
         {
-            Log.d(App_Constants.PREF_APP, "show log out");
             menu.findItem(R.id.menu_login).setVisible(false);
             menu.findItem(R.id.menu_logout).setVisible(true);
         }
     }
 
     private void settings(){
+        Log.d(TAG, "call settings");
+    }
 
+    public void newProjectAction(View view)
+    {
+        Intent intent = new Intent(this, ProjectNewActivity.class);
+        startActivity(intent);
     }
 
     private void login() {
@@ -177,7 +167,6 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void syncProject(){
-        showProgress(true);
         showProgress(true);
         mProjectsLoadingTask = new ProjectsLoadingTask();
         mProjectsLoadingTask.execute((Void) null);
@@ -227,9 +216,9 @@ public class MainActivity extends ActionBarActivity {
                 result = true;
             } catch (JSONException e)
             {
-                Log.d("JSON", e.toString());
+                Log.d(TAG, e.toString());
             } catch (ParseException e) {
-                Log.d("JSON", e.toString());
+                Log.d(TAG, e.toString());
             }
 
 

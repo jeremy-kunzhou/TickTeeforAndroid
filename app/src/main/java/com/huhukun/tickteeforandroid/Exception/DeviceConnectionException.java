@@ -1,4 +1,4 @@
-package com.huhukun.tickteeforandroid.Exception;
+package com.huhukun.tickteeforandroid.exception;
 
 import java.io.IOException;
 

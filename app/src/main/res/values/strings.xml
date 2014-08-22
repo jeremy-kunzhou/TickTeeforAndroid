@@ -46,6 +46,25 @@
     <string name="pref_syncConnectionTypes_default">pref_sdf_defa</string>
     <string name="song_error_title">song error title</string>
     <string name="song_remote_delete">song remot delete</string>
-    <string name="no_record_found">No Record Found!</string>
+    <string name="no_record_found">No Record ccc Found!</string>
+    <string name="edit">Edit</string>
+    <string name="share">Share</string>
+    <string name="name">Name</string>
+    <string name="discard">Discard</string>
+    <string name="done">Done</string>
+    <string name="title_project_edit">Edit</string>
+    <string name="change_saved">Changes Saved</string>
+    <string name="change_discard">Changes Discarded</string>
+    <string name="save_failure">Fail to save changes</string>
+    <string name="remove">Remove</string>
+    <string name="progress_saved">Progress Saved</string>
+    <string name="title_activity_project_new">ProjectNewActivity</string>
+    <string name="project_added">Project Added.</string>
+    <string name="invalid_input">Input Invalid</string>
+    <string name="project_added_fail">Fail to add project</string>
+    <string name="progress_removed">Project Removed.</string>
+    <string name="confirm_delete_project">Continue to remove this project?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
 </resources>

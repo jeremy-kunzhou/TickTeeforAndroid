@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.huhukun.tickteeforandroid" >
 
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -15,10 +14,14 @@
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <uses-feature android:name="android.hardware.location" android:required="false" />
-    <uses-feature android:name="android.hardware.wifi" android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.wifi"
+        android:required="false" />
 
     <application
         android:name=".TickTeeAndroid"
@@ -38,11 +41,13 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
-            android:parentActivityName=".MainActivity"
-            android:windowSoftInputMode="adjustResize|stateVisible" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.huhukun.tickteeforandroid.MainActivity" />
+            android:noHistory="true" >
+
+            <!-- android:parentActivityName=".MainActivity" -->
+            <!-- android:windowSoftInputMode="adjustResize|stateVisible" > -->
+            <!-- <meta-data -->
+            <!-- android:name="android.support.PARENT_ACTIVITY" -->
+            <!-- android:value="com.huhukun.tickteeforandroid.MainActivity" /> -->
         </activity>
         <activity
             android:name=".ProjectListActivity"
@@ -55,39 +60,67 @@
         <activity
             android:name=".ProjectDetailActivity"
             android:label="@string/title_project_detail"
-            android:parentActivityName=".ProjectListActivity" >
+            android:noHistory="true" >
+
+            <!-- android:parentActivityName=".ProjectListActivity" > -->
+            <!-- <meta-data -->
+            <!-- android:name="android.support.PARENT_ACTIVITY" -->
+            <!-- android:value="com.huhukun.tickteeforandroid.ProjectListActivity" /> -->
+        </activity>
+        <activity
+            android:name=".ProjectEditActivity"
+            android:label="@string/title_project_edit"
+            android:noHistory="true" >
+            android:parentActivityName=".ProjectDetailActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.huhukun.tickteeforandroid.ProjectListActivity" />
+                android:value="com.huhukun.tickteeforandroid.ProjectDetailActivity" />
         </activity>
         <activity
             android:name=".IntroActivity"
             android:label="@string/title_activity_intro"
-            android:parentActivityName=".MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.huhukun.tickteeforandroid.MainActivity" />
+            android:noHistory="true" >
+
+            <!-- android:parentActivityName=".MainActivity" > -->
+            <!-- <meta-data -->
+            <!-- android:name="android.support.PARENT_ACTIVITY" -->
+            <!-- android:value="com.huhukun.tickteeforandroid.MainActivity" /> -->
         </activity>
-        <service android:name=".DAL.AuthenticatorService">
+
+        <service android:name=".auth.AuthenticatorService" >
             <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator"/>
+                <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
-            <meta-data android:name="android.accounts.AccountAuthenticator"
+
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
         </service>
         <service
             android:name=".providers.SyncService"
             android:exported="true"
-            android:process=":sync">
+            android:process=":sync" >
             <intent-filter>
-                <action android:name="android.content.SyncAdapter"/>
+                <action android:name="android.content.SyncAdapter" />
             </intent-filter>
-            <meta-data android:name="android.content.SyncAdapter"
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
         </service>
+
         <provider
-            android:authorities="com.huhukun.ticktee"
-            android:name=".providers.TickteeProvider"></provider>
+            android:name=".providers.TickteeProvider"
+            android:authorities="com.huhukun.ticktee" />
+
+        <activity
+            android:name=".ProjectNewActivity"
+            android:label="@string/title_activity_project_new"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.huhukun.tickteeforandroid.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

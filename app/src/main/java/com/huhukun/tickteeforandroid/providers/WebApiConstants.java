@@ -1,9 +1,10 @@
-package com.huhukun.tickteeforandroid.network;
+package com.huhukun.tickteeforandroid.providers;
 
 /**
  * Created by kun on 19/08/2014.
  */
 public class WebApiConstants {
+    public static final String PARAM_PROJECT = "project";
     public static final String PARAM_PROJECTS_ID = "id";
     public static final String PARAM_NAME = "name";
     public static final String PARAM_START_AT = "start_at";

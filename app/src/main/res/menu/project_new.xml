@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ticktee="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.huhukun.tickteeforandroid.ProjectNewActivity" >
+    <item android:id="@+id/project_new_done"
+        android:title="@string/done"
+        android:icon="@drawable/ic_action_done"
+        ticktee:showAsAction="always" />
+    <item android:id="@+id/project_new_discard"
+        android:icon="@drawable/ic_action_edit"
+        android:title="@string/discard"
+        ticktee:showAsAction="never" />
+</menu>

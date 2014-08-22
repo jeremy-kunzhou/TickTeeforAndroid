@@ -2,15 +2,19 @@ package com.huhukun.tickteeforandroid;
 
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
+import android.accounts.AccountAuthenticatorResponse;
 import android.accounts.AccountManager;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -22,7 +26,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.huhukun.tickteeforandroid.network.WebApiConstants;
+import com.huhukun.tickteeforandroid.providers.WebApiConstants;
 import com.huhukun.utils.JSONParser;
 
 import org.apache.http.NameValuePair;
@@ -38,7 +42,7 @@ import java.util.List;
  * A login screen that offers login via email/password.
 
  */
-public class LoginActivity extends AccountAuthenticatorActivity{
+public class LoginActivity extends ActionBarActivity{
 
 
 
@@ -47,16 +51,27 @@ public class LoginActivity extends AccountAuthenticatorActivity{
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
-
+    private AccountAuthenticatorResponse mAccountAuthenticatorResponse = null;
+    private Bundle mResultBundle = null;
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
 
+    public final void setAccountAuthenticatorResult(Bundle result) {
+        mResultBundle = result;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mAccountAuthenticatorResponse =
+                getIntent().getParcelableExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE);
+
+        if (mAccountAuthenticatorResponse != null) {
+            mAccountAuthenticatorResponse.onRequestContinued();
+        }
         setContentView(R.layout.activity_login);
         setupActionBar();
 
@@ -102,10 +117,10 @@ public class LoginActivity extends AccountAuthenticatorActivity{
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void setupActionBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            // Show the Up button in the action bar.
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+
+        getSupportActionBar().setIcon(R.drawable.ic_launcher);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
     }
 
     /**
@@ -232,7 +247,6 @@ public class LoginActivity extends AccountAuthenticatorActivity{
 
 
 
-            boolean result = false;
             try {
                 JSONObject json = new JSONObject(JSONParser.getStringFromUrlViaPost(WebApiConstants.LOGIN_URL, null, loginInfo));
 
@@ -240,7 +254,7 @@ public class LoginActivity extends AccountAuthenticatorActivity{
                 if (!json.has("success")) {
                     String email = json.getJSONObject("user").getString("email");
                     String auth_token = json.getJSONObject("user").getString("auth_token");
-                    Log.d("JSON", email + auth_token);
+                    Log.d(TAG, email + auth_token);
 
                     final Intent res = new Intent();
                     res.putExtra(AccountManager.KEY_ACCOUNT_NAME, mEmail);
@@ -253,7 +267,7 @@ public class LoginActivity extends AccountAuthenticatorActivity{
                 }
             } catch (JSONException e)
             {
-                Log.d("JSON", e.toString());
+                Log.d(TAG, e.toString());
             }
 
 
@@ -282,9 +296,33 @@ public class LoginActivity extends AccountAuthenticatorActivity{
                 accountManager.addAccountExplicitly(account, accountPassword, null);
                 accountManager.setAuthToken(account, App_Constants.AUTH_TOKEN_TYPE, auth_token);
 
+//                ContentResolver.setIsSyncable(account, App_Constants.AUTHORITY, 1);
+//                ContentResolver.setSyncAutomatically(account, App_Constants.AUTHORITY, true);
+//                final Bundle bundle = new Bundle(1);
+//                bundle.putBoolean(ContentResolver.SYNC_EXTRAS_INITIALIZE, true);
+//                ContentResolver.addPeriodicSync(account, App_Constants.AUTHORITY, bundle, 1800);
+
+                ContentResolver.setIsSyncable(account, App_Constants.AUTHORITY, 1);
+                Bundle params = new Bundle();
+                params.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, false);
+                params.putBoolean(ContentResolver.SYNC_EXTRAS_DO_NOT_RETRY, false);
+                params.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, false);
+                ContentResolver.addPeriodicSync(account, App_Constants.AUTHORITY, params, 1800);
+                ContentResolver.setSyncAutomatically(account, App_Constants.AUTHORITY, true);
+                ContentResolver.requestSync(account,App_Constants.AUTHORITY,params);
 
                 setAccountAuthenticatorResult(intent.getExtras());
                 setResult(RESULT_OK, intent);
+                if (mAccountAuthenticatorResponse != null) {
+                    // send the result bundle back if set, otherwise send an error.
+                    if (mResultBundle != null) {
+                        mAccountAuthenticatorResponse.onResult(mResultBundle);
+                    } else {
+                        mAccountAuthenticatorResponse.onError(AccountManager.ERROR_CODE_CANCELED,
+                                "canceled");
+                    }
+                    mAccountAuthenticatorResponse = null;
+                }
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
@@ -297,6 +335,8 @@ public class LoginActivity extends AccountAuthenticatorActivity{
             mAuthTask = null;
             showProgress(false);
         }
+
+
     }
 }
 

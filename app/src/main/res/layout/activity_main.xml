@@ -44,7 +44,7 @@
             android:text="+"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-
+            android:onClick="newProjectAction"
             />
     </RelativeLayout>
 

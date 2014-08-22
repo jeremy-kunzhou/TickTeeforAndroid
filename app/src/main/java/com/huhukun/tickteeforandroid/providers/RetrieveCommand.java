@@ -3,13 +3,12 @@ package com.huhukun.tickteeforandroid.providers;
 import android.util.Log;
 
 import com.huhukun.tickteeforandroid.App_Constants;
-import com.huhukun.tickteeforandroid.Exception.DeviceConnectionException;
-import com.huhukun.tickteeforandroid.Exception.NetworkSystemException;
-import com.huhukun.tickteeforandroid.Exception.WebServiceFailedException;
+import com.huhukun.tickteeforandroid.exception.DeviceConnectionException;
+import com.huhukun.tickteeforandroid.exception.NetworkSystemException;
+import com.huhukun.tickteeforandroid.exception.WebServiceFailedException;
 import com.huhukun.tickteeforandroid.TickTeeAndroid;
 import com.huhukun.tickteeforandroid.model.Project;
 import com.huhukun.utils.MyDateUtils;
-import com.huhukun.tickteeforandroid.network.WebApiConstants;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -66,7 +65,7 @@ public class RetrieveCommand extends RESTCommand {
         httpHeaders.add(new BasicNameValuePair(WebApiConstants.HEADER_ACCESS_TOKEN_PARM, token));
 
         Long dlDate;
-        String dlDateParm;
+        String dlDateParam;
 
         // get the last download date from shared preferences
         dlDate = TickTeeAndroid.appSetting.getLong( App_Constants.PREFS_DOWNLOAD_DATE, 0 );
@@ -74,21 +73,21 @@ public class RetrieveCommand extends RESTCommand {
             dlDate = MyDateUtils.addToCurrent( Calendar.DAY_OF_MONTH, -30 );
         }
 
-        dlDateParm = MyDateUtils.dateToStringForWS( dlDate );
+        dlDateParam = MyDateUtils.dateToStringForWS( dlDate );
 
-        httpParams.add(new BasicNameValuePair(WebApiConstants.PARAM_DOWNLOAD_DATE, dlDateParm));
+        httpParams.add(new BasicNameValuePair(WebApiConstants.PARAM_DOWNLOAD_DATE, dlDateParam));
 
         try {
-            final HttpGet put;
+            final HttpGet get;
 
-            put = NetworkUtils.BUILDER(WebApiConstants.PROJECTS_URL)
+            get = NetworkUtils.BUILDER(WebApiConstants.PROJECTS_URL)
                     .setHeader(httpHeaders).setParams(httpParams).toGet();
 
 
             createHttpClient();
 
 
-            resp = mHttpClient.execute(put);
+            resp = mHttpClient.execute(get);
         } catch (IOException e) {
             String msg = "PUT method failed: Cannot connect to network.";
             Log.i(TAG, msg, e);

@@ -1,4 +1,4 @@
-package com.huhukun.tickteeforandroid.DAL;
+package com.huhukun.tickteeforandroid.auth;
 
 import android.app.Service;
 import android.content.Intent;

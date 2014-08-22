@@ -6,6 +6,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.UnsupportedEncodingException;
@@ -72,8 +73,12 @@ public class NetworkUtils extends RequestBuilder {
 
     }
 
-    public HttpPost toPost() throws UnsupportedEncodingException {
-        return this.buildPost(url, header, params);
+    public HttpPost toPost(String raw) throws UnsupportedEncodingException {
+        return this.buildPost(url, header, raw);
+    }
+
+    public HttpPut toPut(String raw) throws UnsupportedEncodingException {
+        return this.buildPut(url, header, raw);
     }
 
     public HttpGet toGet() throws UnsupportedEncodingException {
@@ -81,6 +86,6 @@ public class NetworkUtils extends RequestBuilder {
     }
 
     public HttpDelete toDelete() throws UnsupportedEncodingException {
-        return this.buildDelete(url, header, params);
+        return this.buildDelete(url, header);
     }
 }

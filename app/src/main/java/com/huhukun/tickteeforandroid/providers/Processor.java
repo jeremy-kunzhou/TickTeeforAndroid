@@ -70,10 +70,10 @@ public class Processor {
      */
     public void update( Project detail )
     {
+        Log.d(TAG, "Update detail projec tid "+detail.getProjectId());
         final Context context = TickTeeAndroid.getAppContext();
         final ContentResolver cr = context.getContentResolver();
         ContentValues values;
-
         Uri uri;
         uri = ContentUris.withAppendedId(
                 TickteeProvider.CONTENT_URI_PROJECTS_COMPLETED,
@@ -81,13 +81,19 @@ public class Processor {
 
         values = new ContentValues();
         int updateCount;
-
         values.put( TableConstants.COL_PROJECT_ID,
                 detail.getProjectId() );
         values.put( TableConstants.COL_NAME ,
                 detail.getName() );
         values.put( TableConstants.COL_DESCRIPTION,
                 detail.getDescription() );
+        values.put( TableConstants.COL_START_AT,  FormatHelper.serverDateFormatter.format(detail.getStartDate()));
+        values.put( TableConstants.COL_END_AT, FormatHelper.serverDateFormatter.format(detail.getEndDate()));
+        values.put( TableConstants.COL_EXPECTED_PROGRESS, detail.getExpectedProgress().toString() );
+        values.put( TableConstants.COL_CURRENT_PROGRESS, detail.getCurrentProgress().toString() );
+        values.put( TableConstants.COL_CREATED_AT,  FormatHelper.serverDateTimeFormatter.format(detail.getCreatedTime()));
+        values.put( TableConstants.COL_UPDATED_AT,  FormatHelper.serverDateTimeFormatter.format(detail.getLastUpdateTime()));
+
         values.put( TableConstants.COL_TRANSACTING,
                 App_Constants.TRANSACTION_COMPLETED );
         values.put( TableConstants.COL_RESULT ,

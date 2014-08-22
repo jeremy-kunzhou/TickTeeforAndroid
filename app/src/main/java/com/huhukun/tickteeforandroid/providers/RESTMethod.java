@@ -4,11 +4,11 @@ import android.util.Log;
 
 
 import com.huhukun.tickteeforandroid.App_Constants;
-import com.huhukun.tickteeforandroid.Exception.AuthenticationFailureException;
-import com.huhukun.tickteeforandroid.Exception.DeviceConnectionException;
-import com.huhukun.tickteeforandroid.Exception.NetworkSystemException;
-import com.huhukun.tickteeforandroid.Exception.WebServiceConnectionException;
-import com.huhukun.tickteeforandroid.Exception.WebServiceFailedException;
+import com.huhukun.tickteeforandroid.exception.AuthenticationFailureException;
+import com.huhukun.tickteeforandroid.exception.DeviceConnectionException;
+import com.huhukun.tickteeforandroid.exception.NetworkSystemException;
+import com.huhukun.tickteeforandroid.exception.WebServiceConnectionException;
+import com.huhukun.tickteeforandroid.exception.WebServiceFailedException;
 
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
@@ -79,6 +79,11 @@ public class RESTMethod {
             case HttpStatus.SC_OK:
                 if ( Log.isLoggable( TAG, Log.INFO) ) {
                     Log.i(TAG, "Request has been processed with success.");
+                }
+                break;
+            case HttpStatus.SC_CREATED:
+                if ( Log.isLoggable( TAG, Log.INFO) ) {
+                    Log.i(TAG, "Create or Update Request has been processed with success.");
                 }
                 break;
             case HttpStatus.SC_NOT_FOUND:

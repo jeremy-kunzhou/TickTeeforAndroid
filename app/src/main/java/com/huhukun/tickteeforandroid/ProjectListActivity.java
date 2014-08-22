@@ -2,8 +2,11 @@ package com.huhukun.tickteeforandroid;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.app.Activity;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.huhukun.tickteeforandroid.model.Project;
@@ -25,8 +28,8 @@ import com.huhukun.tickteeforandroid.model.Project;
  * {@link ProjectListFragment.Callbacks} interface
  * to listen for item selections.
  */
-public class ProjectListActivity extends Activity
-        implements ProjectListFragment.Callbacks<Project> {
+public class ProjectListActivity extends ActionBarActivity
+implements ProjectListFragment.Callbacks<Project> {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -39,7 +42,7 @@ public class ProjectListActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_list);
         // Show the Up button in the action bar.
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (findViewById(R.id.project_detail_container) != null) {
             // The detail container view will be present only in the
@@ -50,13 +53,14 @@ public class ProjectListActivity extends Activity
 
             // In two-pane mode, list items should be given the
             // 'activated' state when touched.
-            ((ProjectListFragment) getFragmentManager()
+            ((ProjectListFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.project_list))
                     .setActivateOnItemClick(true);
         }
 
         // TODO: If exposing deep links into your app, handle intents here.
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -89,7 +93,7 @@ public class ProjectListActivity extends Activity
             arguments.putString(ProjectDetailFragment.ARG_ITEM_ID, project.getId()+"");
             ProjectDetailFragment fragment = new ProjectDetailFragment();
             fragment.setArguments(arguments);
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .replace(R.id.project_detail_container, fragment)
                     .commit();
 

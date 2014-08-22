@@ -2,7 +2,7 @@ package com.huhukun.tickteeforandroid.model;
 
 import com.huhukun.tickteeforandroid.App_Constants;
 import com.huhukun.tickteeforandroid.TickTeeAndroid;
-import com.huhukun.tickteeforandroid.network.WebApiConstants;
+import com.huhukun.tickteeforandroid.providers.WebApiConstants;
 import com.huhukun.utils.JSONParser;
 
 import org.apache.http.NameValuePair;

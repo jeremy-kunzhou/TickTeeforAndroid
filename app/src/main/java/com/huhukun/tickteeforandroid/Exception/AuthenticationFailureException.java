@@ -1,4 +1,4 @@
-package com.huhukun.tickteeforandroid.Exception;
+package com.huhukun.tickteeforandroid.exception;
 
 /**
  * Created by kun on 19/08/2014.

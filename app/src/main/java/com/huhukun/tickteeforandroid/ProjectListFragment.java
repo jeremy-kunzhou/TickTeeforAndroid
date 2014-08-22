@@ -1,28 +1,25 @@
 package com.huhukun.tickteeforandroid;
 
 import android.app.Activity;
-import android.app.LoaderManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.ListFragment;
+import android.support.v4.app.ListFragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-import com.huhukun.tickteeforandroid.UILibrary.DatePickerFragment;
 import com.huhukun.tickteeforandroid.model.Project;
-import com.huhukun.tickteeforandroid.model.ProjectsManagementImpl;
 import com.huhukun.tickteeforandroid.providers.QueryTransactionInfo;
 import com.huhukun.tickteeforandroid.providers.TickteeProvider;
 
@@ -30,7 +27,7 @@ import java.text.ParseException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.*;
+import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants;
 
 /**
  * A list fragment representing a list of Projects. This fragment
@@ -138,6 +135,7 @@ public class ProjectListFragment extends ListFragment implements LoaderManager.L
 
         return cursorLoader;
     }
+
 
 
     @Override
@@ -309,7 +307,6 @@ public class ProjectListFragment extends ListFragment implements LoaderManager.L
     private class ListItemViewBinder implements SimpleCursorAdapter.ViewBinder {
         @Override
         public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-            Log.d(TAG, view.getId()+" "+columnIndex);
             switch (view.getId()) {
                 case R.id.row_project_title:
                     TextView tvName = (TextView) view;

@@ -3,10 +3,10 @@ package com.huhukun.tickteeforandroid.providers;
 import android.os.Bundle;
 
 import com.huhukun.tickteeforandroid.App_Constants;
-import com.huhukun.tickteeforandroid.Exception.AuthenticationFailureException;
-import com.huhukun.tickteeforandroid.Exception.DeviceConnectionException;
-import com.huhukun.tickteeforandroid.Exception.NetworkSystemException;
-import com.huhukun.tickteeforandroid.Exception.WebServiceFailedException;
+import com.huhukun.tickteeforandroid.exception.AuthenticationFailureException;
+import com.huhukun.tickteeforandroid.exception.DeviceConnectionException;
+import com.huhukun.tickteeforandroid.exception.NetworkSystemException;
+import com.huhukun.tickteeforandroid.exception.WebServiceFailedException;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.params.ConnManagerParams;
@@ -37,8 +37,8 @@ public abstract class RESTCommand {
      * Get the authToken used to authenticate the request to the REST API
      *
      * @return The authToken.
-     * @throws com.huhukun.tickteeforandroid.Exception.DeviceConnectionException Network connection is not available.
-     * @throws com.huhukun.tickteeforandroid.Exception.AuthenticationFailureException Failed to authenticate the request.
+     * @throws com.huhukun.tickteeforandroid.exception.DeviceConnectionException Network connection is not available.
+     * @throws com.huhukun.tickteeforandroid.exception.AuthenticationFailureException Failed to authenticate the request.
      * Probably due to invalid credentials.
      */
     protected String getAuthToken()
@@ -72,8 +72,8 @@ public abstract class RESTCommand {
      *
      * @return The HttpStatus code.
      * @throws DeviceConnectionException Network connection is not available.
-     * @throws com.huhukun.tickteeforandroid.Exception.NetworkSystemException Error configuring the network connection.
-     * @throws com.huhukun.tickteeforandroid.Exception.WebServiceFailedException Error configuring the http request or
+     * @throws com.huhukun.tickteeforandroid.exception.NetworkSystemException Error configuring the network connection.
+     * @throws com.huhukun.tickteeforandroid.exception.WebServiceFailedException Error configuring the http request or
      * an invalid json response has been returned.
      * @throws AuthenticationFailureException Failed to authenticate the request.
      */

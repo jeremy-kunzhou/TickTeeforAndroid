@@ -3,13 +3,12 @@ package com.huhukun.tickteeforandroid.providers;
 import android.util.Log;
 
 import com.huhukun.tickteeforandroid.App_Constants;
-import com.huhukun.tickteeforandroid.Exception.DeviceConnectionException;
-import com.huhukun.tickteeforandroid.Exception.NetworkSystemException;
-import com.huhukun.tickteeforandroid.Exception.WebServiceFailedException;
+import com.huhukun.tickteeforandroid.exception.DeviceConnectionException;
+import com.huhukun.tickteeforandroid.exception.NetworkSystemException;
+import com.huhukun.tickteeforandroid.exception.WebServiceFailedException;
 import com.huhukun.tickteeforandroid.TickTeeAndroid;
 import com.huhukun.tickteeforandroid.model.Project;
 import com.huhukun.utils.MyDateUtils;
-import com.huhukun.tickteeforandroid.network.WebApiConstants;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -23,6 +22,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class DeleteCommand extends RESTCommand {
@@ -62,16 +62,16 @@ public class DeleteCommand extends RESTCommand {
         httpHeaders.add(new BasicNameValuePair(WebApiConstants.HEADER_ACCESS_TOKEN_PARM, token));
 
         try {
-            final HttpDelete put;
+            final HttpDelete delete;
 
-            put = NetworkUtils.BUILDER(WebApiConstants.PROJECT_URL, projectId)
+            delete = NetworkUtils.BUILDER(WebApiConstants.PROJECT_URL, projectId)
                     .setHeader(httpHeaders).toDelete();
 
 
             createHttpClient();
 
 
-            resp = mHttpClient.execute(put);
+            resp = mHttpClient.execute(delete);
         } catch (IOException e) {
             String msg = "DELETE method failed: Cannot connect to network.";
             Log.i(TAG, msg, e);
@@ -101,9 +101,10 @@ public class DeleteCommand extends RESTCommand {
                 detail = new Project(jsonObject);
                 detail.setRequestId(requestId);
                 detail.setHttpResult(statusCode);
-                detail.setTransDate(
-                        MyDateUtils.stringToDateForWS(
-                                jsonObject.getString(WebApiConstants.PARAM_DATE_UPDATED)));
+//                detail.setTransDate(
+//                        MyDateUtils.stringToDateForWS(
+//                                jsonObject.getString(WebApiConstants.PARAM_DATE_UPDATED)));
+                detail.setTransDate(new Date());
                 Processor.getInstance().delete(detail.getRequestId());
 
             } catch ( JSONException e ) {
