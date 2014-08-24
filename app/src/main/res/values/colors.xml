@@ -5,4 +5,8 @@
     <color name="progress_gray_dark">#FF383838</color>
 
     <color name="main_color">#00BFFF</color>
+    <color name="normal_status">#87CEEB</color>
+    <color name="in_progress_status">#32CD32</color>
+    <color name="overdue_status">#DC143C</color>
+    <color name="complete_status">#6A5ACD</color>
 </resources>

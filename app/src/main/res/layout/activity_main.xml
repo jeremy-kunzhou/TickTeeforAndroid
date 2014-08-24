@@ -62,7 +62,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:background="#87CEEB"
+                android:background="@color/normal_status"
                 android:onClick="llTotalClick">
                 <TextView
                     android:layout_width="0dp"
@@ -95,13 +95,13 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#32CD32"
+                android:background="@color/in_progress_status"
                 android:layout_marginTop="5sp">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
-                    android:text="@string/on_progress"
+                    android:text="@string/in_progress"
                     android:layout_weight="0.6"
                     android:textSize="@dimen/summary_text_size"
                     android:gravity="center_vertical|start"
@@ -130,7 +130,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/linearLayout"
-                android:background="#DC143C"
+                android:background="@color/overdue_status"
                 android:layout_marginTop="5sp">
 
                 <TextView
@@ -165,7 +165,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/linearLayout2"
-                android:background="#6A5ACD"
+                android:background="@color/complete_status"
                 android:layout_marginTop="5sp">
 
                 <TextView

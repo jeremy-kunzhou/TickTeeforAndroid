@@ -12,6 +12,7 @@ import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.View;
@@ -90,7 +91,7 @@ public class ProjectListFragment extends ListFragment implements LoaderManager.L
 
     private long mUpdateId = 0;
 
-    SimpleCursorAdapter cursorAdapter;
+    CursorAdapter cursorAdapter;
     LoaderManager loaderManager;
     CursorLoader cursorLoader;
 
@@ -141,7 +142,12 @@ public class ProjectListFragment extends ListFragment implements LoaderManager.L
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor)
     {
-        if(cursorAdapter!=null && cursor!=null) {
+        if(cursor!=null) {
+
+
+            cursorAdapter =
+                    new ProjectCursorAdapter(getActivity(),cursor, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+            setListAdapter(cursorAdapter);
             cursorAdapter.swapCursor(cursor); //swap the new cursor in.
         }
     }
@@ -187,15 +193,6 @@ public class ProjectListFragment extends ListFragment implements LoaderManager.L
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
-        cursorAdapter =
-                new SimpleCursorAdapter(getActivity(), R.layout.row_project_list,
-                        null, adapterColumns, to, 0);
-
-        cursorAdapter.setViewBinder( new ListItemViewBinder() );
-        setListAdapter(cursorAdapter);
 
         loaderManager = getLoaderManager();
         loaderManager.initLoader(GET_FILTERED_SONGS, null, this);
@@ -303,19 +300,6 @@ public class ProjectListFragment extends ListFragment implements LoaderManager.L
         mActivatedPosition = position;
     }
 
-
-    private class ListItemViewBinder implements SimpleCursorAdapter.ViewBinder {
-        @Override
-        public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-            switch (view.getId()) {
-                case R.id.row_project_title:
-                    TextView tvName = (TextView) view;
-                    tvName.setText(cursor.getString(columnIndex));
-                    return true;
-            }
-            return false;
-        }
-    }
 
     /**
      * Receives and displays an error message if the REST request fails.

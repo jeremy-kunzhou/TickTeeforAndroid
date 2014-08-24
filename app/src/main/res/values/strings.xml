@@ -23,7 +23,7 @@
     <string name="menu_logout">Sign out</string>
     <string name="projects_summary">Project Summary</string>
     <string name="total_projects">Total:</string>
-    <string name="on_progress">On Progress</string>
+    <string name="in_progress">In Progress</string>
     <string name="overdue">Overdue</string>
     <string name="complete">Complete</string>
     <string name="title_item_list">Items</string>
@@ -66,5 +66,6 @@
     <string name="confirm_delete_project">Continue to remove this project?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="unknown">Unknown</string>
 
 </resources>
