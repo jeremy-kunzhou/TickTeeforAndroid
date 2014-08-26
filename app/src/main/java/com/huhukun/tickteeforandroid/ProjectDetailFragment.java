@@ -1,8 +1,5 @@
 package com.huhukun.tickteeforandroid;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,20 +11,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.huhukun.tickteeforandroid.UILibrary.DatePickerFragment;
 import com.huhukun.tickteeforandroid.UILibrary.SeekArc;
 import com.huhukun.tickteeforandroid.model.Project;
 import com.huhukun.tickteeforandroid.providers.QueryTransactionInfo;
 import com.huhukun.tickteeforandroid.providers.TickteeProvider;
+import com.huhukun.tickteeforandroid.providers.WebApiConstants;
 import com.huhukun.utils.FormatHelper;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.util.Calendar;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -64,8 +58,6 @@ public class ProjectDetailFragment extends Fragment
     private SeekArc seekArc;
 
     private String sqlId;
-    private LoaderManager loaderManager;
-    private CursorLoader cursorLoader;
     private int startPercent = 0;
     private ExecutorService executorPool;
 
@@ -158,7 +150,7 @@ public class ProjectDetailFragment extends Fragment
             if (sqlId == null) {
                 sqlId = getArguments().getString(ARG_ITEM_ID);
             }
-            loaderManager = getLoaderManager();
+            LoaderManager loaderManager = getLoaderManager();
             loaderManager.initLoader(GET_PROJECT_BY_ID, null, this);
         }
 
@@ -169,7 +161,7 @@ public class ProjectDetailFragment extends Fragment
         // Mark as pending so the SyncAdapter knows to request
         // new data from the REST API.
         QueryTransactionInfo.getInstance().markPending();
-
+        CursorLoader cursorLoader;
         switch (id) {
             case GET_PROJECT_BY_ID:
                 Uri baseUri =
@@ -240,7 +232,7 @@ public class ProjectDetailFragment extends Fragment
         if(mItem!=null)
         {
             mItem.setCurrentProgress(new BigDecimal(tvSeekArcPercentage.getText().toString()));
-            UpdateTask task = new UpdateTask(mItem.getId(), mItem);
+            WebApiConstants.UpdateTask task = new WebApiConstants.UpdateTask(mItem.getId(), mItem);
             executorPool.submit(task);
         }
     }
@@ -249,7 +241,7 @@ public class ProjectDetailFragment extends Fragment
         if(mItem !=null)
         {
 
-            DeleteTask task = new DeleteTask(mItem.getId());
+            WebApiConstants.DeleteTask task = new WebApiConstants.DeleteTask(mItem.getId());
             executorPool.submit(task);
             return 1;
         }

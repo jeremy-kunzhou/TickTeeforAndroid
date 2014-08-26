@@ -33,7 +33,6 @@
                 android:layout_weight="1"
                 android:padding="10sp"
                 android:gravity="start|top"
-                android:text="fdddfdf dsf ddfdf"
                 android:textColor="#000000" />
 
 
@@ -82,7 +81,6 @@
                     android:padding="10sp"
                     android:gravity="center_vertical|start"
                     android:id="@+id/project_edit_start_at"
-                    android:text="fdd"
                     android:textColor="#000000" />
 
                 <TextView
@@ -93,7 +91,6 @@
                     android:padding="10sp"
                     android:gravity="center_vertical|start"
                     android:id="@+id/project_edit_end_at"
-                    android:text="fdd"
                     android:textColor="#000000" />
             </LinearLayout>
 
@@ -119,7 +116,6 @@
                 android:layout_weight="1"
                 android:padding="10sp"
                 android:gravity="start|top"
-                android:text="fdddfdf dsf f\n ddfdf"
                 android:textColor="#000000" />
 
         </LinearLayout>

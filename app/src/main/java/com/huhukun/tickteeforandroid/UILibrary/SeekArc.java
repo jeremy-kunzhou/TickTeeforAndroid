@@ -78,7 +78,7 @@ public class SeekArc extends View {
     /**
      * The Width of the background arc for the SeekArc
      */
-    private int mArcWidth = 2;
+    private int mArcWidth = 4;
 
     /**
      * The Angle to start drawing this Arc from
@@ -191,7 +191,7 @@ public class SeekArc extends View {
         int progressColor = res.getColor(android.R.color.holo_green_light);
         int finishedProgressColor = res.getColor(android.R.color.holo_blue_light);
         int expectedProgressColor = res.getColor(android.R.color.holo_red_light);
-        int thumbHalfheight = 0;
+        int thumbHalfHeight = 0;
         int thumbHalfWidth = 0;
         mThumb = res.getDrawable(R.drawable.seek_arc_control_selector);
         // Convert progress width to pixels for current density
@@ -210,10 +210,10 @@ public class SeekArc extends View {
 
 
 
-            thumbHalfheight = (int) mThumb.getIntrinsicHeight() / 2;
+            thumbHalfHeight = (int) mThumb.getIntrinsicHeight() / 2;
             thumbHalfWidth = (int) mThumb.getIntrinsicWidth() / 2;
-            mThumb.setBounds(-thumbHalfWidth, -thumbHalfheight, thumbHalfWidth,
-                    thumbHalfheight);
+            mThumb.setBounds(-thumbHalfWidth, -thumbHalfHeight, thumbHalfWidth,
+                    thumbHalfHeight);
 
             mMax = a.getInteger(R.styleable.SeekArc_max, mMax);
             mProgress = a.getInteger(R.styleable.SeekArc_progress, mProgress);

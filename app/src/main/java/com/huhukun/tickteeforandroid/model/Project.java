@@ -20,6 +20,11 @@ import static com.huhukun.tickteeforandroid.providers.WebApiConstants.*;
  */
 public class Project {
     private static final String TAG = App_Constants.APP_TAG +"Project";
+    public static final int TOTAL_PROJECTS = 1;
+    public static final int IN_PROGRESS_PROJECTS = 2;
+    public static final int OVERDUE_PROJECTS = 3;
+    public static final int COMPLETE_PROJECTS = 4;
+
     public void setSyncMode(SyncMode syncMode) {
         this.syncMode = syncMode;
     }

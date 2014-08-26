@@ -6,8 +6,12 @@ import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,25 +20,45 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.huhukun.tickteeforandroid.model.ProjectsManagementImpl;
+import com.huhukun.tickteeforandroid.model.Project;
+import com.huhukun.tickteeforandroid.model.SqlOpenHelper;
+import com.huhukun.tickteeforandroid.providers.TickteeProvider;
 
-import org.json.JSONException;
-
-import java.text.ParseException;
 import java.util.Locale;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
+
+
+
+    private static final String TAG = App_Constants.APP_TAG +"MainActivity";
+    private static final String[] loaderColumns = new String[] {
+            SqlOpenHelper.TableConstants._ID,
+            SqlOpenHelper.TableConstants.COL_PROJECT_ID,
+            SqlOpenHelper.TableConstants.COL_NAME,
+            SqlOpenHelper.TableConstants.COL_DESCRIPTION,
+            SqlOpenHelper.TableConstants.COL_START_AT,
+            SqlOpenHelper.TableConstants.COL_END_AT,
+            SqlOpenHelper.TableConstants.COL_EXPECTED_PROGRESS,
+            SqlOpenHelper.TableConstants.COL_CURRENT_PROGRESS,
+            SqlOpenHelper.TableConstants.COL_CREATED_AT,
+            SqlOpenHelper.TableConstants.COL_UPDATED_AT,
+            SqlOpenHelper.TableConstants.COL_TRANSACTING,
+            SqlOpenHelper.TableConstants.COL_STATUS,
+            SqlOpenHelper.TableConstants.COL_RESULT,
+            SqlOpenHelper.TableConstants.COL_TRANS_DATE };
 
     private TextView tvTotal;
-    private TextView tvOnProgress;
+    private TextView tvInProgress;
     private TextView tvOverdue;
     private TextView tvComplete;
     private View mProgressView;
-    private ProjectsLoadingTask mProjectsLoadingTask = null;
 
-    private static final String TAG = App_Constants.APP_TAG +"MainActivity";
+    int total_count = 0;
+    int in_progress_count = 0;
+    int overdue_count = 0;
+    int complete_count = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,12 +68,12 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         mProgressView = findViewById(R.id.loading_progress);
         tvTotal = (TextView) findViewById(R.id.tvTotal);
-        tvOnProgress = (TextView) findViewById(R.id.tvOnProgress);
+        tvInProgress = (TextView) findViewById(R.id.tvInProgress);
         tvOverdue = (TextView) findViewById(R.id.tvOverdue);
         tvComplete = (TextView) findViewById(R.id.tvComplete);
 
         tvTotal.setText("0");
-        tvOnProgress.setText("0");
+        tvInProgress.setText("0");
         tvComplete.setText("0");
         tvOverdue.setText("0");
 
@@ -62,6 +86,11 @@ public class MainActivity extends ActionBarActivity {
         if (TickTeeAndroid.appSetting.getString(App_Constants.PREF_TOKEN, null) == null)
         {
             showIntroActivity();
+        }
+        else
+        {
+            LoaderManager loaderManager = getSupportLoaderManager();
+            loaderManager.initLoader(0, null, this);
         }
     }
 
@@ -161,15 +190,25 @@ public class MainActivity extends ActionBarActivity {
         startActivity(intent);
     }
 
-    public void llTotalClick(View view){
+    public void viewProjects(View view){
+        int view_projects_type = 0;
+        switch (view.getId()){
+            case R.id.total_layout:
+                view_projects_type = Project.TOTAL_PROJECTS;
+                break;
+            case R.id.in_progress_layout:
+                view_projects_type = Project.IN_PROGRESS_PROJECTS;
+                break;
+            case R.id.overdue_layout:
+                view_projects_type = Project.OVERDUE_PROJECTS;
+                break;
+            case R.id.complete_layout:
+                view_projects_type = Project.COMPLETE_PROJECTS;
+                break;
+        }
         Intent intent = new Intent(this, ProjectListActivity.class);
+        intent.putExtra(ProjectListActivity.PROJECT_STATUS, view_projects_type);
         startActivity(intent);
-    }
-
-    private void syncProject(){
-        showProgress(true);
-        mProjectsLoadingTask = new ProjectsLoadingTask();
-        mProjectsLoadingTask.execute((Void) null);
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
@@ -198,49 +237,55 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+
+        Uri  baseUri = TickteeProvider.CONTENT_URI;
 
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class ProjectsLoadingTask extends AsyncTask<Void, Void, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
+        CursorLoader cursorLoader = new CursorLoader(
+                        this, baseUri, loaderColumns, null, null, null);
 
 
-            boolean result = false;
-            try {
-                ProjectsManagementImpl.getInstance().SyncProjects();
-                result = true;
-            } catch (JSONException e)
-            {
-                Log.d(TAG, e.toString());
-            } catch (ParseException e) {
-                Log.d(TAG, e.toString());
-            }
 
-
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            showProgress(false);
-
-            if (success) {
-
-            } else {
-                showWarning("Sync Fails");
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            showProgress(false);
-        }
+        return cursorLoader;
     }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        total_count = 0;
+        in_progress_count = 0;
+        overdue_count = 0;
+        complete_count = 0;
+        cursor.moveToFirst();
+        while (cursor.isAfterLast() == false) {
+            total_count ++;
+            if(cursor.getInt(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_CURRENT_PROGRESS))== 100)
+            {
+                complete_count ++;
+            }
+            else if (cursor.getInt(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_CURRENT_PROGRESS))< cursor.getInt(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_EXPECTED_PROGRESS)))
+            {
+                overdue_count ++;
+                in_progress_count ++;
+            }
+            else{
+                in_progress_count ++;
+            }
+            cursor.moveToNext();
+        }
+        tvTotal.setText(total_count+"");
+        tvInProgress.setText(in_progress_count+"");
+        tvOverdue.setText(overdue_count+"");
+        tvComplete.setText(complete_count+"");
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+
+    }
+
+
 
 
 }

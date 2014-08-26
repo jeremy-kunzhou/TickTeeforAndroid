@@ -13,11 +13,9 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.huhukun.tickteeforandroid.model.Project;
@@ -47,6 +45,7 @@ public class ProjectListFragment extends ListFragment implements LoaderManager.L
      */
     private static final String STATE_ACTIVATED_POSITION = "activated_position";
 
+    private int projects_type;
     /**
      * The fragment's current callback object, which is notified of list item
      * clicks.
@@ -60,7 +59,7 @@ public class ProjectListFragment extends ListFragment implements LoaderManager.L
 
     private static final String TAG = App_Constants.APP_TAG +"ProjectListFragment";
 
-    private static final int GET_FILTERED_SONGS = 1;
+    private static final int GET_PROJECTS_BY_STATUS = 1;
 
     private static final String[] loaderColumns = new String[] {
             TableConstants._ID,
@@ -111,18 +110,20 @@ public class ProjectListFragment extends ListFragment implements LoaderManager.L
         QueryTransactionInfo.getInstance().markPending();
 
         switch (id) {
-            case GET_FILTERED_SONGS:
+            case GET_PROJECTS_BY_STATUS:
                 Uri baseUri;
-                String searchTitle = null;
 
-//                searchTitle = titleText.getText().toString();
+                switch (projects_type){
+                    case Project.TOTAL_PROJECTS:
+                        // total projects
+                        baseUri = TickteeProvider.CONTENT_URI;
+                        break;
+                    default:
+                        // get projects in status of in progress (2), overdue(3), complete(4)
+                        baseUri =
+                                Uri.withAppendedPath(TickteeProvider.CONTENT_URI_STATUS,
+                                        projects_type+"");
 
-                if ( searchTitle == null || searchTitle.trim().length() == 0 ) {
-                    baseUri = TickteeProvider.CONTENT_URI;
-                } else {
-                    baseUri =
-                            Uri.withAppendedPath(TickteeProvider.CONTENT_URI_FILTERED,
-                                    Uri.encode(searchTitle) );
                 }
 
                 cursorLoader = new CursorLoader(
@@ -193,9 +194,10 @@ public class ProjectListFragment extends ListFragment implements LoaderManager.L
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.projects_type = getActivity().getIntent().getIntExtra(ProjectListActivity.PROJECT_STATUS, 1);
 
         loaderManager = getLoaderManager();
-        loaderManager.initLoader(GET_FILTERED_SONGS, null, this);
+        loaderManager.initLoader(GET_PROJECTS_BY_STATUS, null, this);
 //
 //        ListAdapter projectsAdapter = new ProjectListAdapter(getActivity(),
 //                R.layout.row_project_list, ProjectsManagementImpl.getInstance().getAllProjects());
@@ -205,7 +207,6 @@ public class ProjectListFragment extends ListFragment implements LoaderManager.L
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         // Restore the previously serialized activated item position.
         if (savedInstanceState != null
                 && savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {

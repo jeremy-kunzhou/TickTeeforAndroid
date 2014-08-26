@@ -50,6 +50,11 @@ public class TickteeProvider extends ContentProvider {
     private static final int PROJECTS_COMPLETED_ID = 6;
     private static final int PROJECTS_QUERY_COMPLETED_ID = 7;
     private static final int PROJECTS_FILTERED = 8;
+    private static final int PROJECTS_STATUS = 9;
+
+    private static final int PROJECTS_STATUS_IN_PROGRESS = 2;
+    private static final int PROJECTS_STATUS_OVERDUE = 3;
+    private static final int PROJECTS_STATUS_COMPLETE = 4;
 
     public static final Uri CONTENT_URI = Uri.parse("content://"
             + AUTHORITY + "/projects");
@@ -63,6 +68,8 @@ public class TickteeProvider extends ContentProvider {
             + AUTHORITY + "/projects/query-completed");
     public static final Uri CONTENT_URI_FILTERED = Uri.parse("content://"
             + AUTHORITY + "/projects/filtered");
+    public static final Uri CONTENT_URI_STATUS = Uri.parse("content://"
+            + AUTHORITY + "/projects/status");
 
     @Override
     public boolean onCreate() {
@@ -86,6 +93,9 @@ public class TickteeProvider extends ContentProvider {
                 "projects/query-completed/#", PROJECTS_QUERY_COMPLETED_ID);
         uriMatcher.addURI(AUTHORITY,
                 "projects/filtered/*", PROJECTS_FILTERED);
+        uriMatcher.addURI(AUTHORITY,
+                "projects/status/*", PROJECTS_STATUS);
+
         return true;
     }
 
@@ -99,7 +109,6 @@ public class TickteeProvider extends ContentProvider {
         if ( Log.isLoggable(TAG, Log.INFO) ) {
             Log.i( TAG, "query uri[" + uri + "]" );
         }
-
         switch (uriMatcher.match(uri)) {
             case PROJECTS:
 
@@ -126,7 +135,7 @@ public class TickteeProvider extends ContentProvider {
                 break;
             case PROJECTS_ID:
 
-                // Retrieve a specific song by ID.
+                // Retrieve a specific project by ID.
 
                 qb.appendWhere( SqlOpenHelper.TableConstants._ID );
                 qb.appendWhere( "=" );
@@ -181,6 +190,26 @@ public class TickteeProvider extends ContentProvider {
                 }
 
                 break;
+            case PROJECTS_STATUS:
+                switch (Integer.parseInt(uri.getPathSegments().get(2))){
+                    case PROJECTS_STATUS_IN_PROGRESS:
+                        qb.appendWhere(TableConstants.COL_CURRENT_PROGRESS);
+                        qb.appendWhere(" != 100");
+                        break;
+                    case PROJECTS_STATUS_OVERDUE:
+                        qb.appendWhere(TableConstants.COL_CURRENT_PROGRESS);
+                        qb.appendWhere(" < ");
+                        qb.appendWhere(TableConstants.COL_EXPECTED_PROGRESS);
+                        break;
+                    case PROJECTS_STATUS_COMPLETE:
+                        qb.appendWhere(TableConstants.COL_CURRENT_PROGRESS);
+                        qb.appendWhere(" = 100");
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Unknown Status  " + uri.getPathSegments().get(2));
+
+                }
+                break;
             default:
                 Log.e( TAG, "Unknown uri[" + uri + "]" );
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -206,11 +235,11 @@ public class TickteeProvider extends ContentProvider {
 
     @Override
     public String getType(Uri uri) {
-
         switch (uriMatcher.match(uri)) {
             case PROJECTS:
             case PROJECTS_PENDING:
             case PROJECTS_FILTERED:
+            case PROJECTS_STATUS:
                 return CONTENT_TYPE;
             case PROJECTS_ID:
             case PROJECTS_PENDING_ID:
@@ -349,7 +378,6 @@ public class TickteeProvider extends ContentProvider {
                     keyWithSelection.append( selection );
                     keyWithSelection.append( ")" );
                 }
-
                 // Virgil Dobjanschi: "Delete breaks the contract."
                 count = db.update(TableConstants.TABLE_NAME, values,
                         keyWithSelection.toString(), selectionArgs);

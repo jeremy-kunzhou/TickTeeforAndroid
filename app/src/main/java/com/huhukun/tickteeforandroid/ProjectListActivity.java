@@ -31,6 +31,8 @@ import com.huhukun.tickteeforandroid.model.Project;
 public class ProjectListActivity extends ActionBarActivity
 implements ProjectListFragment.Callbacks<Project> {
 
+    public static final String PROJECT_STATUS = "projects_status";
+
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.

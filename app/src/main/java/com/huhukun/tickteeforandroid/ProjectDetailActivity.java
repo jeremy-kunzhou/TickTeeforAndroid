@@ -45,13 +45,12 @@ public class ProjectDetailActivity extends ActionBarActivity {
         // http://developer.android.com/guide/components/fragments.html
         //
         if (savedInstanceState == null) {
-            // if ProjectDetialFragment is Fragment
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(ProjectDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(ProjectDetailFragment.ARG_ITEM_ID));
             item_id = getIntent().getStringExtra(ProjectDetailFragment.ARG_ITEM_ID);
+            arguments.putString(ProjectDetailFragment.ARG_ITEM_ID,item_id);
+
             fragment = new ProjectDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()

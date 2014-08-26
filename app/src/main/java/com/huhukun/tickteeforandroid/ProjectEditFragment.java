@@ -1,36 +1,28 @@
 package com.huhukun.tickteeforandroid;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.print.PrintJob;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.app.NavUtils;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.huhukun.tickteeforandroid.UILibrary.DatePickerFragment;
-import com.huhukun.tickteeforandroid.UILibrary.SeekArc;
+
 import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.*;
 
 import com.huhukun.tickteeforandroid.model.Project;
 import com.huhukun.tickteeforandroid.providers.QueryTransactionInfo;
 import com.huhukun.tickteeforandroid.providers.TickteeProvider;
+import com.huhukun.tickteeforandroid.providers.WebApiConstants;
 import com.huhukun.utils.FormatHelper;
 
 import java.math.BigDecimal;
@@ -179,7 +171,7 @@ public class ProjectEditFragment extends Fragment
         mItem.setDescription(etDescription.getText().toString().trim());
         mItem.setStartDate(FormatHelper.shortLocalDateFormatter.parse(tvStartAt.getText().toString()));
         mItem.setEndDate(FormatHelper.shortLocalDateFormatter.parse(tvEndAt.getText().toString()));
-        UpdateTask task = new UpdateTask(mItem.getId(), mItem);
+        WebApiConstants.UpdateTask task = new WebApiConstants.UpdateTask(mItem.getId(), mItem);
         executorPool.submit(task);
     }
 
@@ -216,7 +208,7 @@ public class ProjectEditFragment extends Fragment
             Date date = new Date();
             project.setCreatedTime(date);
             project.setLastUpdateTime(date);
-            InsertTask task = new InsertTask(project);
+            WebApiConstants.InsertTask task = new WebApiConstants.InsertTask(project);
             executorPool.submit(task);
             return 1;
         }

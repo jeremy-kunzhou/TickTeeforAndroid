@@ -63,7 +63,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:background="@color/normal_status"
-                android:onClick="llTotalClick">
+                android:id="@+id/total_layout"
+                android:onClick="viewProjects">
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
@@ -96,6 +97,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/in_progress_status"
+                android:id="@+id/in_progress_layout"
+                android:onClick="viewProjects"
                 android:layout_marginTop="5sp">
 
                 <TextView
@@ -116,7 +119,7 @@
                     android:layout_height="fill_parent"
                     android:layout_margin="0dp"
 
-                    android:id="@+id/tvOnProgress"
+                    android:id="@+id/tvInProgress"
                     android:text="200"
                     android:textSize="@dimen/summary_text_size"
                     android:gravity="center_vertical|end"
@@ -129,7 +132,8 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/linearLayout"
+                android:id="@+id/overdue_layout"
+                android:onClick="viewProjects"
                 android:background="@color/overdue_status"
                 android:layout_marginTop="5sp">
 
@@ -164,7 +168,8 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/linearLayout2"
+                android:id="@+id/complete_layout"
+                android:onClick="viewProjects"
                 android:background="@color/complete_status"
                 android:layout_marginTop="5sp">
 
