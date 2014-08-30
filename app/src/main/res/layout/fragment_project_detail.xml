@@ -24,7 +24,7 @@
             seekarc:rotation="180"
             seekarc:startAngle="30"
             seekarc:sweepAngle="360"
-            seekarc:touchInside="true" />
+            seekarc:touchInside="false" />
 
         <TextView
             android:id="@+id/seekArcProgress"
@@ -43,7 +43,28 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="40sp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/new_progress"
+                android:padding="5sp"
+                android:background="@drawable/bottom_border"
+                android:textColor="@color/main_color"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:gravity="bottom" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="40sp"
+                android:inputType="number"
+                android:ems="10"
+                android:id="@+id/project_detail_new_progress" />
 
             <TextView
                 android:layout_width="fill_parent"
@@ -71,7 +92,8 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+                android:layout_height="fill_parent"
+                android:id="@+id/project_detail_start_end_date_labels">
 
                 <TextView
                     android:layout_width="fill_parent"
@@ -103,7 +125,8 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+                android:layout_height="fill_parent"
+                android:id="@+id/project_detail_start_end_date_values">
 
                 <TextView
                     android:layout_width="fill_parent"

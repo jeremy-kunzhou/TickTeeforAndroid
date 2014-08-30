@@ -8,7 +8,6 @@ import com.huhukun.tickteeforandroid.exception.NetworkSystemException;
 import com.huhukun.tickteeforandroid.exception.WebServiceFailedException;
 import com.huhukun.tickteeforandroid.TickTeeAndroid;
 import com.huhukun.tickteeforandroid.model.Project;
-import com.huhukun.utils.MyDateUtils;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -25,15 +24,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_ALERT_TYPE;
 import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_CREATED_AT;
 import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_CURRENT_PROGRESS;
 import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_DESCRIPTION;
 import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_END_AT;
 import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_EXPECTED_PROGRESS;
+import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_INIT_PROGRESS;
+import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_IS_CONSUMED;
+import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_IS_DECIMAL_UNIT;
 import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_NAME;
 import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_PROJECT;
-import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_PROJECTS_ID;
 import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_START_AT;
+import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_TARGET;
+import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_UNIT;
 import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_UPDATED_AT;
 
 public class InsertCommand extends RESTCommand {
@@ -45,7 +49,9 @@ public class InsertCommand extends RESTCommand {
 
     public InsertCommand( long requestId, String name, String description, String startAt,
                           String endAt, String expectedProgress, String currentProgress,
-                          String createdAt, String updatedAt ) throws JSONException {
+                          String createdAt, String updatedAt, String target, String unit,
+                          String alert, String isDecimal, String initProgress, String isConsumed )
+            throws JSONException {
         this.requestId = requestId;
         JSONObject json = new JSONObject();
         json.put(PARAM_NAME, name);
@@ -56,6 +62,12 @@ public class InsertCommand extends RESTCommand {
         json.put(PARAM_CURRENT_PROGRESS,currentProgress);
         json.put(PARAM_CREATED_AT, createdAt);
         json.put(PARAM_UPDATED_AT, updatedAt);
+        json.put(PARAM_TARGET, target);
+        json.put(PARAM_UNIT, unit);
+        json.put(PARAM_ALERT_TYPE, alert);
+        json.put(PARAM_IS_DECIMAL_UNIT, isDecimal);
+        json.put(PARAM_INIT_PROGRESS, initProgress);
+        json.put(PARAM_IS_CONSUMED, isConsumed);
         projectJson = new JSONObject();
         projectJson.put(PARAM_PROJECT, json);
     }

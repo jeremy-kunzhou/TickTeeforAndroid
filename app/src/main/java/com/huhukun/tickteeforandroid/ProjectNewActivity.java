@@ -39,7 +39,7 @@ public class ProjectNewActivity extends ActionBarActivity {
             // using a fragment transaction.
             fragment = new ProjectEditFragment();
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.project_edit_container, fragment)
+                    .add(R.id.project_new_container, fragment)
                     .commit();
 
         }

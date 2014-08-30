@@ -11,14 +11,10 @@ import com.huhukun.tickteeforandroid.exception.WebServiceFailedException;
 import com.huhukun.tickteeforandroid.R;
 import com.huhukun.tickteeforandroid.TickTeeAndroid;
 import com.huhukun.tickteeforandroid.model.Project;
-import com.huhukun.utils.FormatHelper;
-import com.huhukun.utils.MyDateUtils;
-import com.huhukun.utils.NumberUtils;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -31,16 +27,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.huhukun.tickteeforandroid.providers.WebApiConstants.LOGIN_URL;
+import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_ALERT_TYPE;
 import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_CREATED_AT;
 import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_CURRENT_PROGRESS;
 import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_DESCRIPTION;
 import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_END_AT;
 import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_EXPECTED_PROGRESS;
+import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_INIT_PROGRESS;
+import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_IS_CONSUMED;
+import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_IS_DECIMAL_UNIT;
 import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_NAME;
 import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_PROJECT;
-import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_PROJECTS_ID;
 import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_START_AT;
+import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_TARGET;
+import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_UNIT;
 import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_UPDATED_AT;
 
 
@@ -54,7 +54,9 @@ public class UpdateCommand extends RESTCommand {
 
     public UpdateCommand(long requestId, long projectsId, String name, String description, String startAt,
                          String endAt, String expectedProgress, String currentProgress,
-                         String createdAt, String updatedAt ) throws JSONException {
+                         String createdAt, String updatedAt,String target, String unit,
+                         String alert, String isDecimal, String initProgress, String isConsumed )
+            throws JSONException {
         this.requestId = requestId;
         this.projectId = projectsId;
         JSONObject json = new JSONObject();
@@ -66,6 +68,12 @@ public class UpdateCommand extends RESTCommand {
         json.put(PARAM_CURRENT_PROGRESS,currentProgress);
         json.put(PARAM_CREATED_AT, createdAt);
         json.put(PARAM_UPDATED_AT, updatedAt);
+        json.put(PARAM_TARGET, target);
+        json.put(PARAM_UNIT, unit);
+        json.put(PARAM_ALERT_TYPE, alert);
+        json.put(PARAM_IS_DECIMAL_UNIT, isDecimal);
+        json.put(PARAM_INIT_PROGRESS, initProgress);
+        json.put(PARAM_IS_CONSUMED, isConsumed);
         projectJson = new JSONObject();
         projectJson.put(PARAM_PROJECT, json);
         Log.d(TAG, "prepare for update command project "+ projectsId);

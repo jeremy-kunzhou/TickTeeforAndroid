@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.huhukun.tickteeforandroid.model.Project;
+import com.huhukun.tickteeforandroid.model.SqlOpenHelper;
 import com.huhukun.tickteeforandroid.providers.QueryTransactionInfo;
 import com.huhukun.tickteeforandroid.providers.TickteeProvider;
 
@@ -61,21 +62,7 @@ public class ProjectListFragment extends ListFragment implements LoaderManager.L
 
     private static final int GET_PROJECTS_BY_STATUS = 1;
 
-    private static final String[] loaderColumns = new String[] {
-            TableConstants._ID,
-            TableConstants.COL_PROJECT_ID,
-            TableConstants.COL_NAME,
-            TableConstants.COL_DESCRIPTION,
-            TableConstants.COL_START_AT,
-            TableConstants.COL_END_AT,
-            TableConstants.COL_EXPECTED_PROGRESS,
-            TableConstants.COL_CURRENT_PROGRESS,
-            TableConstants.COL_CREATED_AT,
-            TableConstants.COL_UPDATED_AT,
-            TableConstants.COL_TRANSACTING,
-            TableConstants.COL_STATUS,
-            TableConstants.COL_RESULT,
-            TableConstants.COL_TRANS_DATE };
+
     private static final String[] adapterColumns = new String[] {
             TableConstants.COL_NAME,
             TableConstants.COL_DESCRIPTION,
@@ -127,7 +114,7 @@ public class ProjectListFragment extends ListFragment implements LoaderManager.L
                 }
 
                 cursorLoader = new CursorLoader(
-                        getActivity(), baseUri, loaderColumns, null, null, null);
+                        getActivity(), baseUri, SqlOpenHelper.LOADER_COLUMNS, null, null, null);
 
                 break;
             default:

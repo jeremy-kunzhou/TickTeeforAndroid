@@ -20,6 +20,11 @@ public class FormatHelper {
     public static final DateFormat serverDateTimeFormatter = new SimpleDateFormat(SERVER_DATETIME_FORMAT);
     public static final DateFormat serverDateFormatter = new SimpleDateFormat(SERVER_DATE_FORMAT);
 
+    public static String UseDateFormatter(DateFormat formatter, Date date)
+    {
+        if(date == null) return null;
+        return formatter.format(date);
+    }
 
     public static String fromUTCtoTimeZoneDate(Date date, TimeZone timeZone)
     {

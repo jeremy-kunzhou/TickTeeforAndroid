@@ -1,5 +1,6 @@
 package com.huhukun.tickteeforandroid.model;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -29,6 +30,12 @@ public class SqlOpenHelper extends SQLiteOpenHelper {
         public static final String COL_CREATED_AT = "created_at";
         public static final String COL_UPDATED_AT = "updated_at";
         public static final String COL_DESCRIPTION = "description";
+        public static final String COL_TARGET = "target";
+        public static final String COL_UNIT = "unit";
+        public static final String COL_ALERT_TYPE = "alert_type";
+        public static final String COL_IS_DECIMAL = "is_decimal_unit";
+        public static final String COL_INIT_PROGRESS = "init_progress";
+        public static final String COL_IS_CONSUMED = "is_consumed";
         public static final String COL_STATUS = "status";
         public static final String COL_TRANSACTING = "transacting";
         public static final String COL_RESULT = "result";
@@ -36,6 +43,29 @@ public class SqlOpenHelper extends SQLiteOpenHelper {
         public static final String COL_TRY_COUNT = "try_count";
         public static final String DEFAULT_SORT_ORDER = COL_NAME+" ASC";
     }
+
+
+    public static final String[] LOADER_COLUMNS = new String[]{
+            TableConstants._ID,
+            TableConstants.COL_PROJECT_ID,
+            TableConstants.COL_NAME,
+            TableConstants.COL_DESCRIPTION,
+            TableConstants.COL_START_AT,
+            TableConstants.COL_END_AT,
+            TableConstants.COL_EXPECTED_PROGRESS,
+            TableConstants.COL_CURRENT_PROGRESS,
+            TableConstants.COL_CREATED_AT,
+            TableConstants.COL_UPDATED_AT,
+            TableConstants.COL_TARGET,
+            TableConstants.COL_UNIT,
+            TableConstants.COL_ALERT_TYPE,
+            TableConstants.COL_IS_DECIMAL,
+            TableConstants.COL_INIT_PROGRESS,
+            TableConstants.COL_IS_CONSUMED,
+            TableConstants.COL_TRANSACTING,
+            TableConstants.COL_STATUS,
+            TableConstants.COL_RESULT,
+            TableConstants.COL_TRANS_DATE};
     /**
      * table name: songs
      *
@@ -63,10 +93,16 @@ public class SqlOpenHelper extends SQLiteOpenHelper {
                     + TableConstants.COL_DESCRIPTION + " TEXT, "
                     + TableConstants.COL_START_AT + " DATETIME, "
                     + TableConstants.COL_END_AT + " DATETIME, "
-                    + TableConstants.COL_EXPECTED_PROGRESS + " TEXT, "
-                    + TableConstants.COL_CURRENT_PROGRESS + " TEXT, "
+                    + TableConstants.COL_EXPECTED_PROGRESS + " REAL, "
+                    + TableConstants.COL_CURRENT_PROGRESS + " REAL, "
                     + TableConstants.COL_CREATED_AT + " DATETIME, "
                     + TableConstants.COL_UPDATED_AT + " DATETIME, "
+                    + TableConstants.COL_TARGET + " REAL, "
+                    + TableConstants.COL_UNIT + " TEXT, "
+                    + TableConstants.COL_ALERT_TYPE + " TEXT, "
+                    + TableConstants.COL_IS_DECIMAL + " BOOLEAN, "
+                    + TableConstants.COL_INIT_PROGRESS + " REAL, "
+                    + TableConstants.COL_IS_CONSUMED + " BOOLEAN, "
                     + TableConstants.COL_STATUS + " TEXT, "
                     + TableConstants.COL_TRANSACTING + " INTEGER, "
                     + TableConstants.COL_RESULT + " INTEGER, "

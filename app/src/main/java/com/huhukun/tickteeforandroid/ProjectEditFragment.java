@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,8 +21,11 @@ import com.huhukun.tickteeforandroid.UILibrary.DatePickerFragment;
 import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.*;
 
 import com.huhukun.tickteeforandroid.model.Project;
+import com.huhukun.tickteeforandroid.model.SqlOpenHelper;
+import com.huhukun.tickteeforandroid.providers.InsertTask;
 import com.huhukun.tickteeforandroid.providers.QueryTransactionInfo;
 import com.huhukun.tickteeforandroid.providers.TickteeProvider;
+import com.huhukun.tickteeforandroid.providers.UpdateTask;
 import com.huhukun.tickteeforandroid.providers.WebApiConstants;
 import com.huhukun.utils.FormatHelper;
 
@@ -49,21 +53,7 @@ public class ProjectEditFragment extends Fragment
     private TextView tvEndAt;
     private EditText etDescription;
     private ExecutorService executorPool;
-    private static final String[] loaderColumns = new String[]{
-            TableConstants._ID,
-            TableConstants.COL_PROJECT_ID,
-            TableConstants.COL_NAME,
-            TableConstants.COL_DESCRIPTION,
-            TableConstants.COL_START_AT,
-            TableConstants.COL_END_AT,
-            TableConstants.COL_EXPECTED_PROGRESS,
-            TableConstants.COL_CURRENT_PROGRESS,
-            TableConstants.COL_CREATED_AT,
-            TableConstants.COL_UPDATED_AT,
-            TableConstants.COL_TRANSACTING,
-            TableConstants.COL_STATUS,
-            TableConstants.COL_RESULT,
-            TableConstants.COL_TRANS_DATE};
+
     @Override
     public void onCreate(Bundle bundle){
         super.onCreate(bundle);
@@ -92,9 +82,10 @@ public class ProjectEditFragment extends Fragment
         tvEndAt.setOnClickListener(this);
         etName = (EditText) rootView.findViewById(R.id.project_edit_name);
         etDescription = (EditText) rootView.findViewById(R.id.project_edit_description);
-        Date date = new Date();
-        tvStartAt.setText(FormatHelper.shortLocalDateFormatter.format(date));
-        tvEndAt.setText(FormatHelper.shortLocalDateFormatter.format(date));
+        Calendar cal = Calendar.getInstance();
+        tvStartAt.setText(FormatHelper.shortLocalDateFormatter.format(cal.getTime()));
+        cal.add(Calendar.DAY_OF_MONTH, 1);
+        tvEndAt.setText(FormatHelper.shortLocalDateFormatter.format(cal.getTime()));
         return rootView;
     }
 
@@ -114,7 +105,7 @@ public class ProjectEditFragment extends Fragment
 
 
                 cursorLoader = new CursorLoader(
-                        getActivity(), baseUri, loaderColumns, null, null, null);
+                        getActivity(), baseUri, SqlOpenHelper.LOADER_COLUMNS, null, null, null);
 
                 break;
             default:
@@ -148,9 +139,16 @@ public class ProjectEditFragment extends Fragment
 
     private void showProjectDetail(Project project) {
         if (project != null) {
-            etName.setText(mItem.getName());
-            tvStartAt.setText(FormatHelper.shortLocalDateFormatter.format(mItem.getStartDate()));
-            tvEndAt.setText(FormatHelper.shortLocalDateFormatter.format(mItem.getEndDate()));
+            etName.setText(project.getName());
+            if(mItem.getStartDate() == null )
+            {
+                tvStartAt.setText("");
+                tvEndAt.setText("");
+            }
+            else {
+                tvStartAt.setText(FormatHelper.shortLocalDateFormatter.format(project.getStartDate()));
+                tvEndAt.setText(FormatHelper.shortLocalDateFormatter.format(project.getEndDate()));
+            }
             etDescription.setText(mItem.getDescription());
 
 
@@ -171,7 +169,7 @@ public class ProjectEditFragment extends Fragment
         mItem.setDescription(etDescription.getText().toString().trim());
         mItem.setStartDate(FormatHelper.shortLocalDateFormatter.parse(tvStartAt.getText().toString()));
         mItem.setEndDate(FormatHelper.shortLocalDateFormatter.parse(tvEndAt.getText().toString()));
-        WebApiConstants.UpdateTask task = new WebApiConstants.UpdateTask(mItem.getId(), mItem);
+        UpdateTask task = new UpdateTask(mItem.getId(), mItem);
         executorPool.submit(task);
     }
 
@@ -205,10 +203,16 @@ public class ProjectEditFragment extends Fragment
             project.setEndDate(FormatHelper.shortLocalDateFormatter.parse(tvEndAt.getText().toString()));
             project.setExpectedProgress(BigDecimal.ZERO);
             project.setCurrentProgress(BigDecimal.ZERO);
+            project.setTarget(new BigDecimal("300"));
+            project.setUnit("DSD");
+            project.setAlertType(Project.AlertType.OFF);
+            project.setConsumed(false);
+            project.setDecimalUnit(false);
+            project.setInitProgress(BigDecimal.ZERO);
             Date date = new Date();
             project.setCreatedTime(date);
             project.setLastUpdateTime(date);
-            WebApiConstants.InsertTask task = new WebApiConstants.InsertTask(project);
+            InsertTask task = new InsertTask(project);
             executorPool.submit(task);
             return 1;
         }

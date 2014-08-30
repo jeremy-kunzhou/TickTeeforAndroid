@@ -56,13 +56,14 @@ public class Project {
     private Date endDate;
     private BigDecimal expectedProgress;
     private BigDecimal currentProgress;
+    private BigDecimal initProgress;
     private BigDecimal target;
-    private BigDecimal start;
     private boolean isDecimalUnit;
     private String unit;
     private AlertType alertType;
     private Date createdTime;
     private Date lastUpdateTime;
+    private boolean isConsumed;
 
     public long getId() {
         return _id;
@@ -120,14 +121,6 @@ public class Project {
         this.target = target;
     }
 
-    public BigDecimal getStart() {
-        return start;
-    }
-
-    public void setStart(BigDecimal start) {
-        this.start = start;
-    }
-
     public boolean isDecimalUnit() {
         return isDecimalUnit;
     }
@@ -150,6 +143,22 @@ public class Project {
 
     public void setAlertType(AlertType alertType) {
         this.alertType = alertType;
+    }
+
+    public BigDecimal getInitProgress() {
+        return initProgress;
+    }
+
+    public void setInitProgress(BigDecimal initProgress) {
+        this.initProgress = initProgress;
+    }
+
+    public boolean isConsumed() {
+        return isConsumed;
+    }
+
+    public void setConsumed(boolean isConsumed) {
+        this.isConsumed = isConsumed;
     }
 
     public Date getStartDate() {
@@ -231,15 +240,25 @@ public class Project {
     public Project(JSONObject json) throws JSONException, ParseException {
 
         this.projectId = json.getLong(PARAM_PROJECTS_ID);
-        Log.d(TAG, "Make json "+ projectId);
         this.name = json.getString(PARAM_NAME);
         this.description = json.getString(PARAM_DESCRIPTION);
-        this.startDate = FormatHelper.serverDateFormatter.parse(json.getString(PARAM_START_AT));
-        this.endDate = FormatHelper.serverDateFormatter.parse(json.getString(PARAM_END_AT));
+        if (json.has(PARAM_START_AT) && json.has(PARAM_END_AT)
+                && !json.getString(PARAM_START_AT).equals("null")
+                && !json.getString(PARAM_END_AT).equals("null")) {
+            this.startDate = FormatHelper.serverDateFormatter.parse(json.getString(PARAM_START_AT));
+            this.endDate = FormatHelper.serverDateFormatter.parse(json.getString(PARAM_END_AT));
+        }
         this.expectedProgress = new BigDecimal(json.getString(PARAM_EXPECTED_PROGRESS));
         this.currentProgress = new BigDecimal(json.getString(PARAM_CURRENT_PROGRESS));
         this.createdTime = FormatHelper.serverDateTimeFormatter.parse(json.getString(PARAM_CREATED_AT));
         this.lastUpdateTime = FormatHelper.serverDateTimeFormatter.parse(json.getString(PARAM_UPDATED_AT));
+        this.target = new BigDecimal(json.getString(PARAM_TARGET));
+        this.unit = json.getString(PARAM_UNIT);
+        this.alertType = AlertType.valueOf(json.getString(PARAM_ALERT_TYPE));
+        this.isDecimalUnit = json.getBoolean(PARAM_IS_DECIMAL_UNIT);
+        this.initProgress = new BigDecimal(json.getString(PARAM_INIT_PROGRESS));
+        this.isConsumed = json.getBoolean(PARAM_IS_CONSUMED);
+
     }
 
     public Project(Cursor cursor) throws ParseException {
@@ -247,12 +266,21 @@ public class Project {
         this.projectId = cursor.getLong(cursor.getColumnIndex(COL_PROJECT_ID));
         this.name = cursor.getString(cursor.getColumnIndex(COL_NAME));
         this.description = cursor.getString(cursor.getColumnIndex(COL_DESCRIPTION));
-        this.startDate = FormatHelper.serverDateFormatter.parse(cursor.getString(cursor.getColumnIndex(COL_START_AT)));
-        this.endDate = FormatHelper.serverDateFormatter.parse(cursor.getString(cursor.getColumnIndex(COL_END_AT)));
+        if (cursor.getString(cursor.getColumnIndex(COL_START_AT)) != null
+                && cursor.getString(cursor.getColumnIndex(COL_END_AT)) != null) {
+            this.startDate = FormatHelper.serverDateFormatter.parse(cursor.getString(cursor.getColumnIndex(COL_START_AT)));
+            this.endDate = FormatHelper.serverDateFormatter.parse(cursor.getString(cursor.getColumnIndex(COL_END_AT)));
+        }
         this.expectedProgress = new BigDecimal(cursor.getString(cursor.getColumnIndex(COL_EXPECTED_PROGRESS)));
         this.currentProgress = new BigDecimal(cursor.getString(cursor.getColumnIndex(COL_CURRENT_PROGRESS)));
         this.createdTime = FormatHelper.serverDateTimeFormatter.parse(cursor.getString(cursor.getColumnIndex(COL_CREATED_AT)));
         this.lastUpdateTime = FormatHelper.serverDateTimeFormatter.parse(cursor.getString(cursor.getColumnIndex(COL_UPDATED_AT)));
+        this.target = new BigDecimal(cursor.getString(cursor.getColumnIndex(COL_TARGET)));
+        this.unit = cursor.getString(cursor.getColumnIndex(COL_UNIT));
+        this.alertType = AlertType.valueOf(cursor.getString(cursor.getColumnIndex(COL_ALERT_TYPE)));
+        this.isDecimalUnit = Boolean.getBoolean(cursor.getString(cursor.getColumnIndex(COL_IS_DECIMAL)));
+        this.initProgress = new BigDecimal(cursor.getString(cursor.getColumnIndex(COL_INIT_PROGRESS)));
+        this.isConsumed = Boolean.getBoolean(cursor.getString(cursor.getColumnIndex(COL_IS_CONSUMED)));
     }
 
     public JSONObject toJson() throws JSONException {
@@ -261,12 +289,28 @@ public class Project {
         json.put(PARAM_PROJECTS_ID, this.getProjectId());
         json.put(PARAM_NAME, this.getName());
         json.put(PARAM_DESCRIPTION, this.getDescription());
-        json.put(PARAM_START_AT, FormatHelper.serverDateFormatter.format(this.getStartDate()));
-        json.put(PARAM_END_AT, FormatHelper.serverDateFormatter.format(this.getEndDate()));
+        if (this.getStartDate() != null) {
+            json.put(PARAM_START_AT, FormatHelper.serverDateFormatter.format(this.getStartDate()));
+        }
+        else{
+            json.put(PARAM_START_AT, null);
+        }
+        if (this.getEndDate() != null) {
+            json.put(PARAM_END_AT, FormatHelper.serverDateFormatter.format(this.getEndDate()));
+        }
+        else {
+            json.put(PARAM_END_AT, null);
+        }
         json.put(PARAM_EXPECTED_PROGRESS, this.getExpectedProgress().toString());
         json.put(PARAM_CURRENT_PROGRESS, this.getCurrentProgress().toString());
         json.put(PARAM_CREATED_AT, FormatHelper.serverDateTimeFormatter.format(this.getCreatedTime()));
         json.put(PARAM_UPDATED_AT, FormatHelper.serverDateTimeFormatter.format(this.getLastUpdateTime()));
+        json.put(PARAM_TARGET, this.getTarget().toString());
+        json.put(PARAM_UNIT, this.getUnit());
+        json.put(PARAM_ALERT_TYPE, this.getAlertType().toString());
+        json.put(PARAM_IS_DECIMAL_UNIT, this.isDecimalUnit);
+        json.put(PARAM_INIT_PROGRESS, this.getInitProgress().toString());
+        json.put(PARAM_IS_CONSUMED, this.isConsumed);
         return json;
     }
 

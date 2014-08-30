@@ -21,15 +21,22 @@ import com.huhukun.tickteeforandroid.exception.NetworkSystemException;
 import com.huhukun.tickteeforandroid.exception.WebServiceConnectionException;
 import com.huhukun.tickteeforandroid.exception.WebServiceFailedException;
 import com.huhukun.tickteeforandroid.TickTeeAndroid;
+import com.huhukun.tickteeforandroid.model.SqlOpenHelper;
 
 import org.json.JSONException;
 
 import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants;
+import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants.COL_ALERT_TYPE;
 import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants.COL_CREATED_AT;
 import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants.COL_CURRENT_PROGRESS;
 import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants.COL_END_AT;
 import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants.COL_EXPECTED_PROGRESS;
+import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants.COL_INIT_PROGRESS;
+import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants.COL_IS_CONSUMED;
+import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants.COL_IS_DECIMAL;
 import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants.COL_START_AT;
+import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants.COL_TARGET;
+import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants.COL_UNIT;
 import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants.COL_UPDATED_AT;
 
 /**
@@ -40,20 +47,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     private final Context mContext;
     private final AccountManager mAccountManager;
-
-
-    private static final String[] columns = {
-            TableConstants._ID,
-            TableConstants.COL_PROJECT_ID,
-            TableConstants.COL_NAME,
-            TableConstants.COL_DESCRIPTION,
-            TableConstants.COL_START_AT,
-            TableConstants.COL_END_AT,
-            TableConstants.COL_EXPECTED_PROGRESS,
-            TableConstants.COL_CURRENT_PROGRESS,
-            TableConstants.COL_CREATED_AT,
-            TableConstants.COL_UPDATED_AT,
-            TableConstants.COL_STATUS};
 
     public SyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
@@ -77,7 +70,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
         Cursor cursor;
         cursor = cr.query(
-                TickteeProvider.CONTENT_URI_PROJECTS_PENDING, columns, null, null, null);
+                TickteeProvider.CONTENT_URI_PROJECTS_PENDING, SqlOpenHelper.LOADER_COLUMNS, null, null, null);
 
         final int colId = cursor.getColumnIndex(TableConstants._ID);
         final int colProjectsId = cursor.getColumnIndex(TableConstants.COL_PROJECT_ID);
@@ -89,6 +82,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         final int colCurrentProgress = cursor.getColumnIndex(COL_CURRENT_PROGRESS);
         final int colCreatedAt = cursor.getColumnIndex(COL_CREATED_AT);
         final int colUpdatedAt = cursor.getColumnIndex(COL_UPDATED_AT);
+        final int colTarget = cursor.getColumnIndex(COL_TARGET);
+        final int colUnit = cursor.getColumnIndex(COL_UNIT);
+        final int colAlert = cursor.getColumnIndex(COL_ALERT_TYPE);
+        final int colIsDecimal = cursor.getColumnIndex(COL_IS_DECIMAL);
+        final int colInitProgress = cursor.getColumnIndex(COL_INIT_PROGRESS);
+        final int colIsConsumed = cursor.getColumnIndex(COL_IS_CONSUMED);
 
         final int colStatus = cursor.getColumnIndex(TableConstants.COL_STATUS);
 
@@ -102,6 +101,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         String currentProgress;
         String createdAt;
         String updatedAt;
+        String target;
+        String unit;
+        String alert;
+        String isDecimal;
+        String initProgress;
+        String isConsumed;
         String status;
 
         while (cursor.moveToNext()) {
@@ -118,6 +123,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             currentProgress = cursor.getString(colCurrentProgress);
             createdAt = cursor.getString(colCreatedAt);
             updatedAt = cursor.getString(colUpdatedAt);
+            target = cursor.getString(colTarget);
+            unit = cursor.getString(colUnit);
+            alert = cursor.getString(colAlert);
+            isDecimal = cursor.getString(colIsDecimal);
+            initProgress = cursor.getString(colInitProgress);
+            isConsumed = cursor.getString(colIsConsumed);
             status = cursor.getString(colStatus);
 
             try {
@@ -141,12 +152,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     switch (methodEnum) {
                         case POST:
                             restCommand = new InsertCommand(id, name, description, startAt,
-                                    endAt, expectedProgress, currentProgress, createdAt, updatedAt);
+                                    endAt, expectedProgress, currentProgress, createdAt, updatedAt, target, unit, alert, isDecimal, initProgress, isConsumed);
                             break;
                         case PUT:
 
                                 restCommand = new UpdateCommand(id, projectsId, name, description, startAt,
-                                        endAt, expectedProgress, currentProgress, createdAt, updatedAt);
+                                        endAt, expectedProgress, currentProgress, createdAt, updatedAt, target, unit, alert, isDecimal, initProgress, isConsumed);
 
                             break;
                         case DELETE:

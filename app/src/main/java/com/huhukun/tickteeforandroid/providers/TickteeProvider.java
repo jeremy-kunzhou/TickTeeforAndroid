@@ -194,16 +194,33 @@ public class TickteeProvider extends ContentProvider {
                 switch (Integer.parseInt(uri.getPathSegments().get(2))){
                     case PROJECTS_STATUS_IN_PROGRESS:
                         qb.appendWhere(TableConstants.COL_CURRENT_PROGRESS);
-                        qb.appendWhere(" != 100");
+                        qb.appendWhere(" != ");
+                        qb.appendWhere(TableConstants.COL_TARGET);
                         break;
                     case PROJECTS_STATUS_OVERDUE:
+                        qb.appendWhere("(");
+                        qb.appendWhere(TableConstants.COL_START_AT);
+                        qb.appendWhere(" is not null ) ");
+                        qb.appendWhere(" AND ");
+                        qb.appendWhere(" ( ");
                         qb.appendWhere(TableConstants.COL_CURRENT_PROGRESS);
-                        qb.appendWhere(" < ");
-                        qb.appendWhere(TableConstants.COL_EXPECTED_PROGRESS);
+                        qb.appendWhere("/");
+                        qb.appendWhere(TableConstants.COL_TARGET);
+                        qb.appendWhere(" ) ");
+                        qb.appendWhere(" < (");
+                        qb.appendWhere("( strftime('%s', 'now') - strftime('%s', " +
+                                TableConstants.COL_START_AT +
+                                ") )/( strftime('%s', " +
+                                TableConstants.COL_END_AT +
+                                ") - strftime('%s', " +
+                                TableConstants.COL_START_AT +
+                                ") )");
+                        qb.appendWhere(" ) ");
                         break;
                     case PROJECTS_STATUS_COMPLETE:
                         qb.appendWhere(TableConstants.COL_CURRENT_PROGRESS);
-                        qb.appendWhere(" = 100");
+                        qb.appendWhere(" = ");
+                        qb.appendWhere(TableConstants.COL_TARGET);
                         break;
                     default:
                         throw new IllegalArgumentException("Unknown Status  " + uri.getPathSegments().get(2));

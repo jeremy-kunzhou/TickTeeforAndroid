@@ -23,7 +23,12 @@ import android.widget.TextView;
 import com.huhukun.tickteeforandroid.model.Project;
 import com.huhukun.tickteeforandroid.model.SqlOpenHelper;
 import com.huhukun.tickteeforandroid.providers.TickteeProvider;
+import com.huhukun.utils.FormatHelper;
+import com.huhukun.utils.NumberUtils;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.Locale;
 
 
@@ -33,21 +38,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
 
 
     private static final String TAG = App_Constants.APP_TAG +"MainActivity";
-    private static final String[] loaderColumns = new String[] {
-            SqlOpenHelper.TableConstants._ID,
-            SqlOpenHelper.TableConstants.COL_PROJECT_ID,
-            SqlOpenHelper.TableConstants.COL_NAME,
-            SqlOpenHelper.TableConstants.COL_DESCRIPTION,
-            SqlOpenHelper.TableConstants.COL_START_AT,
-            SqlOpenHelper.TableConstants.COL_END_AT,
-            SqlOpenHelper.TableConstants.COL_EXPECTED_PROGRESS,
-            SqlOpenHelper.TableConstants.COL_CURRENT_PROGRESS,
-            SqlOpenHelper.TableConstants.COL_CREATED_AT,
-            SqlOpenHelper.TableConstants.COL_UPDATED_AT,
-            SqlOpenHelper.TableConstants.COL_TRANSACTING,
-            SqlOpenHelper.TableConstants.COL_STATUS,
-            SqlOpenHelper.TableConstants.COL_RESULT,
-            SqlOpenHelper.TableConstants.COL_TRANS_DATE };
+
 
     private TextView tvTotal;
     private TextView tvInProgress;
@@ -244,7 +235,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
 
 
         CursorLoader cursorLoader = new CursorLoader(
-                        this, baseUri, loaderColumns, null, null, null);
+                        this, baseUri, SqlOpenHelper.LOADER_COLUMNS, null, null, null);
 
 
 
@@ -260,17 +251,34 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         cursor.moveToFirst();
         while (cursor.isAfterLast() == false) {
             total_count ++;
-            if(cursor.getInt(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_CURRENT_PROGRESS))== 100)
+            BigDecimal current = new BigDecimal(cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_CURRENT_PROGRESS)));
+            BigDecimal target = new BigDecimal(cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_TARGET)));
+
+            if(current.compareTo(target) == 0)
             {
                 complete_count ++;
             }
-            else if (cursor.getInt(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_CURRENT_PROGRESS))< cursor.getInt(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_EXPECTED_PROGRESS)))
-            {
-                overdue_count ++;
-                in_progress_count ++;
-            }
-            else{
-                in_progress_count ++;
+            else {
+                String start_date_string = cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_START_AT));
+                String end_date_string = cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_END_AT));
+
+                if ( start_date_string != null && end_date_string != null && !start_date_string.equals("null") && !end_date_string.equals("null"))
+                {
+                    try {
+                        Date start = FormatHelper.serverDateFormatter.parse(start_date_string);
+                        Date end = FormatHelper.serverDateFormatter.parse(end_date_string);
+                        Date now = new Date();
+                        if(NumberUtils.getPercentage(current, target) < NumberUtils.getPercentage(start, end, now))
+                        {
+                            overdue_count++;
+                        }
+                    }catch (ParseException e) {
+                        Log.d(TAG, e.toString());
+                    }
+                }
+
+                in_progress_count++;
+
             }
             cursor.moveToNext();
         }

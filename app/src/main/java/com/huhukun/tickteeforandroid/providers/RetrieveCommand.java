@@ -110,7 +110,7 @@ public class RetrieveCommand extends RESTCommand {
                 Log.e(TAG, msg, e);
                 throw new WebServiceFailedException(msg, e);
             }
-
+            Log.i(TAG, respText);
             try {
 //                jsonObject = new JSONObject( respText );
 //
@@ -121,7 +121,6 @@ public class RetrieveCommand extends RESTCommand {
 //                if ( Log.isLoggable( TAG, Log.INFO ) ) {
 //                    Log.i( TAG, "get: nextDownloadDate[" + nextDownloadDate + "]" );
 //                }
-                Log.e( TAG, respText );
                 jsonArray = new JSONArray( respText );
 
                 details = new Project[jsonArray.length()];

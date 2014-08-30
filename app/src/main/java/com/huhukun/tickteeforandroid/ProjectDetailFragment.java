@@ -7,16 +7,21 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.huhukun.tickteeforandroid.UILibrary.SeekArc;
 import com.huhukun.tickteeforandroid.model.Project;
+import com.huhukun.tickteeforandroid.model.SqlOpenHelper;
+import com.huhukun.tickteeforandroid.providers.DeleteTask;
 import com.huhukun.tickteeforandroid.providers.QueryTransactionInfo;
 import com.huhukun.tickteeforandroid.providers.TickteeProvider;
+import com.huhukun.tickteeforandroid.providers.UpdateTask;
 import com.huhukun.tickteeforandroid.providers.WebApiConstants;
 import com.huhukun.utils.FormatHelper;
 
@@ -47,6 +52,8 @@ public class ProjectDetailFragment extends Fragment
     private Project mItem;
     private static final int GET_PROJECT_BY_ID = 1;
 
+    private LinearLayout layoutStartEndLabels;
+    private LinearLayout layoutStartEndValues;
     private TextView tvProjectStartAt;
     private TextView tvProjectEndAt;
     private TextView tvProjectExpectedProgress;
@@ -58,24 +65,8 @@ public class ProjectDetailFragment extends Fragment
     private SeekArc seekArc;
 
     private String sqlId;
-    private int startPercent = 0;
     private ExecutorService executorPool;
 
-    private static final String[] loaderColumns = new String[]{
-            TableConstants._ID,
-            TableConstants.COL_PROJECT_ID,
-            TableConstants.COL_NAME,
-            TableConstants.COL_DESCRIPTION,
-            TableConstants.COL_START_AT,
-            TableConstants.COL_END_AT,
-            TableConstants.COL_EXPECTED_PROGRESS,
-            TableConstants.COL_CURRENT_PROGRESS,
-            TableConstants.COL_CREATED_AT,
-            TableConstants.COL_UPDATED_AT,
-            TableConstants.COL_TRANSACTING,
-            TableConstants.COL_STATUS,
-            TableConstants.COL_RESULT,
-            TableConstants.COL_TRANS_DATE};
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -108,6 +99,8 @@ public class ProjectDetailFragment extends Fragment
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_project_detail, container, false);
+        layoutStartEndLabels = (LinearLayout) rootView.findViewById(R.id.project_detail_start_end_date_labels);
+        layoutStartEndValues = (LinearLayout) rootView.findViewById(R.id.project_detail_start_end_date_values);
         tvProjectStartAt = (TextView) rootView.findViewById(R.id.project_detail_start_at);
         tvProjectEndAt = (TextView) rootView.findViewById(R.id.project_detail_end_at);
         tvProjectExpectedProgress = (TextView) rootView.findViewById(R.id.project_detail_expected_progress);
@@ -117,26 +110,6 @@ public class ProjectDetailFragment extends Fragment
         tvProjectDescription = (TextView) rootView.findViewById(R.id.project_detail_description);
         tvSeekArcPercentage = (TextView) rootView.findViewById(R.id.seekArcProgress);
         seekArc = (SeekArc) rootView.findViewById(R.id.seekArc);
-
-        seekArc.setOnSeekArcChangeListener(new SeekArc.OnSeekArcChangeListener() {
-
-            @Override
-            public void onStopTrackingTouch(SeekArc seekArc) {
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekArc seekArc) {
-            }
-
-            @Override
-            public void onProgressChanged(SeekArc seekArc, int progress,
-                                          boolean fromUser) {
-                tvSeekArcPercentage.setText(startPercent + progress + "");
-                tvProjectCurrentProgress.setText(startPercent + progress + "");
-            }
-        });
-
-
         return rootView;
     }
 
@@ -170,7 +143,7 @@ public class ProjectDetailFragment extends Fragment
 
 
                 cursorLoader = new CursorLoader(
-                        getActivity(), baseUri, loaderColumns, null, null, null);
+                        getActivity(), baseUri, SqlOpenHelper.LOADER_COLUMNS, null, null, null);
 
                 break;
             default:
@@ -205,16 +178,22 @@ public class ProjectDetailFragment extends Fragment
     private void showProjectDetail(Project project) {
         if (project != null) {
             getActivity().setTitle(mItem.getName());
-            tvProjectStartAt.setText(FormatHelper.shortLocalDateFormatter.format(mItem.getStartDate()));
-            tvProjectEndAt.setText(FormatHelper.shortLocalDateFormatter.format(mItem.getEndDate()));
+            if(mItem.getStartDate() == null )
+            {
+                layoutStartEndLabels.setVisibility(View.GONE);
+                layoutStartEndValues.setVisibility(View.GONE);
+            }
+            else {
+                tvProjectStartAt.setText(FormatHelper.shortLocalDateFormatter.format(mItem.getStartDate()));
+                tvProjectEndAt.setText(FormatHelper.shortLocalDateFormatter.format(mItem.getEndDate()));
+            }
             tvProjectExpectedProgress.setText(mItem.getExpectedProgress().toPlainString());
             tvProjectCurrentProgress.setText(mItem.getCurrentProgress().toPlainString());
             tvProjectCreatedAt.setText(FormatHelper.shortLocalDateTimeFormatter.format(mItem.getCreatedTime()));
             tvProjectLastUpdateAt.setText(FormatHelper.shortLocalDateTimeFormatter.format(mItem.getLastUpdateTime()));
             tvProjectDescription.setText(mItem.getDescription());
-            startPercent = (int) mItem.getCurrentProgress().doubleValue();
-            seekArc.setStartAngle((int) (mItem.getCurrentProgress().doubleValue() / 100 * 360));
-            tvSeekArcPercentage.setText(startPercent + "");
+            seekArc.setStartAngle(getAngle(mItem.getCurrentProgress(), mItem.getTarget()));
+            tvSeekArcPercentage.setText(mItem.getCurrentProgress() + "");
 
         } else {
             tvProjectStartAt.setText("");
@@ -232,7 +211,7 @@ public class ProjectDetailFragment extends Fragment
         if(mItem!=null)
         {
             mItem.setCurrentProgress(new BigDecimal(tvSeekArcPercentage.getText().toString()));
-            WebApiConstants.UpdateTask task = new WebApiConstants.UpdateTask(mItem.getId(), mItem);
+            UpdateTask task = new UpdateTask(mItem.getId(), mItem);
             executorPool.submit(task);
         }
     }
@@ -241,10 +220,17 @@ public class ProjectDetailFragment extends Fragment
         if(mItem !=null)
         {
 
-            WebApiConstants.DeleteTask task = new WebApiConstants.DeleteTask(mItem.getId());
+            DeleteTask task = new DeleteTask(mItem.getId());
             executorPool.submit(task);
             return 1;
         }
         return -1;
+    }
+
+
+    private int getAngle(BigDecimal realNumber, BigDecimal totalNumber) {
+        int angle =  (int)Math.ceil(realNumber.divide(totalNumber, 0, BigDecimal.ROUND_HALF_UP).doubleValue()) / 100 * 360;
+        angle = angle > 360 ? 360 : angle;
+        return  angle;
     }
 }
