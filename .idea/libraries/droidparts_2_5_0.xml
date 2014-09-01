@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="droidparts-2.5.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.droidparts/droidparts/2.5.0/90bee27509eef643f978cc53daf166947053f770/droidparts-2.5.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.droidparts/droidparts/2.5.0/e3d3b026e98dfd3a9e6968d1d99d8b6850e5c10b/droidparts-2.5.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

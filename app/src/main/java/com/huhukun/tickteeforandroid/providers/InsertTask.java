@@ -46,8 +46,8 @@ public class InsertTask implements Callable<Boolean> {
         values.put( SqlOpenHelper.TableConstants.COL_TARGET, project.getTarget().toString());
         values.put( SqlOpenHelper.TableConstants.COL_UNIT, project.getUnit());
         values.put( SqlOpenHelper.TableConstants.COL_ALERT_TYPE, project.getAlertType().toString());
-        values.put( SqlOpenHelper.TableConstants.COL_IS_CONSUMED, project.isConsumed());
-        values.put( SqlOpenHelper.TableConstants.COL_IS_DECIMAL, project.isDecimalUnit());
+        values.put( SqlOpenHelper.TableConstants.COL_IS_CONSUMED, project.isConsumed()? 1:0);
+        values.put( SqlOpenHelper.TableConstants.COL_IS_DECIMAL, project.isDecimalUnit()? 1:0);
         values.put( SqlOpenHelper.TableConstants.COL_INIT_PROGRESS, project.getInitProgress().toString());
 
         Log.d(TAG, values.toString());

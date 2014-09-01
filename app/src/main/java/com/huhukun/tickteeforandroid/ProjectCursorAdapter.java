@@ -3,6 +3,7 @@ package com.huhukun.tickteeforandroid;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,7 +55,12 @@ public class ProjectCursorAdapter extends CursorAdapter {
         BigDecimal target = new BigDecimal(cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_TARGET)));
 
         TextView tvEndDate = (TextView) view.findViewById(R.id.row_project_category);
-        tvEndDate.setText(cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_END_AT)));
+        String endDate = cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_END_AT));
+        if(TextUtils.isEmpty(endDate)) {
+            tvEndDate.setText(R.string.no_time_limit);
+        }else{
+            tvEndDate.setText(endDate);
+        }
 
         int status = 0;
         if (current.compareTo(target) >=0)
@@ -63,7 +69,7 @@ public class ProjectCursorAdapter extends CursorAdapter {
             String start_date_string = cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_START_AT));
             String end_date_string = cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_END_AT));
 
-            if (start_date_string != null && end_date_string != null && !start_date_string.equals("null") && !end_date_string.equals("null")) {
+            if (start_date_string != null && end_date_string != null && !TextUtils.isEmpty(start_date_string) && !TextUtils.isEmpty(end_date_string)) {
                 try {
                     Date start = FormatHelper.serverDateFormatter.parse(start_date_string);
                     Date end = FormatHelper.serverDateFormatter.parse(end_date_string);

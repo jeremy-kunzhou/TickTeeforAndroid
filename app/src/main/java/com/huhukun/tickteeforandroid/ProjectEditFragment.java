@@ -7,18 +7,22 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.huhukun.tickteeforandroid.UILibrary.DatePickerFragment;
-
-import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.*;
 
 import com.huhukun.tickteeforandroid.model.Project;
 import com.huhukun.tickteeforandroid.model.SqlOpenHelper;
@@ -26,8 +30,10 @@ import com.huhukun.tickteeforandroid.providers.InsertTask;
 import com.huhukun.tickteeforandroid.providers.QueryTransactionInfo;
 import com.huhukun.tickteeforandroid.providers.TickteeProvider;
 import com.huhukun.tickteeforandroid.providers.UpdateTask;
-import com.huhukun.tickteeforandroid.providers.WebApiConstants;
 import com.huhukun.utils.FormatHelper;
+import com.huhukun.utils.NumberUtils;
+
+import org.w3c.dom.Text;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -49,10 +55,30 @@ public class ProjectEditFragment extends Fragment
     private static final int GET_PROJECT_BY_ID = 1;
     private Project mItem;
     private EditText etName;
+    private EditText etTarget;
+    private EditText etInitProgress;
+    private AutoCompleteTextView tvUnit;
+    private Spinner spinnerAlertType;
+    private CheckBox checkBoxUseStartEndDate;
+    private LinearLayout layoutStartEndLabels;
+    private LinearLayout layoutStartEndValues;
     private TextView tvStartAt;
     private TextView tvEndAt;
+    private CheckBox checkBoxIsConsumed;
+    private CheckBox checkBoxIsDecimalUnit;
+
+
+
     private EditText etDescription;
+
     private ExecutorService executorPool;
+
+    private View.OnClickListener checkBoxListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            checkBoxClicked(v);
+        }
+    };
 
     @Override
     public void onCreate(Bundle bundle){
@@ -82,6 +108,24 @@ public class ProjectEditFragment extends Fragment
         tvEndAt.setOnClickListener(this);
         etName = (EditText) rootView.findViewById(R.id.project_edit_name);
         etDescription = (EditText) rootView.findViewById(R.id.project_edit_description);
+        spinnerAlertType = (Spinner) rootView.findViewById(R.id.project_edit_alert_spinner);
+        ArrayAdapter<CharSequence> adapterAlert = ArrayAdapter.createFromResource(getActivity(), R.array.alert_array, android.R.layout.simple_spinner_item);
+        adapterAlert.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerAlertType.setAdapter(adapterAlert);
+        tvUnit = (AutoCompleteTextView) rootView.findViewById(R.id.project_edit_unit);
+        String[] units = getResources().getStringArray(R.array.unit_array);
+        ArrayAdapter<String> adapterUnit = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_expandable_list_item_1, units);
+        tvUnit.setAdapter(adapterUnit);
+        etTarget = (EditText) rootView.findViewById(R.id.project_edit_target);
+        etInitProgress = (EditText) rootView.findViewById(R.id.project_edit_init_progress);
+        layoutStartEndLabels = (LinearLayout) rootView.findViewById(R.id.project_edit_start_end_labels);
+        layoutStartEndValues = (LinearLayout) rootView.findViewById(R.id.project_edit_start_end_values);
+        checkBoxUseStartEndDate = (CheckBox) rootView.findViewById(R.id.project_edit_checkBoxUseStartEndDate);
+        checkBoxUseStartEndDate.setOnClickListener(this.checkBoxListener);
+        checkBoxIsConsumed = (CheckBox) rootView.findViewById(R.id.project_edit_consumed);
+        checkBoxIsConsumed.setOnClickListener(this.checkBoxListener);
+        checkBoxIsDecimalUnit = (CheckBox) rootView.findViewById(R.id.project_edit_decimal_unit);
+        checkBoxIsDecimalUnit.setOnClickListener(this.checkBoxListener);
         Calendar cal = Calendar.getInstance();
         tvStartAt.setText(FormatHelper.shortLocalDateFormatter.format(cal.getTime()));
         cal.add(Calendar.DAY_OF_MONTH, 1);
@@ -129,7 +173,6 @@ public class ProjectEditFragment extends Fragment
             }
 
         }
-        cursor.close();
     }
 
     @Override
@@ -138,39 +181,59 @@ public class ProjectEditFragment extends Fragment
     }
 
     private void showProjectDetail(Project project) {
-        if (project != null) {
-            etName.setText(project.getName());
-            if(mItem.getStartDate() == null )
-            {
-                tvStartAt.setText("");
-                tvEndAt.setText("");
-            }
-            else {
-                tvStartAt.setText(FormatHelper.shortLocalDateFormatter.format(project.getStartDate()));
-                tvEndAt.setText(FormatHelper.shortLocalDateFormatter.format(project.getEndDate()));
-            }
-            etDescription.setText(mItem.getDescription());
-
-
-        } else {
-            etName.setText("");
+        etName.setText(project.getName());
+        etTarget.setText(NumberUtils.decimalToString(project.getTarget(), project.isDecimalUnit()));
+        etInitProgress.setText(NumberUtils.decimalToString(project.getInitProgress(), project.isDecimalUnit()));
+        tvUnit.setText(project.getUnit());
+        spinnerAlertType.setSelection(project.getAlertType().ordinal());
+        if(mItem.getStartDate() == null )
+        {
+            checkBoxUseStartEndDate.setChecked(false);
             tvStartAt.setText("");
             tvEndAt.setText("");
-            etDescription.setText("");
-
         }
+        else {
+            checkBoxUseStartEndDate.setChecked(true);
+            layoutStartEndLabels.setVisibility(View.VISIBLE);
+            layoutStartEndValues.setVisibility(View.VISIBLE);
+            tvStartAt.setText(FormatHelper.shortLocalDateFormatter.format(project.getStartDate()));
+            tvEndAt.setText(FormatHelper.shortLocalDateFormatter.format(project.getEndDate()));
+        }
+        checkBoxIsConsumed.setChecked(project.isConsumed());
+        checkBoxIsDecimalUnit.setChecked(project.isDecimalUnit());
+        etDescription.setText(mItem.getDescription());
+        etInitProgress.setEnabled(false);
+        checkBoxIsConsumed.setEnabled(false);
+
 
     }
 
     public void saveProject() throws ParseException {
-        Log.d(TAG, "save project");
-        mItem.setName(etName.getText().toString().trim());
-        Log.d(TAG, "save project id "+mItem.getProjectId());
-        mItem.setDescription(etDescription.getText().toString().trim());
-        mItem.setStartDate(FormatHelper.shortLocalDateFormatter.parse(tvStartAt.getText().toString()));
-        mItem.setEndDate(FormatHelper.shortLocalDateFormatter.parse(tvEndAt.getText().toString()));
-        UpdateTask task = new UpdateTask(mItem.getId(), mItem);
-        executorPool.submit(task);
+        if(validInput())
+        {
+            mItem.setName(etName.getText().toString().trim());
+            mItem.setDescription(etDescription.getText().toString().trim());
+            if(checkBoxUseStartEndDate.isChecked()) {
+                mItem.setStartDate(FormatHelper.shortLocalDateFormatter.parse(tvStartAt.getText().toString()));
+                mItem.setEndDate(FormatHelper.shortLocalDateFormatter.parse(tvEndAt.getText().toString()));
+            }
+            else {
+                mItem.setStartDate(null);
+                mItem.setEndDate(null);
+            }
+            mItem.setTarget(new BigDecimal(etTarget.getText().toString()));
+            mItem.setUnit(tvUnit.getText().toString());
+            mItem.setAlertType(Project.AlertType.parse(spinnerAlertType.getSelectedItem().toString()));
+            mItem.setDecimalUnit(checkBoxIsDecimalUnit.isChecked());
+            Date date = new Date();
+            mItem.setLastUpdateTime(date);
+            UpdateTask task = new UpdateTask(mItem.getId(), mItem);
+            executorPool.submit(task);
+        }
+        else {
+            Toast.makeText(this.getActivity(), R.string.invalid_input, Toast.LENGTH_LONG).show();
+        }
+
     }
 
     @Override
@@ -179,6 +242,30 @@ public class ProjectEditFragment extends Fragment
         datePickerFragment.setCallBack(this);
         datePickerFragment.setTargetId(view.getId());
         datePickerFragment.show(getFragmentManager(), "timePicker");
+    }
+
+    public void checkBoxClicked(View view){
+        switch (view.getId()) {
+            case R.id.project_edit_checkBoxUseStartEndDate:
+                if (this.checkBoxUseStartEndDate.isChecked()) {
+                    this.layoutStartEndValues.setVisibility(View.VISIBLE);
+                    this.layoutStartEndLabels.setVisibility(View.VISIBLE);
+                    Calendar cal = Calendar.getInstance();
+                    tvStartAt.setText(FormatHelper.shortLocalDateFormatter.format(cal.getTime()));
+                    cal.add(Calendar.DAY_OF_MONTH, 1);
+                    tvEndAt.setText(FormatHelper.shortLocalDateFormatter.format(cal.getTime()));
+                } else {
+                    this.layoutStartEndValues.setVisibility(View.GONE);
+                    this.layoutStartEndLabels.setVisibility(View.GONE);
+                    this.tvEndAt.setText("");
+                    this.tvStartAt.setText("");
+                }
+                break;
+            case R.id.project_edit_consumed:
+                break;
+            case R.id.project_edit_decimal_unit:
+                break;
+        }
     }
 
     @Override
@@ -199,16 +286,27 @@ public class ProjectEditFragment extends Fragment
             Project project = new Project();
             project.setName(etName.getText().toString().trim());
             project.setDescription(etDescription.getText().toString().trim());
-            project.setStartDate(FormatHelper.shortLocalDateFormatter.parse(tvStartAt.getText().toString()));
-            project.setEndDate(FormatHelper.shortLocalDateFormatter.parse(tvEndAt.getText().toString()));
+            if(checkBoxUseStartEndDate.isChecked()) {
+                if (!tvStartAt.getText().toString().isEmpty()) {
+                    project.setStartDate(FormatHelper.shortLocalDateFormatter.parse(tvStartAt.getText().toString()));
+                }
+                if (!tvEndAt.getText().toString().isEmpty()) {
+                    project.setEndDate(FormatHelper.shortLocalDateFormatter.parse(tvEndAt.getText().toString()));
+                }
+            }
             project.setExpectedProgress(BigDecimal.ZERO);
             project.setCurrentProgress(BigDecimal.ZERO);
-            project.setTarget(new BigDecimal("300"));
-            project.setUnit("DSD");
-            project.setAlertType(Project.AlertType.OFF);
-            project.setConsumed(false);
-            project.setDecimalUnit(false);
-            project.setInitProgress(BigDecimal.ZERO);
+            project.setTarget(new BigDecimal(etTarget.getText().toString()));
+            project.setUnit(tvUnit.getText().toString());
+            project.setAlertType(Project.AlertType.parse(spinnerAlertType.getSelectedItem().toString()));
+            project.setConsumed(checkBoxIsConsumed.isChecked());
+            project.setDecimalUnit(checkBoxIsDecimalUnit.isChecked());
+            if (TextUtils.isEmpty(etInitProgress.getText())){
+                project.setInitProgress(BigDecimal.ZERO);
+            }
+            else {
+                project.setInitProgress(new BigDecimal(etInitProgress.getText().toString()));
+            }
             Date date = new Date();
             project.setCreatedTime(date);
             project.setLastUpdateTime(date);
@@ -224,9 +322,20 @@ public class ProjectEditFragment extends Fragment
 
     private boolean validInput() {
         boolean result = true;
-        if(etName.getText().toString().trim().isEmpty()) result = false;
-        if (result && tvStartAt.getText().toString().isEmpty()) result = false;
-        if (result && tvEndAt.getText().toString().isEmpty()) result = false;
+        if(result && TextUtils.isEmpty(etName.getText())){
+            etName.setError(getString(R.string.emptyName));
+            result = false;
+        }
+        if (result && TextUtils.isEmpty(etTarget.getText())) {
+            etTarget.setError(getString(R.string.emptyTarget));
+            result = false;
+        }
+
+        if (result && TextUtils.isEmpty(tvUnit.getText())) {
+            tvUnit.setError(getString(R.string.emptyUnit));
+            result = false;
+        }
         return result;
     }
+
 }

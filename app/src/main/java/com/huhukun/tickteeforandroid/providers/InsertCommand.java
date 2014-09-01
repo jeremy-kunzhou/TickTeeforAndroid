@@ -50,14 +50,14 @@ public class InsertCommand extends RESTCommand {
     public InsertCommand( long requestId, String name, String description, String startAt,
                           String endAt, String expectedProgress, String currentProgress,
                           String createdAt, String updatedAt, String target, String unit,
-                          String alert, String isDecimal, String initProgress, String isConsumed )
+                          String alert, boolean isDecimal, String initProgress, boolean isConsumed )
             throws JSONException {
         this.requestId = requestId;
         JSONObject json = new JSONObject();
         json.put(PARAM_NAME, name);
         json.put(PARAM_DESCRIPTION, description);
-        json.put(PARAM_START_AT, startAt);
-        json.put(PARAM_END_AT, endAt);
+        json.put(PARAM_START_AT, startAt == null? JSONObject.NULL : startAt);
+        json.put(PARAM_END_AT, endAt == null? JSONObject.NULL: endAt);
         json.put(PARAM_EXPECTED_PROGRESS, expectedProgress);
         json.put(PARAM_CURRENT_PROGRESS,currentProgress);
         json.put(PARAM_CREATED_AT, createdAt);
@@ -70,6 +70,7 @@ public class InsertCommand extends RESTCommand {
         json.put(PARAM_IS_CONSUMED, isConsumed);
         projectJson = new JSONObject();
         projectJson.put(PARAM_PROJECT, json);
+        Log.e(TAG, projectJson.toString());
     }
 
     @Override

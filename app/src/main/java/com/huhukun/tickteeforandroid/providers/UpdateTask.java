@@ -42,7 +42,6 @@ public class UpdateTask implements Callable<Boolean> {
         uri = ContentUris.withAppendedId(
                 TickteeProvider.CONTENT_URI_PROJECTS_PENDING,
                 mUpdateId);
-
         values.put( SqlOpenHelper.TableConstants.COL_NAME, project.getName() );
         values.put( SqlOpenHelper.TableConstants.COL_DESCRIPTION, project.getDescription() );
         values.put( SqlOpenHelper.TableConstants.COL_START_AT,  FormatHelper.UseDateFormatter(FormatHelper.serverDateFormatter, project.getStartDate()));
@@ -54,10 +53,9 @@ public class UpdateTask implements Callable<Boolean> {
         values.put( SqlOpenHelper.TableConstants.COL_TARGET, project.getTarget().toString());
         values.put( SqlOpenHelper.TableConstants.COL_UNIT, project.getUnit());
         values.put( SqlOpenHelper.TableConstants.COL_ALERT_TYPE, project.getAlertType().toString());
-        values.put( SqlOpenHelper.TableConstants.COL_IS_CONSUMED, project.isConsumed());
-        values.put( SqlOpenHelper.TableConstants.COL_IS_DECIMAL, project.isDecimalUnit());
+        values.put( SqlOpenHelper.TableConstants.COL_IS_CONSUMED, project.isConsumed()? 1:0);
+        values.put( SqlOpenHelper.TableConstants.COL_IS_DECIMAL, project.isDecimalUnit()? 1:0);
         values.put( SqlOpenHelper.TableConstants.COL_INIT_PROGRESS, project.getInitProgress().toString());
-
         updateCount = cr.update( uri, values, null, null );
 
         if ( updateCount == 0 ) {

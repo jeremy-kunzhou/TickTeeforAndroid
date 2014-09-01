@@ -207,15 +207,14 @@ public class TickteeProvider extends ContentProvider {
                         qb.appendWhere("/");
                         qb.appendWhere(TableConstants.COL_TARGET);
                         qb.appendWhere(" ) ");
-                        qb.appendWhere(" < (");
-                        qb.appendWhere("( strftime('%s', 'now') - strftime('%s', " +
+                        qb.appendWhere(" < cast(");
+                        qb.appendWhere(" strftime('%s', 'now') - strftime('%s', " +
                                 TableConstants.COL_START_AT +
-                                ") )/( strftime('%s', " +
+                                ") as real )/( strftime('%s', " +
                                 TableConstants.COL_END_AT +
                                 ") - strftime('%s', " +
                                 TableConstants.COL_START_AT +
                                 ") )");
-                        qb.appendWhere(" ) ");
                         break;
                     case PROJECTS_STATUS_COMPLETE:
                         qb.appendWhere(TableConstants.COL_CURRENT_PROGRESS);
@@ -471,7 +470,6 @@ public class TickteeProvider extends ContentProvider {
         if ( Log.isLoggable( TAG, Log.INFO ) ) {
             Log.i( TAG, "update uri[" + uri + "]" );
         }
-
         switch (uriMatcher.match(uri)) {
             case PROJECTS_PENDING_ID:
 

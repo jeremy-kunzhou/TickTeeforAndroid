@@ -55,15 +55,15 @@ public class UpdateCommand extends RESTCommand {
     public UpdateCommand(long requestId, long projectsId, String name, String description, String startAt,
                          String endAt, String expectedProgress, String currentProgress,
                          String createdAt, String updatedAt,String target, String unit,
-                         String alert, String isDecimal, String initProgress, String isConsumed )
+                         String alert, boolean isDecimal, String initProgress, boolean isConsumed )
             throws JSONException {
         this.requestId = requestId;
         this.projectId = projectsId;
         JSONObject json = new JSONObject();
         json.put(PARAM_NAME, name);
         json.put(PARAM_DESCRIPTION, description);
-        json.put(PARAM_START_AT, startAt);
-        json.put(PARAM_END_AT, endAt);
+        json.put(PARAM_START_AT, startAt == null? JSONObject.NULL : startAt);
+        json.put(PARAM_END_AT, endAt == null? JSONObject.NULL: endAt);
         json.put(PARAM_EXPECTED_PROGRESS, expectedProgress);
         json.put(PARAM_CURRENT_PROGRESS,currentProgress);
         json.put(PARAM_CREATED_AT, createdAt);

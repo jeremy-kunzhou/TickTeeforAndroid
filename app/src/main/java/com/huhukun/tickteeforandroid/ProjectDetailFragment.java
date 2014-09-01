@@ -9,9 +9,12 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.text.Layout;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,11 +22,13 @@ import com.huhukun.tickteeforandroid.UILibrary.SeekArc;
 import com.huhukun.tickteeforandroid.model.Project;
 import com.huhukun.tickteeforandroid.model.SqlOpenHelper;
 import com.huhukun.tickteeforandroid.providers.DeleteTask;
+import com.huhukun.tickteeforandroid.providers.NetworkUtils;
 import com.huhukun.tickteeforandroid.providers.QueryTransactionInfo;
 import com.huhukun.tickteeforandroid.providers.TickteeProvider;
 import com.huhukun.tickteeforandroid.providers.UpdateTask;
 import com.huhukun.tickteeforandroid.providers.WebApiConstants;
 import com.huhukun.utils.FormatHelper;
+import com.huhukun.utils.NumberUtils;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -39,7 +44,7 @@ import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants;
  * on handsets.
  */
 public class ProjectDetailFragment extends Fragment
-        implements LoaderManager.LoaderCallbacks<Cursor> {
+        implements LoaderManager.LoaderCallbacks<Cursor>, SeekArc.OnSeekArcChangeListener {
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
@@ -62,6 +67,8 @@ public class ProjectDetailFragment extends Fragment
     private TextView tvProjectLastUpdateAt;
     private TextView tvProjectDescription;
     private TextView tvSeekArcPercentage;
+    private TextView tvSeekArcPercentageUnit;
+    private EditText etNewProgress;
     private SeekArc seekArc;
 
     private String sqlId;
@@ -109,9 +116,24 @@ public class ProjectDetailFragment extends Fragment
         tvProjectLastUpdateAt = (TextView) rootView.findViewById(R.id.project_detail_last_update_at);
         tvProjectDescription = (TextView) rootView.findViewById(R.id.project_detail_description);
         tvSeekArcPercentage = (TextView) rootView.findViewById(R.id.seekArcProgress);
+        tvSeekArcPercentageUnit = (TextView) rootView.findViewById(R.id.seekArcProgressUnit);
+        etNewProgress = (EditText) rootView.findViewById(R.id.project_detail_new_progress);
+        etNewProgress.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    updateProgress(etNewProgress.getText().toString().trim());
+//                    handled = true;
+                }
+                return handled;
+            }
+        });
         seekArc = (SeekArc) rootView.findViewById(R.id.seekArc);
+        seekArc.setOnSeekArcChangeListener(this);
         return rootView;
     }
+
 
     @Override
     public void onResume(){
@@ -192,8 +214,16 @@ public class ProjectDetailFragment extends Fragment
             tvProjectCreatedAt.setText(FormatHelper.shortLocalDateTimeFormatter.format(mItem.getCreatedTime()));
             tvProjectLastUpdateAt.setText(FormatHelper.shortLocalDateTimeFormatter.format(mItem.getLastUpdateTime()));
             tvProjectDescription.setText(mItem.getDescription());
-            seekArc.setStartAngle(getAngle(mItem.getCurrentProgress(), mItem.getTarget()));
-            tvSeekArcPercentage.setText(mItem.getCurrentProgress() + "");
+            seekArc.setStartAngle(NumberUtils.getAngle(mItem.getCurrentProgress(), mItem.getTarget()));
+            seekArc.setExpectedAngle(NumberUtils.getAngle(mItem.getExpectedPercentage()));
+            tvSeekArcPercentage.setText(NumberUtils.decimalToString(mItem.getCurrentProgress(), mItem.isDecimalUnit()));
+            tvSeekArcPercentageUnit.setText(mItem.getUnit());
+            if (mItem.getUnit()!=null && !mItem.getUnit().trim().isEmpty()){
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)tvSeekArcPercentageUnit.getLayoutParams();
+                params.setMargins(5, 0, 0, 0); //substitute parameters for left, top, right, bottom
+                tvSeekArcPercentageUnit.setLayoutParams(params);
+            }
+
 
         } else {
             tvProjectStartAt.setText("");
@@ -228,9 +258,31 @@ public class ProjectDetailFragment extends Fragment
     }
 
 
-    private int getAngle(BigDecimal realNumber, BigDecimal totalNumber) {
-        int angle =  (int)Math.ceil(realNumber.divide(totalNumber, 0, BigDecimal.ROUND_HALF_UP).doubleValue()) / 100 * 360;
-        angle = angle > 360 ? 360 : angle;
-        return  angle;
+    @Override
+    public void onProgressChanged(SeekArc seekArc, int progress, boolean fromUser) {
+        if(fromUser){
+            BigDecimal newProgress =  NumberUtils.getNumberFromPercentage(progress, mItem.getTarget());
+            this.tvSeekArcPercentage.setText(NumberUtils.decimalToString(mItem.getCurrentProgress().add(newProgress), mItem.isDecimalUnit()));
+            this.etNewProgress.setText(NumberUtils.decimalToString(newProgress, mItem.isDecimalUnit()));
+
+        }
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekArc seekArc) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekArc seekArc) {
+
+    }
+
+
+    private void updateProgress(String progress) {
+        if(progress == null || progress.isEmpty()) progress = "0";
+        BigDecimal currentProgress = new BigDecimal(progress);
+        seekArc.setProgress(NumberUtils.getPercentage(currentProgress, mItem.getTarget()));
+        tvSeekArcPercentage.setText(NumberUtils.decimalToString(mItem.getCurrentProgress().add(currentProgress), mItem.isDecimalUnit()));
     }
 }

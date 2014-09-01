@@ -26,13 +26,22 @@
             seekarc:sweepAngle="360"
             seekarc:touchInside="false" />
 
-        <TextView
-            android:id="@+id/seekArcProgress"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="0"
-            android:textSize="40sp" />
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:id="@+id/seekArcProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="0"
+                android:textSize="40sp" />
+
+        </LinearLayout>
+
     </FrameLayout>
 
     <ScrollView
@@ -59,12 +68,33 @@
                 android:textStyle="bold"
                 android:gravity="bottom" />
 
-            <EditText
-                android:layout_width="fill_parent"
-                android:layout_height="40sp"
-                android:inputType="number"
-                android:ems="10"
-                android:id="@+id/project_detail_new_progress" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:orientation="horizontal"
+                >
+                <org.droidparts.widget.ClearableEditText
+                    android:layout_width="fill_parent"
+                    android:layout_height="40sp"
+                    android:inputType="numberDecimal"
+                    android:ems="10"
+                    android:id="@+id/project_detail_new_progress"
+                    android:drawableRight="@android:drawable/presence_offline"
+                    android:drawablePadding="12dp"/>
+
+
+                <TextView
+                    android:id="@+id/seekArcProgressUnit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="20sp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="5dp"/>
+
+            </LinearLayout>
+
 
             <TextView
                 android:layout_width="fill_parent"
@@ -204,7 +234,8 @@
                 android:textColor="@color/main_color"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:gravity="bottom" />
+                android:gravity="bottom"
+                android:visibility="gone" />
 
             <TextView
                 android:layout_width="fill_parent"
@@ -214,7 +245,8 @@
                 android:padding="10sp"
                 android:gravity="center_vertical|start"
                 android:id="@+id/project_detail_expected_progress"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                android:visibility="gone" />
 
 
             <TextView
@@ -227,7 +259,8 @@
                 android:textColor="@color/main_color"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:gravity="bottom" />
+                android:gravity="bottom"
+                android:visibility="gone" />
 
             <TextView
                 android:layout_width="fill_parent"
@@ -237,7 +270,8 @@
                 android:padding="10sp"
                 android:gravity="center_vertical|start"
                 android:id="@+id/project_detail_current_progress"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                android:visibility="gone" />
 
 
         </LinearLayout>

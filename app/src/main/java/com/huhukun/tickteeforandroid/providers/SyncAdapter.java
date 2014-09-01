@@ -104,9 +104,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         String target;
         String unit;
         String alert;
-        String isDecimal;
+        boolean isDecimal;
         String initProgress;
-        String isConsumed;
+        boolean isConsumed;
         String status;
 
         while (cursor.moveToNext()) {
@@ -126,9 +126,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             target = cursor.getString(colTarget);
             unit = cursor.getString(colUnit);
             alert = cursor.getString(colAlert);
-            isDecimal = cursor.getString(colIsDecimal);
+            isDecimal = cursor.getString(colIsDecimal).equals("0")? false : true;
             initProgress = cursor.getString(colInitProgress);
-            isConsumed = cursor.getString(colIsConsumed);
+            isConsumed = cursor.getString(colIsConsumed).equals("0")? false : true;
             status = cursor.getString(colStatus);
 
             try {
@@ -156,8 +156,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                             break;
                         case PUT:
 
-                                restCommand = new UpdateCommand(id, projectsId, name, description, startAt,
-                                        endAt, expectedProgress, currentProgress, createdAt, updatedAt, target, unit, alert, isDecimal, initProgress, isConsumed);
+                            restCommand = new UpdateCommand(id, projectsId, name, description, startAt,
+                                    endAt, expectedProgress, currentProgress, createdAt, updatedAt, target, unit, alert, isDecimal, initProgress, isConsumed);
 
                             break;
                         case DELETE:

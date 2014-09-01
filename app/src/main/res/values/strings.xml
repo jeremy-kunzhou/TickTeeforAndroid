@@ -68,5 +68,17 @@
     <string name="no">No</string>
     <string name="unknown">Unknown</string>
     <string name="new_progress">New Progress</string>
+    <string name="start_end">Use Start and End Date</string>
+    <string name="target">Target Aim</string>
+    <string name="unit">Unit</string>
+    <string name="alertType">Alert</string>
+    <string name="init_progress">Initial Progress</string>
+    <string name="others">Others</string>
+    <string name="consumed">Is Consumed</string>
+    <string name="decimalUnit">Is Decimal Unit</string>
+    <string name="emptyName">Name cannot be empty.</string>
+    <string name="emptyTarget">Target cannot be empty.</string>
+    <string name="no_time_limit">No Time Limit</string>
+    <string name="emptyUnit">Unit cannot be empty.</string>
 
 </resources>

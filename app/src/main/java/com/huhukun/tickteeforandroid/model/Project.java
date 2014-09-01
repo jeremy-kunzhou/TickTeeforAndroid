@@ -1,10 +1,13 @@
 package com.huhukun.tickteeforandroid.model;
 
 import android.database.Cursor;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.huhukun.tickteeforandroid.App_Constants;
+import com.huhukun.utils.BooleanUtils;
 import com.huhukun.utils.FormatHelper;
+import com.huhukun.utils.NumberUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,14 +41,51 @@ public class Project {
 
     public enum AlertType {
         OFF,
-        PER_DAY,
+        EVERY_DAY,
         EVERY_MONDAY,
         EVERY_TUESDAY,
         EVERY_WEDNESDAY,
         EVERY_THURSDAY,
         EVERY_FRIDAY,
         EVERY_SATURDAY,
-        EVERY_SUNDAY
+        EVERY_SUNDAY;
+
+        @Override
+        public String toString() {
+            return super.toString();
+        }
+
+
+        public static AlertType parse(String string){
+            if (string.equals("OFF")) {
+                return OFF;
+            }
+            if (string.equals("EVERY DAY") || string.equals("EVERY_DAY")) {
+                return EVERY_DAY;
+            }
+            if (string.equals("EVERY MONDAY") || string.equals("EVERY_MONDAY")) {
+                return EVERY_MONDAY;
+            }
+            if (string.equals("EVERY TUESDAY") || string.equals("EVERY_TUESDAY")) {
+                return EVERY_TUESDAY;
+            }
+            if (string.equals("EVERY WEDNESDAY") || string.equals("EVERY_WEDNESDAY")) {
+                return EVERY_WEDNESDAY;
+            }
+            if (string.equals("EVERY THURSDAY") || string.equals("EVERY_THURSDAY")) {
+                return EVERY_THURSDAY;
+            }
+            if (string.equals("EVERY FRIDAY") || string.equals("EVERY_FRIDAY")) {
+                return EVERY_FRIDAY;
+            }
+            if (string.equals("EVERY SATURDAY") || string.equals("EVERY_SATURDAY")){
+                return EVERY_SATURDAY;
+            }
+            if (string.equals("EVERY SUNDAY") || string.equals("EVERY_SUNDAY")) {
+                return EVERY_SUNDAY;
+            }
+            throw new IllegalArgumentException("No parse for string "+string);
+        }
     }
 
     private long _id;
@@ -54,13 +94,13 @@ public class Project {
     private String description;
     private Date startDate;
     private Date endDate;
-    private BigDecimal expectedProgress;
-    private BigDecimal currentProgress;
-    private BigDecimal initProgress;
-    private BigDecimal target;
+    private BigDecimal expectedProgress = BigDecimal.ZERO;
+    private BigDecimal currentProgress = BigDecimal.ZERO;
+    private BigDecimal initProgress = BigDecimal.ZERO;
+    private BigDecimal target = BigDecimal.ZERO;
     private boolean isDecimalUnit;
     private String unit;
-    private AlertType alertType;
+    private AlertType alertType = AlertType.OFF;
     private Date createdTime;
     private Date lastUpdateTime;
     private boolean isConsumed;
@@ -238,7 +278,6 @@ public class Project {
     public Project() {}
 
     public Project(JSONObject json) throws JSONException, ParseException {
-
         this.projectId = json.getLong(PARAM_PROJECTS_ID);
         this.name = json.getString(PARAM_NAME);
         this.description = json.getString(PARAM_DESCRIPTION);
@@ -248,17 +287,16 @@ public class Project {
             this.startDate = FormatHelper.serverDateFormatter.parse(json.getString(PARAM_START_AT));
             this.endDate = FormatHelper.serverDateFormatter.parse(json.getString(PARAM_END_AT));
         }
-        this.expectedProgress = new BigDecimal(json.getString(PARAM_EXPECTED_PROGRESS));
-        this.currentProgress = new BigDecimal(json.getString(PARAM_CURRENT_PROGRESS));
-        this.createdTime = FormatHelper.serverDateTimeFormatter.parse(json.getString(PARAM_CREATED_AT));
-        this.lastUpdateTime = FormatHelper.serverDateTimeFormatter.parse(json.getString(PARAM_UPDATED_AT));
-        this.target = new BigDecimal(json.getString(PARAM_TARGET));
-        this.unit = json.getString(PARAM_UNIT);
-        this.alertType = AlertType.valueOf(json.getString(PARAM_ALERT_TYPE));
-        this.isDecimalUnit = json.getBoolean(PARAM_IS_DECIMAL_UNIT);
-        this.initProgress = new BigDecimal(json.getString(PARAM_INIT_PROGRESS));
-        this.isConsumed = json.getBoolean(PARAM_IS_CONSUMED);
-
+        this.expectedProgress = json.has(PARAM_EXPECTED_PROGRESS)? new BigDecimal(json.getString(PARAM_EXPECTED_PROGRESS)): BigDecimal.ZERO;
+        this.currentProgress = json.has(PARAM_CURRENT_PROGRESS)? new BigDecimal(json.getString(PARAM_CURRENT_PROGRESS)) : BigDecimal.ZERO;
+        this.createdTime = json.has(PARAM_CREATED_AT)? FormatHelper.serverDateTimeFormatter.parse(json.getString(PARAM_CREATED_AT)):null;
+        this.lastUpdateTime = json.has(PARAM_UPDATED_AT)?FormatHelper.serverDateTimeFormatter.parse(json.getString(PARAM_UPDATED_AT)) : null;
+        this.target = json.has(PARAM_TARGET)? new BigDecimal(json.getString(PARAM_TARGET)) : BigDecimal.ONE;
+        this.unit = json.has(PARAM_UNIT)? json.getString(PARAM_UNIT): "";
+        this.alertType = json.has(PARAM_ALERT_TYPE)? AlertType.parse(json.getString(PARAM_ALERT_TYPE)) : AlertType.OFF;
+        this.isDecimalUnit = json.has(PARAM_IS_DECIMAL_UNIT)? json.getBoolean(PARAM_IS_DECIMAL_UNIT):false;
+        this.initProgress = json.has(PARAM_INIT_PROGRESS)? new BigDecimal(json.getString(PARAM_INIT_PROGRESS)) : BigDecimal.ZERO;
+        this.isConsumed = json.has(PARAM_IS_CONSUMED)? json.getBoolean(PARAM_IS_CONSUMED) : false;
     }
 
     public Project(Cursor cursor) throws ParseException {
@@ -266,8 +304,8 @@ public class Project {
         this.projectId = cursor.getLong(cursor.getColumnIndex(COL_PROJECT_ID));
         this.name = cursor.getString(cursor.getColumnIndex(COL_NAME));
         this.description = cursor.getString(cursor.getColumnIndex(COL_DESCRIPTION));
-        if (cursor.getString(cursor.getColumnIndex(COL_START_AT)) != null
-                && cursor.getString(cursor.getColumnIndex(COL_END_AT)) != null) {
+        if (!TextUtils.isEmpty(cursor.getString(cursor.getColumnIndex(COL_START_AT)) )
+                && !TextUtils.isEmpty(cursor.getString(cursor.getColumnIndex(COL_END_AT)))) {
             this.startDate = FormatHelper.serverDateFormatter.parse(cursor.getString(cursor.getColumnIndex(COL_START_AT)));
             this.endDate = FormatHelper.serverDateFormatter.parse(cursor.getString(cursor.getColumnIndex(COL_END_AT)));
         }
@@ -277,15 +315,16 @@ public class Project {
         this.lastUpdateTime = FormatHelper.serverDateTimeFormatter.parse(cursor.getString(cursor.getColumnIndex(COL_UPDATED_AT)));
         this.target = new BigDecimal(cursor.getString(cursor.getColumnIndex(COL_TARGET)));
         this.unit = cursor.getString(cursor.getColumnIndex(COL_UNIT));
-        this.alertType = AlertType.valueOf(cursor.getString(cursor.getColumnIndex(COL_ALERT_TYPE)));
-        this.isDecimalUnit = Boolean.getBoolean(cursor.getString(cursor.getColumnIndex(COL_IS_DECIMAL)));
+        this.alertType = AlertType.parse(cursor.getString(cursor.getColumnIndex(COL_ALERT_TYPE)));
+        this.isDecimalUnit = BooleanUtils.parse(cursor.getString(cursor.getColumnIndex(COL_IS_DECIMAL)));
         this.initProgress = new BigDecimal(cursor.getString(cursor.getColumnIndex(COL_INIT_PROGRESS)));
-        this.isConsumed = Boolean.getBoolean(cursor.getString(cursor.getColumnIndex(COL_IS_CONSUMED)));
+        this.isConsumed = BooleanUtils.parse(cursor.getString(cursor.getColumnIndex(COL_IS_CONSUMED)));
     }
 
-    public JSONObject toJson() throws JSONException {
+    public JSONObject toJson() {
 
         JSONObject json = new JSONObject();
+        try{
         json.put(PARAM_PROJECTS_ID, this.getProjectId());
         json.put(PARAM_NAME, this.getName());
         json.put(PARAM_DESCRIPTION, this.getDescription());
@@ -293,13 +332,13 @@ public class Project {
             json.put(PARAM_START_AT, FormatHelper.serverDateFormatter.format(this.getStartDate()));
         }
         else{
-            json.put(PARAM_START_AT, null);
+            json.put(PARAM_START_AT, "");
         }
         if (this.getEndDate() != null) {
             json.put(PARAM_END_AT, FormatHelper.serverDateFormatter.format(this.getEndDate()));
         }
         else {
-            json.put(PARAM_END_AT, null);
+            json.put(PARAM_END_AT, "");
         }
         json.put(PARAM_EXPECTED_PROGRESS, this.getExpectedProgress().toString());
         json.put(PARAM_CURRENT_PROGRESS, this.getCurrentProgress().toString());
@@ -311,7 +350,18 @@ public class Project {
         json.put(PARAM_IS_DECIMAL_UNIT, this.isDecimalUnit);
         json.put(PARAM_INIT_PROGRESS, this.getInitProgress().toString());
         json.put(PARAM_IS_CONSUMED, this.isConsumed);
+        } catch (JSONException e) {
+            Log.e(TAG, "unable to make json");
+        }
         return json;
+    }
+
+    public int getExpectedPercentage()
+    {
+        if(this.getStartDate() == null || this.getEndDate() == null) return 0;
+        Date now = new Date();
+        return NumberUtils.getPercentage(this.getStartDate(), this.getEndDate(), now);
+
     }
 
 

@@ -135,7 +135,7 @@ public class ProjectDetailActivity extends ActionBarActivity {
         if(fragment != null)
         {
             fragment.saveProgress();
-            Toast.makeText(this, R.string.progress_saved, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.progress_saved, Toast.LENGTH_SHORT).show();
             finish();
         }
     }

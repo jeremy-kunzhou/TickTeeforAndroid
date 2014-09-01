@@ -14,6 +14,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -262,7 +263,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
                 String start_date_string = cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_START_AT));
                 String end_date_string = cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_END_AT));
 
-                if ( start_date_string != null && end_date_string != null && !start_date_string.equals("null") && !end_date_string.equals("null"))
+                if (start_date_string != null && end_date_string != null && !TextUtils.isEmpty(start_date_string) && !TextUtils.isEmpty(end_date_string))
                 {
                     try {
                         Date start = FormatHelper.serverDateFormatter.parse(start_date_string);
@@ -282,7 +283,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
             }
             cursor.moveToNext();
         }
-        tvTotal.setText(total_count+"");
+        tvTotal.setText(total_count + "");
         tvInProgress.setText(in_progress_count+"");
         tvOverdue.setText(overdue_count+"");
         tvComplete.setText(complete_count+"");

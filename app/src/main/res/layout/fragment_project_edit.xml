@@ -36,11 +36,113 @@
                 android:textColor="#000000" />
 
 
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="40sp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/target"
+                android:padding="5sp"
+                android:background="@drawable/bottom_border"
+                android:textColor="@color/main_color"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:gravity="bottom"
+                />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:ems="10"
+                android:id="@+id/project_edit_target"
+                android:padding="10sp" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="40sp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/init_progress"
+                android:padding="5sp"
+                android:background="@drawable/bottom_border"
+                android:textColor="@color/main_color"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:gravity="bottom"/>
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:ems="10"
+                android:id="@+id/project_edit_init_progress"
+                android:padding="10sp"
+                android:text="0" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:background="@drawable/bottom_border"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:padding="5sp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40sp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/unit"
+                    android:padding="5sp"
+                    android:textColor="@color/main_color"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:gravity="bottom"
+                    android:layout_weight="1" />
+
+                <AutoCompleteTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/project_edit_unit"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:background="@drawable/bottom_border"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:padding="5sp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40sp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/alertType"
+                    android:padding="5sp"
+                    android:textColor="@color/main_color"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:gravity="bottom"
+                    android:layout_weight="1" />
+
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/project_edit_alert_spinner"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/start_end"
+                android:id="@+id/project_edit_checkBoxUseStartEndDate"
+                android:padding="5sp" />
+
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                >
+                android:id="@+id/project_edit_start_end_labels"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="fill_parent"
@@ -73,7 +175,8 @@
                 android:orientation="horizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                >
+                android:id="@+id/project_edit_start_end_values"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="fill_parent"
@@ -94,6 +197,38 @@
                     android:gravity="center_vertical|start"
                     android:id="@+id/project_edit_end_at"
                     android:textColor="#000000" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="40sp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/others"
+                android:padding="5sp"
+                android:background="@drawable/bottom_border"
+                android:textColor="@color/main_color"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:gravity="bottom"/>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/consumed"
+                    android:id="@+id/project_edit_consumed"
+                    android:layout_weight="1" />
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/decimalUnit"
+                    android:id="@+id/project_edit_decimal_unit"
+                    android:layout_weight="1" />
             </LinearLayout>
 
             <TextView

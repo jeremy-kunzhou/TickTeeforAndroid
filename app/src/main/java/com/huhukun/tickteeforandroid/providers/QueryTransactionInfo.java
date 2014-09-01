@@ -11,7 +11,7 @@ import java.util.Calendar;
 
 public class QueryTransactionInfo {
 
-    private static final String TAG = App_Constants.APP_TAG +"QueryTransactionInfo";
+    private static final String TAG = App_Constants.APP_TAG +"QTI";
 
     private static final QueryTransactionInfo instance = new QueryTransactionInfo();
 
