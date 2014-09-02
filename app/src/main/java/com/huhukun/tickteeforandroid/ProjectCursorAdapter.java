@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.huhukun.tickteeforandroid.model.SqlOpenHelper;
+import com.huhukun.utils.BooleanUtils;
 import com.huhukun.utils.FormatHelper;
 import com.huhukun.utils.MyDateUtils;
 import com.huhukun.utils.NumberUtils;
@@ -74,13 +75,19 @@ public class ProjectCursorAdapter extends CursorAdapter {
         else {
             String start_date_string = cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_START_AT));
             String end_date_string = cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_END_AT));
+            boolean isConsumed = BooleanUtils.parse(cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_IS_CONSUMED)));
 
             if (start_date_string != null && end_date_string != null && !TextUtils.isEmpty(start_date_string) && !TextUtils.isEmpty(end_date_string)) {
                 try {
                     Date start = FormatHelper.toLocalDateFromUTCString(start_date_string);
                     Date end = FormatHelper.toLocalDateFromUTCString(end_date_string);
                     Date now = new Date();
-                    if (NumberUtils.getPercentage(current, target) < NumberUtils.getPercentage(start, end, now)) {
+
+                    if(!isConsumed && NumberUtils.getPercentage(current, target) < NumberUtils.getPercentage(start, end, now))
+                    {
+                        status = -1;
+                    }else if (isConsumed && NumberUtils.getPercentage(current, target) > NumberUtils.getPercentage(start, end, now))
+                    {
                         status = -1;
                     }
                 }catch (ParseException e) {

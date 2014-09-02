@@ -1,5 +1,7 @@
 package com.huhukun.utils;
 
+import android.util.Log;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -33,6 +35,7 @@ public class FormatHelper {
 
     public static String fromUTCToLocal(Date date)
     {
+        if (date == null) return null;
         return fromUTCtoTimeZoneDate(date, TimeZone.getDefault());
     }
 
@@ -51,19 +54,29 @@ public class FormatHelper {
         return converter.parse(dateString);
     }
 
+
+    public static Date fromLocalDateTimeStringToUTC(String dateString) throws ParseException {
+        DateFormat converter = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault());
+        converter.setTimeZone(TimeZone.getDefault());
+        return converter.parse(dateString);
+    }
+
     public static String toUTCString(Date date){
+        if (date == null) return null;
         DateFormat serverDateTimeFormatter = new SimpleDateFormat(SERVER_DATETIME_FORMAT);
         serverDateTimeFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         return serverDateTimeFormatter.format(date);
     }
 
     public static String toLocalDateString(Date date){
+        if (date == null) return null;
         DateFormat serverDateTimeFormatter = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
         serverDateTimeFormatter.setTimeZone(TimeZone.getDefault());
         return serverDateTimeFormatter.format(date);
     }
 
     public static String toLocalDateTimeString(Date date){
+        if (date == null) return null;
         DateFormat serverDateTimeFormatter = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault());
         serverDateTimeFormatter.setTimeZone(TimeZone.getDefault());
         return serverDateTimeFormatter.format(date);
@@ -77,6 +90,7 @@ public class FormatHelper {
 
     public static String fromTimeZonetoUTCDate(Date date)
     {
+        if (date == null) return null;
         DateFormat converter = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
         converter.setTimeZone(TimeZone.getTimeZone("UTC"));
         return converter.format(date);

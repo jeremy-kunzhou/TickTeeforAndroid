@@ -126,6 +126,7 @@ public class SeekArc extends View {
     private double mTouchAngle;
     private float mTouchIgnoreRadius;
     private OnSeekArcChangeListener mOnSeekArcChangeListener;
+    private boolean reverse = false;
 
     public interface OnSeekArcChangeListener {
 
@@ -294,13 +295,30 @@ public class SeekArc extends View {
         // Draw the arcs
         final int arcStart = mStartAngle + mAngleOffset + mRotation;
         final int arcSweep = mSweepAngle;
-        canvas.drawArc(mArcRect, arcStart, arcSweep, false, mArcPaint);
-        canvas.drawArc(mArcRect,  mAngleOffset+mRotation,  mExpectedAngle, false,
-                mExpectedProgressPaint);
-        canvas.drawArc(mArcRect, arcStart, mProgressSweep, false,
-                mProgressPaint);
-        canvas.drawArc(mArcRect, mAngleOffset+mRotation, mStartAngle, false, mFinishedProgressPaint);
 
+        if(reverse)
+        {
+            canvas.drawArc(mArcRect, arcStart, arcSweep, false, mArcPaint);
+            if(mExpectedAngle - mStartAngle < mProgressSweep){
+                canvas.drawArc(mArcRect,  mExpectedAngle + mAngleOffset + mRotation,  mProgressSweep - (mExpectedAngle-mStartAngle), false,
+                        mExpectedProgressPaint);
+                canvas.drawArc(mArcRect, arcStart, mExpectedAngle - mStartAngle, false,
+                        mProgressPaint);
+            }
+            else {
+                canvas.drawArc(mArcRect, arcStart, mProgressSweep, false,
+                        mProgressPaint);
+            }
+            canvas.drawArc(mArcRect, mAngleOffset+mRotation, mStartAngle, false, mFinishedProgressPaint);
+
+        }else {
+            canvas.drawArc(mArcRect, arcStart, arcSweep, false, mArcPaint);
+            canvas.drawArc(mArcRect,  mAngleOffset+mRotation,  mExpectedAngle, false,
+                    mExpectedProgressPaint);
+            canvas.drawArc(mArcRect, arcStart, mProgressSweep, false,
+                    mProgressPaint);
+            canvas.drawArc(mArcRect, mAngleOffset+mRotation, mStartAngle, false, mFinishedProgressPaint);
+        }
         // Draw the thumb nail
         canvas.translate(mTranslateX -mThumbXPos, mTranslateY -mThumbYPos);
         mThumb.draw(canvas);
@@ -338,6 +356,7 @@ public class SeekArc extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 onStartTrackingTouch();
@@ -562,4 +581,19 @@ public class SeekArc extends View {
     }
 
     public void setExpectedAngle(int angle) {this.mExpectedAngle = angle;}
+
+    public void setReverse(){
+        mArcWidth = mProgressWidth;
+        final Resources res = getResources();
+        int arcColor = res.getColor(android.R.color.holo_blue_light);
+        int progressColor = res.getColor(android.R.color.holo_green_light);
+        int finishedProgressColor = res.getColor(R.color.progress_gray);
+        int expectedProgressColor = res.getColor(android.R.color.holo_red_light);
+        mArcPaint.setColor(arcColor);
+        mProgressPaint.setColor(progressColor);
+        mFinishedProgressPaint.setColor(finishedProgressColor);
+        mExpectedProgressPaint.setColor(expectedProgressColor);
+        reverse = true;
+
+    }
 }

@@ -360,6 +360,9 @@ public class Project {
     {
         if(this.getStartDate() == null || this.getEndDate() == null) return 0;
         Date now = new Date();
+//        if (isConsumed()){
+//            return 100 - NumberUtils.getPercentage(this.getStartDate(), this.getEndDate(), now);
+//        }
         return NumberUtils.getPercentage(this.getStartDate(), this.getEndDate(), now);
 
     }

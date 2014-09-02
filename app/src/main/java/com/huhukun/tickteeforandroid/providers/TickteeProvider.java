@@ -201,7 +201,7 @@ public class TickteeProvider extends ContentProvider {
                         qb.appendWhere("(");
                         qb.appendWhere(TableConstants.COL_START_AT);
                         qb.appendWhere(" is not null ) ");
-                        qb.appendWhere(" AND ");
+                        qb.appendWhere(" AND ((is_consumed = 0 and ");
                         qb.appendWhere(" ( ");
                         qb.appendWhere(TableConstants.COL_CURRENT_PROGRESS);
                         qb.appendWhere("/");
@@ -215,6 +215,21 @@ public class TickteeProvider extends ContentProvider {
                                 ") - strftime('%s', " +
                                 TableConstants.COL_START_AT +
                                 ") )");
+                        qb.appendWhere(") or (is_consumed = 1 and ");
+                        qb.appendWhere(" ( ");
+                        qb.appendWhere(TableConstants.COL_CURRENT_PROGRESS);
+                        qb.appendWhere("/");
+                        qb.appendWhere(TableConstants.COL_TARGET);
+                        qb.appendWhere(" ) ");
+                        qb.appendWhere(" > cast(");
+                        qb.appendWhere(" strftime('%s', 'now') - strftime('%s', " +
+                                TableConstants.COL_START_AT +
+                                ") as real )/( strftime('%s', " +
+                                TableConstants.COL_END_AT +
+                                ") - strftime('%s', " +
+                                TableConstants.COL_START_AT +
+                                ") )");
+                        qb.appendWhere("))");
                         break;
                     case PROJECTS_STATUS_COMPLETE:
                         qb.appendWhere(TableConstants.COL_CURRENT_PROGRESS);

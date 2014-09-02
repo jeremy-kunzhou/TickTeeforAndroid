@@ -214,16 +214,27 @@ public class ProjectDetailFragment extends Fragment
             tvProjectCreatedAt.setText(FormatHelper.toLocalDateTimeString(mItem.getCreatedTime()));
             tvProjectLastUpdateAt.setText(FormatHelper.toLocalDateTimeString(mItem.getLastUpdateTime()));
             tvProjectDescription.setText(mItem.getDescription());
-            seekArc.setStartAngle(NumberUtils.getAngle(mItem.getCurrentProgress(), mItem.getTarget()));
-            seekArc.setExpectedAngle(NumberUtils.getAngle(mItem.getExpectedPercentage()));
-            tvSeekArcPercentage.setText(NumberUtils.decimalToString(mItem.getCurrentProgress(), mItem.isDecimalUnit()));
+            int startAngle = NumberUtils.getAngle(mItem.getCurrentProgress(), mItem.getTarget());
+            int expectedAngle = NumberUtils.getAngle(mItem.getExpectedPercentage());
+            if(mItem.isConsumed()){
+                tvSeekArcPercentage.setText(NumberUtils.decimalToString(mItem.getTarget().subtract(mItem.getCurrentProgress()), mItem.isDecimalUnit()));
+                seekArc.setStartAngle(startAngle);
+                if(expectedAngle == 0) expectedAngle = 360;
+                seekArc.setExpectedAngle(expectedAngle);
+                seekArc.setReverse();
+            }
+            else
+            {
+                seekArc.setStartAngle(startAngle);
+                seekArc.setExpectedAngle(expectedAngle);
+                tvSeekArcPercentage.setText(NumberUtils.decimalToString(mItem.getCurrentProgress(), mItem.isDecimalUnit()));
+            }
             tvSeekArcPercentageUnit.setText(mItem.getUnit());
             if (mItem.getUnit()!=null && !mItem.getUnit().trim().isEmpty()){
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)tvSeekArcPercentageUnit.getLayoutParams();
                 params.setMargins(5, 0, 0, 0); //substitute parameters for left, top, right, bottom
                 tvSeekArcPercentageUnit.setLayoutParams(params);
             }
-
 
         } else {
             tvProjectStartAt.setText("");
@@ -240,7 +251,12 @@ public class ProjectDetailFragment extends Fragment
     public void saveProgress() {
         if(mItem!=null)
         {
-            mItem.setCurrentProgress(new BigDecimal(tvSeekArcPercentage.getText().toString()));
+            if (mItem.isConsumed()){
+                mItem.setCurrentProgress(mItem.getTarget().subtract(new BigDecimal(tvSeekArcPercentage.getText().toString())));
+            }
+            else {
+                mItem.setCurrentProgress(new BigDecimal(tvSeekArcPercentage.getText().toString()));
+            }
             UpdateTask task = new UpdateTask(mItem.getId(), mItem);
             executorPool.submit(task);
         }
@@ -263,6 +279,9 @@ public class ProjectDetailFragment extends Fragment
         if(fromUser){
             BigDecimal newProgress =  NumberUtils.getNumberFromPercentage(progress, mItem.getTarget());
             this.tvSeekArcPercentage.setText(NumberUtils.decimalToString(mItem.getCurrentProgress().add(newProgress), mItem.isDecimalUnit()));
+            if(mItem.isConsumed()){
+                tvSeekArcPercentage.setText(NumberUtils.decimalToString(mItem.getTarget().subtract(mItem.getCurrentProgress().add(newProgress)), mItem.isDecimalUnit()));
+            }
             this.etNewProgress.setText(NumberUtils.decimalToString(newProgress, mItem.isDecimalUnit()));
 
         }
@@ -284,5 +303,8 @@ public class ProjectDetailFragment extends Fragment
         BigDecimal currentProgress = new BigDecimal(progress);
         seekArc.setProgress(NumberUtils.getPercentage(currentProgress, mItem.getTarget()));
         tvSeekArcPercentage.setText(NumberUtils.decimalToString(mItem.getCurrentProgress().add(currentProgress), mItem.isDecimalUnit()));
+        if(mItem.isConsumed()){
+            tvSeekArcPercentage.setText(NumberUtils.decimalToString(mItem.getTarget().subtract(mItem.getCurrentProgress().add(currentProgress)), mItem.isDecimalUnit()));
+        }
     }
 }

@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.huhukun.tickteeforandroid.model.Project;
 import com.huhukun.tickteeforandroid.model.SqlOpenHelper;
 import com.huhukun.tickteeforandroid.providers.TickteeProvider;
+import com.huhukun.utils.BooleanUtils;
 import com.huhukun.utils.FormatHelper;
 import com.huhukun.utils.NumberUtils;
 
@@ -262,7 +263,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
             else {
                 String start_date_string = cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_START_AT));
                 String end_date_string = cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_END_AT));
-
+                boolean isConsumed = BooleanUtils.parse(cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_IS_CONSUMED)));
                 if (start_date_string != null && end_date_string != null && !TextUtils.isEmpty(start_date_string) && !TextUtils.isEmpty(end_date_string))
                 {
                     try {
@@ -271,7 +272,10 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
                         Date now = new Date();
                         Log.d(TAG, NumberUtils.getPercentage(current, target) +" "+ NumberUtils.getPercentage(start, end, now)
                                 +" "+(end.getTime()-start.getTime())+ " "+(now.getTime()-start.getTime()));
-                        if(NumberUtils.getPercentage(current, target) < NumberUtils.getPercentage(start, end, now))
+                        if(!isConsumed && NumberUtils.getPercentage(current, target) < NumberUtils.getPercentage(start, end, now))
+                        {
+                            overdue_count++;
+                        }else if (isConsumed && NumberUtils.getPercentage(current, target) > NumberUtils.getPercentage(start, end, now))
                         {
                             overdue_count++;
                         }
