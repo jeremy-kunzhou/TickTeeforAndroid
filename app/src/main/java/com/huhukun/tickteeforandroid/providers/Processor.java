@@ -87,12 +87,12 @@ public class Processor {
                 detail.getName() );
         values.put( TableConstants.COL_DESCRIPTION,
                 detail.getDescription() );
-        values.put( TableConstants.COL_START_AT,  FormatHelper.UseDateFormatter(FormatHelper.serverDateFormatter, detail.getStartDate()));
-        values.put( TableConstants.COL_END_AT, FormatHelper.UseDateFormatter(FormatHelper.serverDateFormatter, detail.getEndDate()));
+        values.put( TableConstants.COL_START_AT,  FormatHelper.toUTCString(detail.getStartDate()));
+        values.put( TableConstants.COL_END_AT, FormatHelper.toUTCString(detail.getEndDate()));
         values.put( TableConstants.COL_EXPECTED_PROGRESS, detail.getExpectedProgress().toString() );
         values.put( TableConstants.COL_CURRENT_PROGRESS, detail.getCurrentProgress().toString() );
-        values.put( TableConstants.COL_CREATED_AT,  FormatHelper.serverDateTimeFormatter.format(detail.getCreatedTime()));
-        values.put( TableConstants.COL_UPDATED_AT,  FormatHelper.serverDateTimeFormatter.format(detail.getLastUpdateTime()));
+        values.put( TableConstants.COL_CREATED_AT,  FormatHelper.toUTCString(detail.getCreatedTime()));
+        values.put( TableConstants.COL_UPDATED_AT,  FormatHelper.toUTCString(detail.getLastUpdateTime()));
         values.put( TableConstants.COL_TARGET, detail.getTarget().toString());
         values.put( TableConstants.COL_UNIT, detail.getUnit());
         values.put( TableConstants.COL_ALERT_TYPE, detail.getAlertType().toString());
@@ -175,17 +175,17 @@ public class Processor {
                                         .withValue(TableConstants.COL_DESCRIPTION,
                                                 detail.getDescription())
                                         .withValue(TableConstants.COL_START_AT,
-                                                FormatHelper.UseDateFormatter(FormatHelper.serverDateFormatter, detail.getStartDate()))
+                                                FormatHelper.toUTCString(detail.getStartDate()))
                                         .withValue(TableConstants.COL_END_AT,
-                                                FormatHelper.UseDateFormatter(FormatHelper.serverDateFormatter, detail.getEndDate()))
+                                                FormatHelper.toUTCString(detail.getEndDate()))
                                         .withValue(TableConstants.COL_EXPECTED_PROGRESS,
                                                 detail.getExpectedProgress().toString())
                                         .withValue(TableConstants.COL_CURRENT_PROGRESS,
                                                 detail.getCurrentProgress().toString())
                                         .withValue(TableConstants.COL_CREATED_AT,
-                                                FormatHelper.serverDateTimeFormatter.format(detail.getCreatedTime()))
+                                                FormatHelper.toUTCString(detail.getCreatedTime()))
                                         .withValue(TableConstants.COL_UPDATED_AT,
-                                                FormatHelper.serverDateTimeFormatter.format(detail.getLastUpdateTime()))
+                                                FormatHelper.toUTCString(detail.getLastUpdateTime()))
                                         .withValue( TableConstants.COL_TARGET, detail.getTarget().toString())
                                         .withValue( TableConstants.COL_UNIT, detail.getUnit())
                                         .withValue( TableConstants.COL_ALERT_TYPE, detail.getAlertType().toString())
@@ -219,17 +219,17 @@ public class Processor {
                                         .withValue( TableConstants.COL_DESCRIPTION,
                                                 detail.getDescription() )
                                         .withValue(TableConstants.COL_START_AT,
-                                                FormatHelper.UseDateFormatter(FormatHelper.serverDateFormatter, detail.getStartDate()))
+                                                FormatHelper.toUTCString(detail.getStartDate()))
                                         .withValue(TableConstants.COL_END_AT,
-                                                FormatHelper.UseDateFormatter(FormatHelper.serverDateFormatter, detail.getEndDate()))
+                                                FormatHelper.toUTCString(detail.getEndDate()))
                                         .withValue(TableConstants.COL_EXPECTED_PROGRESS,
                                                 detail.getExpectedProgress().toString())
                                         .withValue(TableConstants.COL_CURRENT_PROGRESS,
                                                 detail.getCurrentProgress().toString())
                                         .withValue(TableConstants.COL_CREATED_AT,
-                                                FormatHelper.serverDateTimeFormatter.format(detail.getCreatedTime()))
+                                                FormatHelper.toUTCString(detail.getCreatedTime()))
                                         .withValue(TableConstants.COL_UPDATED_AT,
-                                                FormatHelper.serverDateTimeFormatter.format(detail.getLastUpdateTime()))
+                                                FormatHelper.toUTCString(detail.getLastUpdateTime()))
                                         .withValue( TableConstants.COL_TARGET, detail.getTarget().toString())
                                         .withValue( TableConstants.COL_UNIT, detail.getUnit())
                                         .withValue( TableConstants.COL_ALERT_TYPE, detail.getAlertType().toString())

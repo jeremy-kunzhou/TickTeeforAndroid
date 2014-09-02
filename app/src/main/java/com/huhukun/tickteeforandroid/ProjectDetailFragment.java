@@ -206,13 +206,13 @@ public class ProjectDetailFragment extends Fragment
                 layoutStartEndValues.setVisibility(View.GONE);
             }
             else {
-                tvProjectStartAt.setText(FormatHelper.shortLocalDateFormatter.format(mItem.getStartDate()));
-                tvProjectEndAt.setText(FormatHelper.shortLocalDateFormatter.format(mItem.getEndDate()));
+                tvProjectStartAt.setText(FormatHelper.toLocalDateString(mItem.getStartDate()));
+                tvProjectEndAt.setText(FormatHelper.toLocalDateString(mItem.getEndDate()));
             }
             tvProjectExpectedProgress.setText(mItem.getExpectedProgress().toPlainString());
             tvProjectCurrentProgress.setText(mItem.getCurrentProgress().toPlainString());
-            tvProjectCreatedAt.setText(FormatHelper.shortLocalDateTimeFormatter.format(mItem.getCreatedTime()));
-            tvProjectLastUpdateAt.setText(FormatHelper.shortLocalDateTimeFormatter.format(mItem.getLastUpdateTime()));
+            tvProjectCreatedAt.setText(FormatHelper.toLocalDateTimeString(mItem.getCreatedTime()));
+            tvProjectLastUpdateAt.setText(FormatHelper.toLocalDateTimeString(mItem.getLastUpdateTime()));
             tvProjectDescription.setText(mItem.getDescription());
             seekArc.setStartAngle(NumberUtils.getAngle(mItem.getCurrentProgress(), mItem.getTarget()));
             seekArc.setExpectedAngle(NumberUtils.getAngle(mItem.getExpectedPercentage()));

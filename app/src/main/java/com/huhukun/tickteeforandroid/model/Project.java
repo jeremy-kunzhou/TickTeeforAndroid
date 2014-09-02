@@ -284,13 +284,13 @@ public class Project {
         if (json.has(PARAM_START_AT) && json.has(PARAM_END_AT)
                 && !json.getString(PARAM_START_AT).equals("null")
                 && !json.getString(PARAM_END_AT).equals("null")) {
-            this.startDate = FormatHelper.serverDateFormatter.parse(json.getString(PARAM_START_AT));
-            this.endDate = FormatHelper.serverDateFormatter.parse(json.getString(PARAM_END_AT));
+            this.startDate = FormatHelper.toLocalDateFromUTCString(json.getString(PARAM_START_AT));
+            this.endDate = FormatHelper.toLocalDateFromUTCString(json.getString(PARAM_END_AT));
         }
         this.expectedProgress = json.has(PARAM_EXPECTED_PROGRESS)? new BigDecimal(json.getString(PARAM_EXPECTED_PROGRESS)): BigDecimal.ZERO;
         this.currentProgress = json.has(PARAM_CURRENT_PROGRESS)? new BigDecimal(json.getString(PARAM_CURRENT_PROGRESS)) : BigDecimal.ZERO;
-        this.createdTime = json.has(PARAM_CREATED_AT)? FormatHelper.serverDateTimeFormatter.parse(json.getString(PARAM_CREATED_AT)):null;
-        this.lastUpdateTime = json.has(PARAM_UPDATED_AT)?FormatHelper.serverDateTimeFormatter.parse(json.getString(PARAM_UPDATED_AT)) : null;
+        this.createdTime = json.has(PARAM_CREATED_AT)? FormatHelper.toLocalDateFromUTCString(json.getString(PARAM_CREATED_AT)):null;
+        this.lastUpdateTime = json.has(PARAM_UPDATED_AT)?FormatHelper.toLocalDateFromUTCString(json.getString(PARAM_UPDATED_AT)) : null;
         this.target = json.has(PARAM_TARGET)? new BigDecimal(json.getString(PARAM_TARGET)) : BigDecimal.ONE;
         this.unit = json.has(PARAM_UNIT)? json.getString(PARAM_UNIT): "";
         this.alertType = json.has(PARAM_ALERT_TYPE)? AlertType.parse(json.getString(PARAM_ALERT_TYPE)) : AlertType.OFF;
@@ -306,13 +306,13 @@ public class Project {
         this.description = cursor.getString(cursor.getColumnIndex(COL_DESCRIPTION));
         if (!TextUtils.isEmpty(cursor.getString(cursor.getColumnIndex(COL_START_AT)) )
                 && !TextUtils.isEmpty(cursor.getString(cursor.getColumnIndex(COL_END_AT)))) {
-            this.startDate = FormatHelper.serverDateFormatter.parse(cursor.getString(cursor.getColumnIndex(COL_START_AT)));
-            this.endDate = FormatHelper.serverDateFormatter.parse(cursor.getString(cursor.getColumnIndex(COL_END_AT)));
+            this.startDate = FormatHelper.toLocalDateFromUTCString(cursor.getString(cursor.getColumnIndex(COL_START_AT)));
+            this.endDate = FormatHelper.toLocalDateFromUTCString(cursor.getString(cursor.getColumnIndex(COL_END_AT)));
         }
         this.expectedProgress = new BigDecimal(cursor.getString(cursor.getColumnIndex(COL_EXPECTED_PROGRESS)));
         this.currentProgress = new BigDecimal(cursor.getString(cursor.getColumnIndex(COL_CURRENT_PROGRESS)));
-        this.createdTime = FormatHelper.serverDateTimeFormatter.parse(cursor.getString(cursor.getColumnIndex(COL_CREATED_AT)));
-        this.lastUpdateTime = FormatHelper.serverDateTimeFormatter.parse(cursor.getString(cursor.getColumnIndex(COL_UPDATED_AT)));
+        this.createdTime = FormatHelper.toLocalDateFromUTCString(cursor.getString(cursor.getColumnIndex(COL_CREATED_AT)));
+        this.lastUpdateTime = FormatHelper.toLocalDateFromUTCString(cursor.getString(cursor.getColumnIndex(COL_UPDATED_AT)));
         this.target = new BigDecimal(cursor.getString(cursor.getColumnIndex(COL_TARGET)));
         this.unit = cursor.getString(cursor.getColumnIndex(COL_UNIT));
         this.alertType = AlertType.parse(cursor.getString(cursor.getColumnIndex(COL_ALERT_TYPE)));
@@ -329,21 +329,21 @@ public class Project {
         json.put(PARAM_NAME, this.getName());
         json.put(PARAM_DESCRIPTION, this.getDescription());
         if (this.getStartDate() != null) {
-            json.put(PARAM_START_AT, FormatHelper.serverDateFormatter.format(this.getStartDate()));
+            json.put(PARAM_START_AT, FormatHelper.toUTCString(this.getStartDate()));
         }
         else{
             json.put(PARAM_START_AT, "");
         }
         if (this.getEndDate() != null) {
-            json.put(PARAM_END_AT, FormatHelper.serverDateFormatter.format(this.getEndDate()));
+            json.put(PARAM_END_AT, FormatHelper.toUTCString(this.getEndDate()));
         }
         else {
             json.put(PARAM_END_AT, "");
         }
         json.put(PARAM_EXPECTED_PROGRESS, this.getExpectedProgress().toString());
         json.put(PARAM_CURRENT_PROGRESS, this.getCurrentProgress().toString());
-        json.put(PARAM_CREATED_AT, FormatHelper.serverDateTimeFormatter.format(this.getCreatedTime()));
-        json.put(PARAM_UPDATED_AT, FormatHelper.serverDateTimeFormatter.format(this.getLastUpdateTime()));
+        json.put(PARAM_CREATED_AT, FormatHelper.toUTCString(this.getCreatedTime()));
+        json.put(PARAM_UPDATED_AT, FormatHelper.toUTCString(this.getLastUpdateTime()));
         json.put(PARAM_TARGET, this.getTarget().toString());
         json.put(PARAM_UNIT, this.getUnit());
         json.put(PARAM_ALERT_TYPE, this.getAlertType().toString());

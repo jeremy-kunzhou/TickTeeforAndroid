@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.huhukun.tickteeforandroid.model.SqlOpenHelper;
 import com.huhukun.utils.FormatHelper;
+import com.huhukun.utils.MyDateUtils;
 import com.huhukun.utils.NumberUtils;
 
 import java.math.BigDecimal;
@@ -59,6 +60,11 @@ public class ProjectCursorAdapter extends CursorAdapter {
         if(TextUtils.isEmpty(endDate)) {
             tvEndDate.setText(R.string.no_time_limit);
         }else{
+            try {
+                endDate = FormatHelper.fromUTCStringToLocalString(endDate);
+            } catch (ParseException e) {
+                Log.e(TAG, "unable to parse endDate in utc format");
+            }
             tvEndDate.setText(endDate);
         }
 
@@ -71,8 +77,8 @@ public class ProjectCursorAdapter extends CursorAdapter {
 
             if (start_date_string != null && end_date_string != null && !TextUtils.isEmpty(start_date_string) && !TextUtils.isEmpty(end_date_string)) {
                 try {
-                    Date start = FormatHelper.serverDateFormatter.parse(start_date_string);
-                    Date end = FormatHelper.serverDateFormatter.parse(end_date_string);
+                    Date start = FormatHelper.toLocalDateFromUTCString(start_date_string);
+                    Date end = FormatHelper.toLocalDateFromUTCString(end_date_string);
                     Date now = new Date();
                     if (NumberUtils.getPercentage(current, target) < NumberUtils.getPercentage(start, end, now)) {
                         status = -1;

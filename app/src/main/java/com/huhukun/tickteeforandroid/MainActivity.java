@@ -266,9 +266,11 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
                 if (start_date_string != null && end_date_string != null && !TextUtils.isEmpty(start_date_string) && !TextUtils.isEmpty(end_date_string))
                 {
                     try {
-                        Date start = FormatHelper.serverDateFormatter.parse(start_date_string);
-                        Date end = FormatHelper.serverDateFormatter.parse(end_date_string);
+                        Date start = FormatHelper.toLocalDateFromUTCString(start_date_string);
+                        Date end = FormatHelper.toLocalDateFromUTCString(end_date_string);
                         Date now = new Date();
+                        Log.d(TAG, NumberUtils.getPercentage(current, target) +" "+ NumberUtils.getPercentage(start, end, now)
+                                +" "+(end.getTime()-start.getTime())+ " "+(now.getTime()-start.getTime()));
                         if(NumberUtils.getPercentage(current, target) < NumberUtils.getPercentage(start, end, now))
                         {
                             overdue_count++;

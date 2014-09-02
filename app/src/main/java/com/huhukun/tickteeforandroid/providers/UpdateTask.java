@@ -44,12 +44,12 @@ public class UpdateTask implements Callable<Boolean> {
                 mUpdateId);
         values.put( SqlOpenHelper.TableConstants.COL_NAME, project.getName() );
         values.put( SqlOpenHelper.TableConstants.COL_DESCRIPTION, project.getDescription() );
-        values.put( SqlOpenHelper.TableConstants.COL_START_AT,  FormatHelper.UseDateFormatter(FormatHelper.serverDateFormatter, project.getStartDate()));
-        values.put( SqlOpenHelper.TableConstants.COL_END_AT, FormatHelper.UseDateFormatter(FormatHelper.serverDateFormatter, project.getEndDate()));
+        values.put( SqlOpenHelper.TableConstants.COL_START_AT,  FormatHelper.toUTCString( project.getStartDate()));
+        values.put( SqlOpenHelper.TableConstants.COL_END_AT, FormatHelper.toUTCString( project.getEndDate()));
         values.put( SqlOpenHelper.TableConstants.COL_EXPECTED_PROGRESS, project.getExpectedProgress().toString() );
         values.put( SqlOpenHelper.TableConstants.COL_CURRENT_PROGRESS, project.getCurrentProgress().toString() );
-        values.put( SqlOpenHelper.TableConstants.COL_CREATED_AT,  FormatHelper.serverDateTimeFormatter.format(project.getCreatedTime()));
-        values.put( SqlOpenHelper.TableConstants.COL_UPDATED_AT,  FormatHelper.serverDateTimeFormatter.format(project.getLastUpdateTime()));
+        values.put( SqlOpenHelper.TableConstants.COL_CREATED_AT,  FormatHelper.toUTCString(project.getCreatedTime()));
+        values.put( SqlOpenHelper.TableConstants.COL_UPDATED_AT,  FormatHelper.toUTCString(project.getLastUpdateTime()));
         values.put( SqlOpenHelper.TableConstants.COL_TARGET, project.getTarget().toString());
         values.put( SqlOpenHelper.TableConstants.COL_UNIT, project.getUnit());
         values.put( SqlOpenHelper.TableConstants.COL_ALERT_TYPE, project.getAlertType().toString());

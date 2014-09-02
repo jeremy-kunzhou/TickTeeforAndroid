@@ -196,8 +196,8 @@ public class ProjectEditFragment extends Fragment
             checkBoxUseStartEndDate.setChecked(true);
             layoutStartEndLabels.setVisibility(View.VISIBLE);
             layoutStartEndValues.setVisibility(View.VISIBLE);
-            tvStartAt.setText(FormatHelper.shortLocalDateFormatter.format(project.getStartDate()));
-            tvEndAt.setText(FormatHelper.shortLocalDateFormatter.format(project.getEndDate()));
+            tvStartAt.setText(FormatHelper.toLocalDateString(project.getStartDate()));
+            tvEndAt.setText(FormatHelper.toLocalDateString(project.getEndDate()));
         }
         checkBoxIsConsumed.setChecked(project.isConsumed());
         checkBoxIsDecimalUnit.setChecked(project.isDecimalUnit());
@@ -214,8 +214,8 @@ public class ProjectEditFragment extends Fragment
             mItem.setName(etName.getText().toString().trim());
             mItem.setDescription(etDescription.getText().toString().trim());
             if(checkBoxUseStartEndDate.isChecked()) {
-                mItem.setStartDate(FormatHelper.shortLocalDateFormatter.parse(tvStartAt.getText().toString()));
-                mItem.setEndDate(FormatHelper.shortLocalDateFormatter.parse(tvEndAt.getText().toString()));
+                mItem.setStartDate(FormatHelper.fromLocalDateStringToUTC(tvStartAt.getText().toString()+" 00:00:00"));
+                mItem.setEndDate(FormatHelper.fromLocalDateStringToUTC(tvEndAt.getText().toString() + " 23:59:59"));
             }
             else {
                 mItem.setStartDate(null);
@@ -288,10 +288,10 @@ public class ProjectEditFragment extends Fragment
             project.setDescription(etDescription.getText().toString().trim());
             if(checkBoxUseStartEndDate.isChecked()) {
                 if (!tvStartAt.getText().toString().isEmpty()) {
-                    project.setStartDate(FormatHelper.shortLocalDateFormatter.parse(tvStartAt.getText().toString()));
+                    project.setStartDate(FormatHelper.fromLocalDateStringToUTC(tvStartAt.getText().toString()+" 00:00:00"));
                 }
                 if (!tvEndAt.getText().toString().isEmpty()) {
-                    project.setEndDate(FormatHelper.shortLocalDateFormatter.parse(tvEndAt.getText().toString()));
+                    project.setEndDate(FormatHelper.fromLocalDateStringToUTC(tvEndAt.getText().toString()+" 23:59:59"));
                 }
             }
             project.setExpectedProgress(BigDecimal.ZERO);
