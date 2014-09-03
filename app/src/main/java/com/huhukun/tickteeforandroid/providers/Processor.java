@@ -170,6 +170,8 @@ public class Processor {
 
                         updateOps.add(
                                 ContentProviderOperation.newUpdate(pendingUri)
+                                        .withValue( TableConstants.COL_PROJECT_ID,
+                                                detail.getProjectId() )
                                         .withValue(TableConstants.COL_NAME,
                                                 detail.getName())
                                         .withValue(TableConstants.COL_DESCRIPTION,

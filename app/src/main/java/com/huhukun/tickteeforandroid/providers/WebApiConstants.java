@@ -37,7 +37,7 @@ public class WebApiConstants {
     public static final String PARAM_DATE_UPDATED = "trans_date";
     public static final String PARAM_DOWNLOAD_DATE = "downloadDate";
     public static final String PARAM_NEXT_DOWNLOAD_DATE = "";
-    public static final String PARAM_SYNC_MODE = "";
+    public static final String PARAM_SYNC_MODE = "sync_mode";
     public static final String PARAM_SONGS_LIST = "";
     public static final String LOGIN_URL ;
     public static final String PROJECTS_URL;

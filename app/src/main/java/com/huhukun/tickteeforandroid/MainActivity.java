@@ -1,9 +1,12 @@
 package com.huhukun.tickteeforandroid;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -30,6 +33,7 @@ import com.huhukun.utils.NumberUtils;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -70,7 +74,21 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         tvComplete.setText("0");
         tvOverdue.setText("0");
 
+        if(App_Constants.currentAccount != null){
+            Bundle params = new Bundle();
+            params.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+            params.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+            ContentResolver.requestSync(App_Constants.currentAccount,App_Constants.AUTHORITY,params);
+        }
 
+//        SharedPreferences prefs;
+//        long dlMillis;
+//        long cutoffMillis;
+//
+//        prefs = TickTeeAndroid.getAppContext().getSharedPreferences(
+//                App_Constants.PREF_APP, 0 );
+//        SharedPreferences.Editor editor = prefs.edit();
+//        editor.putLong(App_Constants.PREFS_DOWNLOAD_DATE, Calendar.getInstance().getTimeInMillis() );
     }
 
     @Override
@@ -263,6 +281,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
             else {
                 String start_date_string = cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_START_AT));
                 String end_date_string = cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_END_AT));
+                String name = cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_NAME));
                 boolean isConsumed = BooleanUtils.parse(cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_IS_CONSUMED)));
                 if (start_date_string != null && end_date_string != null && !TextUtils.isEmpty(start_date_string) && !TextUtils.isEmpty(end_date_string))
                 {
@@ -270,7 +289,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
                         Date start = FormatHelper.toLocalDateFromUTCString(start_date_string);
                         Date end = FormatHelper.toLocalDateFromUTCString(end_date_string);
                         Date now = new Date();
-                        Log.d(TAG, NumberUtils.getPercentage(current, target) +" "+ NumberUtils.getPercentage(start, end, now)
+                        Log.d(TAG, name + ": "+NumberUtils.getPercentage(current, target) +" "+ NumberUtils.getPercentage(start, end, now)
                                 +" "+(end.getTime()-start.getTime())+ " "+(now.getTime()-start.getTime()));
                         if(!isConsumed && NumberUtils.getPercentage(current, target) < NumberUtils.getPercentage(start, end, now))
                         {

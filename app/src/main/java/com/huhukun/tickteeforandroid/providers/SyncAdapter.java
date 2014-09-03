@@ -48,6 +48,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     private final Context mContext;
     private final AccountManager mAccountManager;
 
+
     public SyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
         mContext = context;
@@ -67,6 +68,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         MethodEnum methodEnum;
         Uri pendingUri;
         int count;
+
+
 
         Cursor cursor;
         cursor = cr.query(

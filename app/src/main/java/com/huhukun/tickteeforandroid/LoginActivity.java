@@ -307,7 +307,7 @@ public class LoginActivity extends ActionBarActivity{
                 params.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, false);
                 params.putBoolean(ContentResolver.SYNC_EXTRAS_DO_NOT_RETRY, false);
                 params.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, false);
-                ContentResolver.addPeriodicSync(account, App_Constants.AUTHORITY, params, 1800);
+                ContentResolver.addPeriodicSync(account, App_Constants.AUTHORITY, params, 60);
                 ContentResolver.setSyncAutomatically(account, App_Constants.AUTHORITY, true);
                 ContentResolver.requestSync(account,App_Constants.AUTHORITY,params);
 
@@ -323,6 +323,7 @@ public class LoginActivity extends ActionBarActivity{
                     }
                     mAccountAuthenticatorResponse = null;
                 }
+                App_Constants.currentAccount = account;
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

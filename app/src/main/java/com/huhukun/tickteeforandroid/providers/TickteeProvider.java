@@ -191,6 +191,11 @@ public class TickteeProvider extends ContentProvider {
 
                 break;
             case PROJECTS_STATUS:
+                qb.appendWhere( SqlOpenHelper.TableConstants.COL_STATUS );
+                qb.appendWhere( "!=" );
+                qb.appendWhere( "'" );
+                qb.appendWhere( MethodEnum.DELETE.toString() );
+                qb.appendWhere( "' AND " );
                 switch (Integer.parseInt(uri.getPathSegments().get(2))){
                     case PROJECTS_STATUS_IN_PROGRESS:
                         qb.appendWhere(TableConstants.COL_CURRENT_PROGRESS);
@@ -609,14 +614,34 @@ public class TickteeProvider extends ContentProvider {
                     keyWithSelection.append( ")" );
                 }
 
-                count = db.update(SqlOpenHelper.TableConstants.TABLE_NAME, values,
-                        keyWithSelection.toString(), selectionArgs);
+                Cursor cursor = db.rawQuery("select 1 from projects where "+TableConstants.COL_PROJECT_ID+"= ?",
+                        new String[] { segment });
+                boolean exists = (cursor.getCount() > 0);
+                cursor.close();
+                if (exists) {
+                    count = 0;
+                    cursor = db.rawQuery("select 1 from projects where "+TableConstants.COL_PROJECT_ID+"= ? And "+TableConstants.COL_UPDATED_AT+" > ?",
+                            new String[] { segment, values.getAsString(TableConstants.COL_UPDATED_AT) });
+                    exists = (cursor.getCount() > 0);
+                    cursor.close();
+                    if(!exists) {
+                        count = db.update(SqlOpenHelper.TableConstants.TABLE_NAME, values,
+                                keyWithSelection.toString(), selectionArgs);
 
-                newUri = ContentUris.withAppendedId(
-                        TickteeProvider.CONTENT_URI_PROJECTS_QUERY_COMPLETED,
-                        Long.valueOf(segment));
-                getContext().getContentResolver().notifyChange(newUri, null);
-
+                        newUri = ContentUris.withAppendedId(
+                                TickteeProvider.CONTENT_URI_PROJECTS_QUERY_COMPLETED,
+                                Long.valueOf(segment));
+                        getContext().getContentResolver().notifyChange(newUri, null);
+                    }
+                }
+                else {
+                    long requestId = db.insertOrThrow(
+                            SqlOpenHelper.TableConstants.TABLE_NAME, null, values);
+                    newUri = ContentUris.withAppendedId(
+                            TickteeProvider.CONTENT_URI, requestId);
+                    getContext().getContentResolver().notifyChange(newUri, null);
+                    count = 1;
+                }
                 return count;
 
             default:

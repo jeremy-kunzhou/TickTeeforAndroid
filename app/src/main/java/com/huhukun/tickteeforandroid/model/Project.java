@@ -35,7 +35,8 @@ public class Project {
     public enum SyncMode {
         I,
         U,
-        D
+        D,
+        NA
 
     }
 
@@ -233,19 +234,11 @@ public class Project {
         this.lastUpdateTime = lastUpdateTime;
     }
 
-//    private long projectsId;
     private Date transDate;
     private long requestId;
     private int httpResult;
     private SyncMode syncMode;
 
-//    public long getProjectsId() {
-//        return projectsId;
-//    }
-//
-//    public void setProjectsId(long projectsId) {
-//        this.projectsId = projectsId;
-//    }
 
     public Date getTransDate() {
         return transDate;
@@ -297,6 +290,7 @@ public class Project {
         this.isDecimalUnit = json.has(PARAM_IS_DECIMAL_UNIT)? json.getBoolean(PARAM_IS_DECIMAL_UNIT):false;
         this.initProgress = json.has(PARAM_INIT_PROGRESS)? new BigDecimal(json.getString(PARAM_INIT_PROGRESS)) : BigDecimal.ZERO;
         this.isConsumed = json.has(PARAM_IS_CONSUMED)? json.getBoolean(PARAM_IS_CONSUMED) : false;
+        this.syncMode = json.has(PARAM_SYNC_MODE)? SyncMode.valueOf(json.getString(PARAM_SYNC_MODE)) : SyncMode.NA;
     }
 
     public Project(Cursor cursor) throws ParseException {

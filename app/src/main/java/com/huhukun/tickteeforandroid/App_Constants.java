@@ -1,5 +1,7 @@
 package com.huhukun.tickteeforandroid;
 
+import android.accounts.Account;
+
 /**
  * Created by kun on 19/08/2014.
  */
@@ -36,4 +38,6 @@ public class App_Constants {
     public static final String KEY_ERROR_MSG = "errorMsg";
 
     public static final String ERROR_MSG_RECEIVER = "com.huhukun.ticktee.ERROR_MSG_RECEIVER";
+
+    public static Account currentAccount;
 }

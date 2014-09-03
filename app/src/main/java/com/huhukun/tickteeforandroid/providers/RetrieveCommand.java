@@ -137,7 +137,7 @@ public class RetrieveCommand extends RESTCommand {
 //                    detail.setTransDate(
 //                            MyDateUtils.stringToDateForWS(jObj.getString(
 //                                    WebApiConstants.PARAM_DATE_UPDATED)));
-                    detail.setSyncMode(Project.SyncMode.I);
+//                    detail.setSyncMode(Project.SyncMode.I);
                     details[i] = detail;
                 }
 
@@ -150,7 +150,7 @@ public class RetrieveCommand extends RESTCommand {
                 e.printStackTrace();
             }
 
-            Processor.getInstance().retrieve( details, MyDateUtils.addToCurrent(Calendar.DAY_OF_MONTH, 1),statusCode );
+            Processor.getInstance().retrieve( details, MyDateUtils.addToCurrent(Calendar.MINUTE, 2),statusCode );
         }
 
         return statusCode;
