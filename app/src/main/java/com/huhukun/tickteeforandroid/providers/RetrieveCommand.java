@@ -89,7 +89,7 @@ public class RetrieveCommand extends RESTCommand {
 
             resp = mHttpClient.execute(get);
         } catch (IOException e) {
-            String msg = "PUT method failed: Cannot connect to network.";
+            String msg = "GET method failed: Cannot connect to network.";
             Log.i(TAG, msg, e);
             throw new DeviceConnectionException(msg, e);
         }

@@ -2,6 +2,7 @@ package com.huhukun.tickteeforandroid.providers;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.ActionBar;
 import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -304,10 +305,26 @@ public class TickteeProvider extends ContentProvider {
                 // retrieved from the REST API during a GET request.
 
                 try {
-                    requestId = db.insertOrThrow(
-                            SqlOpenHelper.TableConstants.TABLE_NAME, null, values);
-                    newUri = ContentUris.withAppendedId(
-                            TickteeProvider.CONTENT_URI, requestId);
+                    Log.d(TAG, values.toString());
+                    Cursor cursor = db.rawQuery("select _id from projects where "+TableConstants.COL_PROJECT_ID+"= ?",
+                            new String[] { values.getAsString(TableConstants.COL_PROJECT_ID) });
+                    boolean exists = (cursor.getCount() > 0);
+                    long _id = 0;
+                    if(exists) {
+                        cursor.moveToFirst();
+                        _id = Long.parseLong(cursor.getString(0));
+                    }
+                    cursor.close();
+                    if (exists)
+                    {
+                        newUri = ContentUris.withAppendedId(
+                                TickteeProvider.CONTENT_URI, _id);
+                    }else{
+                        requestId = db.insertOrThrow(
+                                SqlOpenHelper.TableConstants.TABLE_NAME, null, values);
+                        newUri = ContentUris.withAppendedId(
+                                TickteeProvider.CONTENT_URI, requestId);
+                    }
                     getContext().getContentResolver().notifyChange(newUri, null);
                     return newUri;
                 } catch ( SQLException e ) {
@@ -498,9 +515,17 @@ public class TickteeProvider extends ContentProvider {
                 // and start a PUT request.
 
                 segment = uri.getPathSegments().get(2);
-
-                values.put( SqlOpenHelper.TableConstants.COL_STATUS,
-                        MethodEnum.PUT.toString() );
+                Log.d(TAG, values.toString());
+                Cursor cursor = db.rawQuery("select "+TableConstants.COL_STATUS+", "+ TableConstants.COL_RESULT+" from projects where "+TableConstants._ID+"= ?",
+                        new String[] { segment  });
+                cursor.moveToFirst();
+                MethodEnum  status = MethodEnum.valueOf(cursor.getString(0));
+                int result = Integer.parseInt(cursor.getString(1));
+                cursor.close();
+                if (!(status == MethodEnum.POST && result <= 0 )) {
+                    values.put(SqlOpenHelper.TableConstants.COL_STATUS,
+                            MethodEnum.PUT.toString());
+                }
                 values.put( SqlOpenHelper.TableConstants.COL_TRANSACTING,
                         App_Constants.TRANSACTION_PENDING );
                 values.put( SqlOpenHelper.TableConstants.COL_RESULT,
@@ -514,10 +539,10 @@ public class TickteeProvider extends ContentProvider {
                 keyWithSelection.append( SqlOpenHelper.TableConstants._ID );
                 keyWithSelection.append( "=" );
                 keyWithSelection.append( segment );
-                keyWithSelection.append( " AND " );
-                keyWithSelection.append( SqlOpenHelper.TableConstants.COL_TRANSACTING );
-                keyWithSelection.append( " != " );
-                keyWithSelection.append( App_Constants.TRANSACTION_PENDING );
+//                keyWithSelection.append( " AND " );
+//                keyWithSelection.append( SqlOpenHelper.TableConstants.COL_TRANSACTING );
+//                keyWithSelection.append( " != " );
+//                keyWithSelection.append( App_Constants.TRANSACTION_PENDING );
 
                 if ( (!TextUtils.isEmpty(selection) )) {
                     keyWithSelection.append( " AND (" );
@@ -614,7 +639,7 @@ public class TickteeProvider extends ContentProvider {
                     keyWithSelection.append( ")" );
                 }
 
-                Cursor cursor = db.rawQuery("select 1 from projects where "+TableConstants.COL_PROJECT_ID+"= ?",
+                cursor = db.rawQuery("select 1 from projects where "+TableConstants.COL_PROJECT_ID+"= ?",
                         new String[] { segment });
                 boolean exists = (cursor.getCount() > 0);
                 cursor.close();
