@@ -121,6 +121,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.huhukun.tickteeforandroid.MainActivity" />
         </activity>
+        <receiver android:name=".MyReceiver" />
+        <service android:enabled="true" android:name=".MyAlarmService" />
     </application>
 
 </manifest>

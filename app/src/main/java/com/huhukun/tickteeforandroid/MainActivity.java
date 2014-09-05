@@ -5,7 +5,9 @@ import android.accounts.AccountManager;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -36,6 +38,7 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 
 public class MainActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -56,6 +59,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
     int in_progress_count = 0;
     int overdue_count = 0;
     int complete_count = 0;
+    private PendingIntent pendingIntent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,14 +85,25 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
             ContentResolver.requestSync(App_Constants.currentAccount,App_Constants.AUTHORITY,params);
         }
 
-//        SharedPreferences prefs;
-//        long dlMillis;
-//        long cutoffMillis;
-//
-//        prefs = TickTeeAndroid.getAppContext().getSharedPreferences(
-//                App_Constants.PREF_APP, 0 );
-//        SharedPreferences.Editor editor = prefs.edit();
-//        editor.putLong(App_Constants.PREFS_DOWNLOAD_DATE, Calendar.getInstance().getTimeInMillis() );
+        Intent myIntent = new Intent(MainActivity.this, MyReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 10241, myIntent, PendingIntent.FLAG_NO_CREATE);
+
+        if (pendingIntent != null)
+        {
+            Log.d(TAG, "Alarm is already active");
+        }else {
+            Log.d(TAG, "Alarm is created");
+            pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 10241, myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeZone(TimeZone.getDefault());
+            calendar.set(Calendar.HOUR_OF_DAY, 9);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            Log.d(TAG, "Set alarm time " + calendar.getTimeInMillis() + " " + calendar.getTime());
+            TickTeeAndroid.alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            TickTeeAndroid.alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+        }
     }
 
     @Override

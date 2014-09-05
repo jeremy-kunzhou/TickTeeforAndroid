@@ -2,6 +2,7 @@ package com.huhukun.tickteeforandroid;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.AlarmManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -12,6 +13,7 @@ import android.content.SharedPreferences;
 public class TickTeeAndroid extends Application {
     private static Context context;
     public static SharedPreferences appSetting;
+    public static AlarmManager alarmManager;
 
     @Override
     public void onCreate(){
