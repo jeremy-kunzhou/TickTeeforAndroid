@@ -1,7 +1,5 @@
 package com.huhukun.tickteeforandroid;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -86,14 +84,14 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         }
 
         Intent myIntent = new Intent(MainActivity.this, MyReceiver.class);
-        pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 10241, myIntent, PendingIntent.FLAG_NO_CREATE);
+        pendingIntent = PendingIntent.getBroadcast(MainActivity.this, App_Constants.ALERT_ID, myIntent, PendingIntent.FLAG_NO_CREATE);
 
         if (pendingIntent != null)
         {
             Log.d(TAG, "Alarm is already active");
         }else {
             Log.d(TAG, "Alarm is created");
-            pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 10241, myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+            pendingIntent = PendingIntent.getBroadcast(MainActivity.this, App_Constants.ALERT_ID, myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeZone(TimeZone.getDefault());
             calendar.set(Calendar.HOUR_OF_DAY, 9);

@@ -42,10 +42,11 @@ public class WebApiConstants {
     public static final String LOGIN_URL ;
     public static final String PROJECTS_URL;
     public static final String PROJECT_URL;
-    public static final String BASE_URL = "http://192.168.2.3:3000/";
+//    public static final String BASE_URL = "http://192.168.2.3:3000/";
+    public static final String BASE_URL = "http://ticktee.herokuapp.com/";
 
     public static final String HEADER_ACCESS_EMAIL_PARAM = "X_API_EMAIL";
-    public static final String HEADER_ACCESS_TOKEN_PARM = "X_API_TOKEN";
+    public static final String HEADER_ACCESS_TOKEN_PARAM = "X_API_TOKEN";
     static {
         LOGIN_URL = BASE_URL + "users/sign_in.json";
         PROJECTS_URL = BASE_URL + "api/v1/projects.json";

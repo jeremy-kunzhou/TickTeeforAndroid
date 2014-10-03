@@ -96,7 +96,7 @@ public class InsertCommand extends RESTCommand {
         String token = TickTeeAndroid.appSetting.getString(App_Constants.PREF_TOKEN, null);
 
         httpHeaders.add(new BasicNameValuePair(WebApiConstants.HEADER_ACCESS_EMAIL_PARAM, email));
-        httpHeaders.add(new BasicNameValuePair(WebApiConstants.HEADER_ACCESS_TOKEN_PARM, token));
+        httpHeaders.add(new BasicNameValuePair(WebApiConstants.HEADER_ACCESS_TOKEN_PARAM, token));
 
         try {
             final HttpPost post;

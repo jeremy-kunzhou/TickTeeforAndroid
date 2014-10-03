@@ -138,7 +138,7 @@ public class QueryTransactionInfo {
                         App_Constants.PREF_APP, 0 );
 
                 dlMillis = prefs.getLong( App_Constants.PREFS_DOWNLOAD_DATE, 0 );
-                cutoffMillis = MyDateUtils.addToCurrent(Calendar.MINUTE, -1);
+                cutoffMillis = System.currentTimeMillis()-10;
                 Log.d(TAG, (dlMillis <= cutoffMillis) +" if true refresh "+dlMillis +" "+cutoffMillis);
                 if ( dlMillis <= cutoffMillis ) {
                     refresh = true;

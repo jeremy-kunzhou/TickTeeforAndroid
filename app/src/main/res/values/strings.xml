@@ -58,7 +58,7 @@
     <string name="save_failure">Fail to save changes</string>
     <string name="remove">Remove</string>
     <string name="progress_saved">Progress Saved</string>
-    <string name="title_activity_project_new">ProjectNewActivity</string>
+    <string name="title_activity_project_new">New Project</string>
     <string name="project_added">Project Added.</string>
     <string name="invalid_input">Input Invalid</string>
     <string name="project_added_fail">Fail to add project</string>
@@ -80,5 +80,7 @@
     <string name="emptyTarget">Target cannot be empty.</string>
     <string name="no_time_limit">No Time Limit</string>
     <string name="emptyUnit">Unit cannot be empty.</string>
+    <string name="title_activity_project_sharing">Sharing your progress</string>
+    <string name="sharing_with">Sharing with</string>
 
 </resources>

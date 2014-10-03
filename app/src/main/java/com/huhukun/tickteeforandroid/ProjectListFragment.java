@@ -27,8 +27,6 @@ import java.text.ParseException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants;
-
 /**
  * A list fragment representing a list of Projects. This fragment
  * also supports tablet devices by allowing list items to be given an
@@ -51,7 +49,7 @@ public class ProjectListFragment extends ListFragment implements LoaderManager.L
      * The fragment's current callback object, which is notified of list item
      * clicks.
      */
-    private Callbacks <Project> mCallbacks = sDummyCallbacks;
+    private Callbacks <Project> mCallbacks ;
 
     /**
      * The current activated item position. Only used on tablets.
@@ -63,19 +61,7 @@ public class ProjectListFragment extends ListFragment implements LoaderManager.L
     private static final int GET_PROJECTS_BY_STATUS = 1;
 
 
-    private static final String[] adapterColumns = new String[] {
-            TableConstants.COL_NAME,
-            TableConstants.COL_DESCRIPTION,
-            TableConstants.COL_TRANSACTING };
-    private static final int[] to = new int[] {
-            R.id.row_project_title,
-            R.id.row_project_category,
-            R.id.row_project_progress };
-
-
     private ExecutorService executorPool;
-
-    private long mUpdateId = 0;
 
     CursorAdapter cursorAdapter;
     LoaderManager loaderManager;
@@ -161,15 +147,7 @@ public class ProjectListFragment extends ListFragment implements LoaderManager.L
         public void onItemSelected(T t);
     }
 
-    /**
-     * A dummy implementation of the {@link Callbacks} interface that does
-     * nothing. Used only when this fragment is not attached to an activity.
-     */
-    private static Callbacks sDummyCallbacks = new Callbacks<Project>() {
-        @Override
-        public void onItemSelected(Project id) {
-        }
-    };
+
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -209,8 +187,9 @@ public class ProjectListFragment extends ListFragment implements LoaderManager.L
         if (!(activity instanceof Callbacks)) {
             throw new IllegalStateException("Activity must implement fragment's callbacks.");
         }
-
-        mCallbacks = (Callbacks) activity;
+        else {
+            mCallbacks = (Callbacks) activity;
+        }
     }
 
     @Override
@@ -218,7 +197,7 @@ public class ProjectListFragment extends ListFragment implements LoaderManager.L
         super.onDetach();
 
         // Reset the active callbacks interface to the dummy implementation.
-        mCallbacks = sDummyCallbacks;
+        mCallbacks = null;
     }
 
     @Override
@@ -250,10 +229,12 @@ public class ProjectListFragment extends ListFragment implements LoaderManager.L
         final Cursor cursor;
 
         cursor = (Cursor)listView.getItemAtPosition( position );
-        try {
-            mCallbacks.onItemSelected(new Project(cursor));
-        } catch (ParseException e) {
-            Log.e(TAG, e.toString());
+        if(mCallbacks != null) {
+            try {
+                mCallbacks.onItemSelected(new Project(cursor));
+            } catch (ParseException e) {
+                Log.e(TAG, e.toString());
+            }
         }
     }
 
@@ -299,7 +280,7 @@ public class ProjectListFragment extends ListFragment implements LoaderManager.L
             final String errorMsg =
                     intent.getExtras().getString( App_Constants.KEY_ERROR_MSG );
 
-            Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT);
+            Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show();
 
         }
 

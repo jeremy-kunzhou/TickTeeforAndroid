@@ -10,39 +10,107 @@
     tools:context=".ProjectDetailFragment"
     android:background="@color/background">
 
-    <FrameLayout
-        android:id="@+id/seekArcContainer"
-        android:layout_width="match_parent"
-        android:layout_height="150dp">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
 
-        <com.huhukun.tickteeforandroid.UILibrary.SeekArc
-            android:id="@+id/seekArc"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_gravity="center"
-            android:padding="30dp"
-            seekarc:rotation="180"
-            seekarc:startAngle="30"
-            seekarc:sweepAngle="360"
-            seekarc:touchInside="false" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/project_detail_past"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:gravity="start|left" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="horizontal"
-            >
-            <TextView
-                android:id="@+id/seekArcProgress"
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/project_detail_past_daily"
+            android:layout_weight="2"
+            android:gravity="right|end" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/project_detail_future"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:gravity="start|left" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/project_detail_future_daily"
+            android:layout_weight="2"
+            android:gravity="right|end" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5sp">
+
+        <FrameLayout
+            android:id="@+id/seekArcContainer"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_weight="1">
+
+            <com.huhukun.tickteeforandroid.UILibrary.SeekArc
+                android:id="@+id/seekArc"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:padding="30dp"
+                seekarc:rotation="180"
+                seekarc:startAngle="0"
+                seekarc:sweepAngle="360"
+                seekarc:touchInside="false" />
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="0"
-                android:textSize="40sp" />
+                android:orientation="horizontal"
+                >
+                <TextView
+                    android:id="@+id/seekArcProgress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="0"
+                    android:textSize="40sp" />
 
-        </LinearLayout>
+            </LinearLayout>
 
-    </FrameLayout>
+        </FrameLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/project_detail_percentage"
+                android:layout_gravity="center"
+                android:textSize="60sp"
+                android:textStyle="bold"
+                android:text="0%"
+                android:textColor="@color/main_color" />
+        </FrameLayout>
+    </LinearLayout>
+
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -75,13 +143,15 @@
                 android:orientation="horizontal"
                 >
                 <org.droidparts.widget.ClearableEditText
+                    android:drawableRight="@android:drawable/presence_offline"
+                    android:drawablePadding="12dp"
                     android:layout_width="fill_parent"
                     android:layout_height="40sp"
                     android:inputType="numberDecimal"
                     android:ems="10"
                     android:id="@+id/project_detail_new_progress"
-                    android:drawableRight="@android:drawable/presence_offline"
-                    android:drawablePadding="12dp"/>
+                    android:lines="1"
+                    android:singleLine="true" />
 
 
                 <TextView
@@ -91,7 +161,8 @@
                     android:layout_gravity="center"
                     android:textSize="20sp"
                     android:layout_marginLeft="5dp"
-                    android:layout_marginStart="5dp"/>
+                    android:layout_marginStart="5dp"
+                    android:singleLine="true" />
 
             </LinearLayout>
 

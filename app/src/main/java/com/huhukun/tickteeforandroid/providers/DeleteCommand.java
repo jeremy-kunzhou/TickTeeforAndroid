@@ -8,7 +8,6 @@ import com.huhukun.tickteeforandroid.exception.NetworkSystemException;
 import com.huhukun.tickteeforandroid.exception.WebServiceFailedException;
 import com.huhukun.tickteeforandroid.TickTeeAndroid;
 import com.huhukun.tickteeforandroid.model.Project;
-import com.huhukun.utils.MyDateUtils;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -59,7 +58,7 @@ public class DeleteCommand extends RESTCommand {
         String token = TickTeeAndroid.appSetting.getString(App_Constants.PREF_TOKEN, null);
 
         httpHeaders.add(new BasicNameValuePair(WebApiConstants.HEADER_ACCESS_EMAIL_PARAM, email));
-        httpHeaders.add(new BasicNameValuePair(WebApiConstants.HEADER_ACCESS_TOKEN_PARM, token));
+        httpHeaders.add(new BasicNameValuePair(WebApiConstants.HEADER_ACCESS_TOKEN_PARAM, token));
 
         try {
             final HttpDelete delete;

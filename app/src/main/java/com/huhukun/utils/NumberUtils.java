@@ -54,4 +54,13 @@ public class NumberUtils {
     public static int getAngle(int percentage) {
         return getAngle(new BigDecimal(percentage), new BigDecimal(100));
     }
+
+    public static long millisecondToDay(long millisecond){
+        return millisecond/1000/60/60/24;
+    }
+
+    public static long diffOfDate(Date date1, Date date2){
+        return millisecondToDay(Math.max(date1.getTime(), date2.getTime()) - Math.min(date1.getTime(), date2.getTime()));
+    }
+
 }

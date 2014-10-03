@@ -52,10 +52,12 @@ public class ProjectCursorAdapter extends CursorAdapter {
         TextView tvName = (TextView) view.findViewById(R.id.row_project_title);
         tvName.setText(cursor.getString((cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_NAME))));
         TextView tvStatus = (TextView) view.findViewById(R.id.row_project_progress);
+        TextView tvPercentage = (TextView) view.findViewById(R.id.row_project_percentage);
 
         BigDecimal current = new BigDecimal(cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_CURRENT_PROGRESS)));
         BigDecimal target = new BigDecimal(cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_TARGET)));
 
+        tvPercentage.setText(String.format("%d%%", NumberUtils.getPercentage(current, target)));
         TextView tvEndDate = (TextView) view.findViewById(R.id.row_project_category);
         String endDate = cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_END_AT));
         if(TextUtils.isEmpty(endDate)) {

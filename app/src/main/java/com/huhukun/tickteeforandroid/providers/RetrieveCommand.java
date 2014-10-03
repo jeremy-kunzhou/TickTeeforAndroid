@@ -62,7 +62,7 @@ public class RetrieveCommand extends RESTCommand {
         String token = TickTeeAndroid.appSetting.getString(App_Constants.PREF_TOKEN, null);
 
         httpHeaders.add(new BasicNameValuePair(WebApiConstants.HEADER_ACCESS_EMAIL_PARAM, email));
-        httpHeaders.add(new BasicNameValuePair(WebApiConstants.HEADER_ACCESS_TOKEN_PARM, token));
+        httpHeaders.add(new BasicNameValuePair(WebApiConstants.HEADER_ACCESS_TOKEN_PARAM, token));
 
         Long dlDate;
         String dlDateParam;
@@ -150,7 +150,7 @@ public class RetrieveCommand extends RESTCommand {
                 e.printStackTrace();
             }
 
-            Processor.getInstance().retrieve( details, MyDateUtils.addToCurrent(Calendar.MINUTE, 2),statusCode );
+            Processor.getInstance().retrieve( details, App_Constants.Sync_period(),statusCode );
         }
 
         return statusCode;

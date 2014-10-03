@@ -2,6 +2,10 @@ package com.huhukun.utils;
 
 import android.util.Log;
 
+import com.huhukun.tickteeforandroid.App_Constants;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,7 +17,7 @@ import java.util.TimeZone;
  * Created by kun on 18/08/2014.
  */
 public class FormatHelper {
-
+    private static final String TAG = App_Constants.APP_TAG + "FormatHelper";
     public static final String SERVER_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     public static final String SERVER_DATE_FORMAT = "yyyy-MM-dd";
 
@@ -94,6 +98,16 @@ public class FormatHelper {
         DateFormat converter = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
         converter.setTimeZone(TimeZone.getTimeZone("UTC"));
         return converter.format(date);
+    }
+
+    public static String urlEncode(String s) {
+        try {
+            return URLEncoder.encode(s, "UTF-8");
+        }
+        catch (UnsupportedEncodingException e) {
+            Log.wtf(TAG, "UTF-8 should always be supported", e);
+            throw new RuntimeException("URLEncoder.encode() failed for " + s);
+        }
     }
 
 

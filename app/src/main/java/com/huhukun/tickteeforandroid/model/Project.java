@@ -13,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.text.ParseException;
 import java.util.Date;
 
@@ -361,5 +362,51 @@ public class Project {
 
     }
 
+    public long getRestDay(){
+        long diff = 1;
+        if (this.getEndDate() == null ) {
+            diff = 1;
+        }
+        else{
+            diff = NumberUtils.diffOfDate(this.getEndDate(), new Date());
+        }
+        return diff == 0? 1 : diff;
+    }
+
+    public long getLastUpdatePastDay(){
+        long diff = 1;
+        if (this.getStartDate() == null ) {
+            diff = NumberUtils.diffOfDate(this.getCreatedTime(), this.getLastUpdateTime());
+        }else{
+            diff = NumberUtils.diffOfDate(this.getStartDate(), this.getLastUpdateTime());
+        }
+        return diff == 0? 1 : diff;
+    }
+
+    public long getPastDay(){
+        long diff = 1;
+        if (this.getStartDate() == null ) {
+            diff = NumberUtils.diffOfDate(this.getCreatedTime(), new Date());
+        }else{
+            diff = NumberUtils.diffOfDate(this.getStartDate(), new Date());
+        }
+        return diff == 0? 1 : diff;
+    }
+
+    public int currentPercentage(){
+        return NumberUtils.getPercentage(this.currentProgress, this.target);
+    }
+
+    public int restPercentage(){
+        return 100 - currentPercentage();
+    }
+
+    public BigDecimal getPastDaily(){
+        return this.currentProgress.divide(new BigDecimal(getLastUpdatePastDay()), new MathContext(2));
+    }
+
+    public BigDecimal getFutureDaily() {
+        return this.target.subtract(this.currentProgress).divide(new BigDecimal(getRestDay()), new MathContext(2));
+    }
 
 }

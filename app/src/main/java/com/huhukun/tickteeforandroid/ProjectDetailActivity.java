@@ -3,8 +3,10 @@ package com.huhukun.tickteeforandroid;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
-import android.app.Activity;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -12,13 +14,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.huhukun.utils.FormatHelper;
+
+import java.util.List;
+
 
 /**
  * An activity representing a single Project detail screen. This
  * activity is only used on handset devices. On tablet-size devices,
  * item details are presented side-by-side with a list of items
  * in a {@link ProjectListActivity}.
- * <p>
+ * <p/>
  * This activity is mostly just a 'shell' activity containing nothing
  * more than a {@link ProjectDetailFragment}.
  */
@@ -49,7 +55,7 @@ public class ProjectDetailActivity extends ActionBarActivity {
             // using a fragment transaction.
             Bundle arguments = new Bundle();
             item_id = getIntent().getStringExtra(ProjectDetailFragment.ARG_ITEM_ID);
-            arguments.putString(ProjectDetailFragment.ARG_ITEM_ID,item_id);
+            arguments.putString(ProjectDetailFragment.ARG_ITEM_ID, item_id);
 
             fragment = new ProjectDetailFragment();
             fragment.setArguments(arguments);
@@ -74,16 +80,16 @@ public class ProjectDetailActivity extends ActionBarActivity {
         switch (item.getItemId()) {
             case R.id.project_detail_edit:
                 editProject();
-                return true;
+                break;
             case R.id.project_detail_share:
                 shareProject();
-                return true;
+                break;
             case R.id.project_detail_done:
                 saveProgress();
-                return true;
+                break;
             case R.id.project_detail_remove:
                 removeProject();
-                return true;
+                break;
             case android.R.id.home:
                 // This ID represents the Home or Up button. In the case of this
                 // activity, the Up button is shown. Use NavUtils to allow users
@@ -93,16 +99,16 @@ public class ProjectDetailActivity extends ActionBarActivity {
                 // http://developer.android.com/design/patterns/navigation.html#up-vs-back
                 //
                 NavUtils.navigateUpTo(this, new Intent(this, ProjectListActivity.class));
-                return true;
+                break;
 
             default:
                 return super.onOptionsItemSelected(item);
         }
+        return true;
     }
 
     private void removeProject() {
-        if(fragment != null)
-        {
+        if (fragment != null) {
             // Create an alert dialog box
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -132,8 +138,7 @@ public class ProjectDetailActivity extends ActionBarActivity {
     }
 
     private void saveProgress() {
-        if(fragment != null)
-        {
+        if (fragment != null) {
             fragment.saveProgress();
             Toast.makeText(this, R.string.progress_saved, Toast.LENGTH_SHORT).show();
             finish();
@@ -141,6 +146,9 @@ public class ProjectDetailActivity extends ActionBarActivity {
     }
 
     private void shareProject() {
+        if(fragment != null ){
+            fragment.sharing();
+        }
 
     }
 
@@ -148,5 +156,32 @@ public class ProjectDetailActivity extends ActionBarActivity {
         Intent intent = new Intent(this, ProjectEditActivity.class);
         intent.putExtra(ProjectEditActivity.ARG_ITEM_ID, item_id);
         startActivity(intent);
+    }
+
+    public void findTwitterClient(Intent tweetIntent) {
+        final String[] twitterApps = {
+                // package // name - nb installs (thousands)
+                "com.twitter.android", // official - 10 000
+                "com.twidroid", // twidroyd - 5 000
+                "com.handmark.tweetcaster", // Tweecaster - 5 000
+                "com.thedeck.android" // TweetDeck - 5 000
+        };
+        final PackageManager packageManager = getPackageManager();
+        List<ResolveInfo> list = packageManager.queryIntentActivities(
+                tweetIntent, PackageManager.MATCH_DEFAULT_ONLY);
+
+        for (int i = 0; i < twitterApps.length; i++) {
+            for (ResolveInfo resolveInfo : list) {
+                String p = resolveInfo.activityInfo.packageName;
+                if (p != null && p.startsWith(twitterApps[i])) {
+                    tweetIntent.setPackage(p);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
     }
 }

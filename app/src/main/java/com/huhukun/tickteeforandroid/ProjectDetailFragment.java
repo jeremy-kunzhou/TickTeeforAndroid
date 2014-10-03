@@ -1,5 +1,6 @@
 package com.huhukun.tickteeforandroid;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -29,6 +30,10 @@ import com.huhukun.tickteeforandroid.providers.UpdateTask;
 import com.huhukun.tickteeforandroid.providers.WebApiConstants;
 import com.huhukun.utils.FormatHelper;
 import com.huhukun.utils.NumberUtils;
+
+import org.droidparts.adapter.widget.TextWatcherAdapter;
+import org.droidparts.widget.ClearableEditText;
+import org.w3c.dom.Text;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -68,7 +73,12 @@ public class ProjectDetailFragment extends Fragment
     private TextView tvProjectDescription;
     private TextView tvSeekArcPercentage;
     private TextView tvSeekArcPercentageUnit;
-    private EditText etNewProgress;
+    private TextView tvProjectPast;
+    private TextView tvProjectPastDaily;
+    private TextView tvProjectFuture;
+    private TextView tvProjectFutureDaily;
+    private TextView tvProjectProgress;
+    private org.droidparts.widget.ClearableEditText etNewProgress;
     private SeekArc seekArc;
 
     private String sqlId;
@@ -115,9 +125,20 @@ public class ProjectDetailFragment extends Fragment
         tvProjectCreatedAt = (TextView) rootView.findViewById(R.id.project_detail_created_at);
         tvProjectLastUpdateAt = (TextView) rootView.findViewById(R.id.project_detail_last_update_at);
         tvProjectDescription = (TextView) rootView.findViewById(R.id.project_detail_description);
+        tvProjectPast = (TextView) rootView.findViewById(R.id.project_detail_past);
+        tvProjectPastDaily = (TextView) rootView.findViewById(R.id.project_detail_past_daily);
+        tvProjectFuture = (TextView) rootView.findViewById(R.id.project_detail_future);
+        tvProjectFutureDaily = (TextView) rootView.findViewById(R.id.project_detail_future_daily);
         tvSeekArcPercentage = (TextView) rootView.findViewById(R.id.seekArcProgress);
         tvSeekArcPercentageUnit = (TextView) rootView.findViewById(R.id.seekArcProgressUnit);
-        etNewProgress = (EditText) rootView.findViewById(R.id.project_detail_new_progress);
+        tvProjectProgress = (TextView) rootView.findViewById(R.id.project_detail_percentage);
+        etNewProgress = (org.droidparts.widget.ClearableEditText) rootView.findViewById(R.id.project_detail_new_progress);
+        etNewProgress.setListener(new ClearableEditText.Listener() {
+            @Override
+            public void didClearText() {
+                updateProgress(null);
+            }
+        });
         etNewProgress.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -214,6 +235,9 @@ public class ProjectDetailFragment extends Fragment
             tvProjectCreatedAt.setText(FormatHelper.toLocalDateTimeString(mItem.getCreatedTime()));
             tvProjectLastUpdateAt.setText(FormatHelper.toLocalDateTimeString(mItem.getLastUpdateTime()));
             tvProjectDescription.setText(mItem.getDescription());
+            tvProjectPastDaily.setText("Daily: "+NumberUtils.decimalToString(mItem.getPastDaily(), mItem.isDecimalUnit())+" "+mItem.getUnit());
+            tvProjectFutureDaily.setText("Daily: "+NumberUtils.decimalToString(mItem.getFutureDaily(), mItem.isDecimalUnit())+" "+mItem.getUnit());
+            tvProjectProgress.setText(String.format("%d%%",mItem.currentPercentage()));
             int startAngle = NumberUtils.getAngle(mItem.getCurrentProgress(), mItem.getTarget());
             int expectedAngle = NumberUtils.getAngle(mItem.getExpectedPercentage());
             if(mItem.isConsumed()){
@@ -222,9 +246,13 @@ public class ProjectDetailFragment extends Fragment
                 if(expectedAngle == 0) expectedAngle = 360;
                 seekArc.setExpectedAngle(expectedAngle);
                 seekArc.setReverse();
+                tvProjectPast.setText(mItem.currentPercentage()+"% gone so far");
+                tvProjectFuture.setText(mItem.restPercentage()+"% left in next "+mItem.getRestDay()+" days");
             }
             else
             {
+                tvProjectPast.setText(mItem.currentPercentage()+"% finished so far");
+                tvProjectFuture.setText(mItem.restPercentage()+"% to be done in next "+mItem.getRestDay()+" days");
                 seekArc.setStartAngle(startAngle);
                 seekArc.setExpectedAngle(expectedAngle);
                 tvSeekArcPercentage.setText(NumberUtils.decimalToString(mItem.getCurrentProgress(), mItem.isDecimalUnit()));
@@ -277,10 +305,12 @@ public class ProjectDetailFragment extends Fragment
     @Override
     public void onProgressChanged(SeekArc seekArc, int progress, boolean fromUser) {
         if(fromUser){
+            tvProjectProgress.setText(String.format("%d%%", progress+mItem.currentPercentage()));
             BigDecimal newProgress =  NumberUtils.getNumberFromPercentage(progress, mItem.getTarget());
-            this.tvSeekArcPercentage.setText(NumberUtils.decimalToString(mItem.getCurrentProgress().add(newProgress), mItem.isDecimalUnit()));
             if(mItem.isConsumed()){
                 tvSeekArcPercentage.setText(NumberUtils.decimalToString(mItem.getTarget().subtract(mItem.getCurrentProgress().add(newProgress)), mItem.isDecimalUnit()));
+            }else {
+                this.tvSeekArcPercentage.setText(NumberUtils.decimalToString(mItem.getCurrentProgress().add(newProgress), mItem.isDecimalUnit()));
             }
             this.etNewProgress.setText(NumberUtils.decimalToString(newProgress, mItem.isDecimalUnit()));
 
@@ -300,11 +330,29 @@ public class ProjectDetailFragment extends Fragment
 
     private void updateProgress(String progress) {
         if(progress == null || progress.isEmpty()) progress = "0";
+        if(new BigDecimal(progress).compareTo(mItem.getTarget().subtract(mItem.getCurrentProgress())) > 0)
+            progress = NumberUtils.decimalToString(mItem.getTarget().subtract(mItem.getCurrentProgress()), mItem.isDecimalUnit());
         BigDecimal currentProgress = new BigDecimal(progress);
-        seekArc.setProgress(NumberUtils.getPercentage(currentProgress, mItem.getTarget()));
-        tvSeekArcPercentage.setText(NumberUtils.decimalToString(mItem.getCurrentProgress().add(currentProgress), mItem.isDecimalUnit()));
+        int percentage = NumberUtils.getPercentage(currentProgress, mItem.getTarget());
+        seekArc.setProgress(percentage);
+        tvProjectProgress.setText(String.format("%d%%",mItem.currentPercentage()+percentage));
         if(mItem.isConsumed()){
             tvSeekArcPercentage.setText(NumberUtils.decimalToString(mItem.getTarget().subtract(mItem.getCurrentProgress().add(currentProgress)), mItem.isDecimalUnit()));
         }
+        else{
+            tvSeekArcPercentage.setText(NumberUtils.decimalToString(mItem.getCurrentProgress().add(currentProgress), mItem.isDecimalUnit()));
+        }
+        etNewProgress.setText(progress);
+    }
+
+    public void sharing(){
+        saveProgress();
+        String sharing = String.format("I have finished %s of my progress %s. That's awesome!", tvProjectProgress.getText(), mItem.getName());
+
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, sharing);
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent,getString(R.string.sharing_with)));
     }
 }

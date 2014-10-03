@@ -2,6 +2,10 @@ package com.huhukun.tickteeforandroid;
 
 import android.accounts.Account;
 
+import com.huhukun.utils.MyDateUtils;
+
+import java.util.Calendar;
+
 /**
  * Created by kun on 19/08/2014.
  */
@@ -22,6 +26,8 @@ public class App_Constants {
     public static final int MAX_REQUEST_ATTEMPTS = 5;
     public static final int NON_HTTP_FAILURE = -1;
 
+    public static final int ALERT_ID = 10241;
+
 
 
     public static final int TRANSACTION_PENDING = 0;
@@ -40,4 +46,8 @@ public class App_Constants {
     public static final String ERROR_MSG_RECEIVER = "com.huhukun.ticktee.ERROR_MSG_RECEIVER";
 
     public static Account currentAccount;
+
+    public static long Sync_period(){
+        return MyDateUtils.addToCurrent(Calendar.HOUR, 2);
+    }
 }
