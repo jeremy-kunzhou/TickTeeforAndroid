@@ -34,16 +34,18 @@ public class WebApiConstants {
     public static final String PARAM_IS_DECIMAL_UNIT = "is_decimal_unit";
     public static final String PARAM_INIT_PROGRESS = "init_progress";
     public static final String PARAM_IS_CONSUMED = "is_consumed";
+    public static final String PARAM_SCHEDULE = "schedule";
     public static final String PARAM_DATE_UPDATED = "trans_date";
     public static final String PARAM_DOWNLOAD_DATE = "downloadDate";
     public static final String PARAM_NEXT_DOWNLOAD_DATE = "";
     public static final String PARAM_SYNC_MODE = "sync_mode";
+
     public static final String PARAM_SONGS_LIST = "";
     public static final String LOGIN_URL ;
     public static final String PROJECTS_URL;
     public static final String PROJECT_URL;
-//    public static final String BASE_URL = "http://192.168.2.3:3000/";
-    public static final String BASE_URL = "http://ticktee.herokuapp.com/";
+    public static final String BASE_URL = "http://192.168.2.3:3000/";
+//    public static final String BASE_URL = "http://ticktee.herokuapp.com/";
 
     public static final String HEADER_ACCESS_EMAIL_PARAM = "X_API_EMAIL";
     public static final String HEADER_ACCESS_TOKEN_PARAM = "X_API_TOKEN";

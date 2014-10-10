@@ -36,6 +36,7 @@ public class SqlOpenHelper extends SQLiteOpenHelper {
         public static final String COL_IS_DECIMAL = "is_decimal_unit";
         public static final String COL_INIT_PROGRESS = "init_progress";
         public static final String COL_IS_CONSUMED = "is_consumed";
+        public static final String COL_SCHEDULE = "schedule";
         public static final String COL_STATUS = "status";
         public static final String COL_TRANSACTING = "transacting";
         public static final String COL_RESULT = "result";
@@ -62,10 +63,12 @@ public class SqlOpenHelper extends SQLiteOpenHelper {
             TableConstants.COL_IS_DECIMAL,
             TableConstants.COL_INIT_PROGRESS,
             TableConstants.COL_IS_CONSUMED,
+            TableConstants.COL_SCHEDULE,
             TableConstants.COL_TRANSACTING,
             TableConstants.COL_STATUS,
             TableConstants.COL_RESULT,
-            TableConstants.COL_TRANS_DATE};
+            TableConstants.COL_TRANS_DATE
+    };
     /**
      * table name: songs
      *
@@ -103,6 +106,7 @@ public class SqlOpenHelper extends SQLiteOpenHelper {
                     + TableConstants.COL_IS_DECIMAL + " BOOLEAN, "
                     + TableConstants.COL_INIT_PROGRESS + " REAL, "
                     + TableConstants.COL_IS_CONSUMED + " BOOLEAN, "
+                    + TableConstants.COL_SCHEDULE + " INTEGER, "
                     + TableConstants.COL_STATUS + " TEXT, "
                     + TableConstants.COL_TRANSACTING + " INTEGER, "
                     + TableConstants.COL_RESULT + " INTEGER, "

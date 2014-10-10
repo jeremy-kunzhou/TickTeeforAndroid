@@ -33,6 +33,7 @@ import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants.C
 import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants.COL_EXPECTED_PROGRESS;
 import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants.COL_INIT_PROGRESS;
 import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants.COL_IS_CONSUMED;
+import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants.COL_SCHEDULE;
 import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants.COL_IS_DECIMAL;
 import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants.COL_START_AT;
 import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants.COL_TARGET;
@@ -91,6 +92,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         final int colIsDecimal = cursor.getColumnIndex(COL_IS_DECIMAL);
         final int colInitProgress = cursor.getColumnIndex(COL_INIT_PROGRESS);
         final int colIsConsumed = cursor.getColumnIndex(COL_IS_CONSUMED);
+        final int colSchedule = cursor.getColumnIndex(COL_SCHEDULE);
 
         final int colStatus = cursor.getColumnIndex(TableConstants.COL_STATUS);
 
@@ -110,6 +112,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         boolean isDecimal;
         String initProgress;
         boolean isConsumed;
+        String schedule;
         String status;
 
         while (cursor.moveToNext()) {
@@ -132,6 +135,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             isDecimal = cursor.getString(colIsDecimal).equals("0")? false : true;
             initProgress = cursor.getString(colInitProgress);
             isConsumed = cursor.getString(colIsConsumed).equals("0")? false : true;
+            schedule = cursor.getString(colSchedule);
             status = cursor.getString(colStatus);
 
             try {
@@ -155,12 +159,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     switch (methodEnum) {
                         case POST:
                             restCommand = new InsertCommand(id, name, description, startAt,
-                                    endAt, expectedProgress, currentProgress, createdAt, updatedAt, target, unit, alert, isDecimal, initProgress, isConsumed);
+                                    endAt, expectedProgress, currentProgress, createdAt, updatedAt, target, unit, alert, isDecimal, initProgress, isConsumed, schedule);
                             break;
                         case PUT:
 
                             restCommand = new UpdateCommand(id, projectsId, name, description, startAt,
-                                    endAt, expectedProgress, currentProgress, createdAt, updatedAt, target, unit, alert, isDecimal, initProgress, isConsumed);
+                                    endAt, expectedProgress, currentProgress, createdAt, updatedAt, target, unit, alert, isDecimal, initProgress, isConsumed, schedule);
 
                             break;
                         case DELETE:

@@ -82,5 +82,7 @@
     <string name="emptyUnit">Unit cannot be empty.</string>
     <string name="title_activity_project_sharing">Sharing your progress</string>
     <string name="sharing_with">Sharing with</string>
+    <string name="title_activity_notify_activity_dialog">NotifyActivityDialog</string>
+    <string name="schedule">Schedule</string>
 
 </resources>

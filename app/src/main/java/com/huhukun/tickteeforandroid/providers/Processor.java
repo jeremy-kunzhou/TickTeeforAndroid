@@ -97,6 +97,7 @@ public class Processor {
         values.put( TableConstants.COL_UNIT, detail.getUnit());
         values.put( TableConstants.COL_ALERT_TYPE, detail.getAlertType().toString());
         values.put( TableConstants.COL_IS_CONSUMED, detail.isConsumed());
+        values.put( TableConstants.COL_SCHEDULE, detail.getSchedule());
         values.put( TableConstants.COL_IS_DECIMAL, detail.isDecimalUnit());
         values.put( TableConstants.COL_INIT_PROGRESS, detail.getInitProgress().toString());
 
@@ -192,6 +193,7 @@ public class Processor {
                                         .withValue( TableConstants.COL_UNIT, detail.getUnit())
                                         .withValue( TableConstants.COL_ALERT_TYPE, detail.getAlertType().toString())
                                         .withValue( TableConstants.COL_IS_CONSUMED, detail.isConsumed())
+                                        .withValue( TableConstants.COL_SCHEDULE, detail.getSchedule())
                                         .withValue( TableConstants.COL_IS_DECIMAL, detail.isDecimalUnit())
                                         .withValue( TableConstants.COL_INIT_PROGRESS, detail.getInitProgress().toString())
                                         .withValue(TableConstants.COL_TRANS_DATE,
@@ -236,6 +238,7 @@ public class Processor {
                                         .withValue( TableConstants.COL_UNIT, detail.getUnit())
                                         .withValue( TableConstants.COL_ALERT_TYPE, detail.getAlertType().toString())
                                         .withValue( TableConstants.COL_IS_CONSUMED, detail.isConsumed())
+                                        .withValue( TableConstants.COL_SCHEDULE, detail.getSchedule())
                                         .withValue( TableConstants.COL_IS_DECIMAL, detail.isDecimalUnit())
                                         .withValue( TableConstants.COL_INIT_PROGRESS, detail.getInitProgress().toString())
                                         .withValue(TableConstants.COL_TRANS_DATE,

@@ -86,6 +86,61 @@
                 android:padding="10sp"
                 android:singleLine="true" />
 
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="40sp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/schedule"
+                android:padding="5sp"
+                android:background="@drawable/bottom_border"
+                android:textColor="@color/main_color"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:gravity="bottom"/>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:background="@drawable/bottom_border"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:padding="5sp">
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="S"
+                    android:id="@+id/project_edit_schedule_sunday" />
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="M"
+                    android:id="@+id/project_edit_schedule_monday" />
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="T"
+                    android:id="@+id/project_edit_schedule_tuesday" />
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="W"
+                    android:id="@+id/project_edit_schedule_wednesday" />
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="T"
+                    android:id="@+id/project_edit_schedule_thursday" />
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="F"
+                    android:id="@+id/project_edit_schedule_friday" />
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="S"
+                    android:id="@+id/project_edit_schedule_saturday" />
+
+            </LinearLayout>
+
             <LinearLayout
                 android:orientation="horizontal"
                 android:background="@drawable/bottom_border"

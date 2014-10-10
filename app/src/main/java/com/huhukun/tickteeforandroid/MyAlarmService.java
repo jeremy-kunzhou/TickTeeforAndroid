@@ -1,9 +1,11 @@
 package com.huhukun.tickteeforandroid;
 
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -16,6 +18,7 @@ import android.os.Message;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.Toast;
 import android.os.Process;
 
@@ -167,7 +170,7 @@ public class MyAlarmService extends Service {
                 Log.d(TAG, "No projects need to be alarmed");
             }
             else {
-                Intent notificationIntent = new Intent(MyAlarmService.this.getApplicationContext(), MainActivity.class);
+                final Intent notificationIntent = new Intent(MyAlarmService.this.getApplicationContext(), MainActivity.class);
                 PendingIntent pendingIntent = PendingIntent.getActivity(MyAlarmService.this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
                 NotificationCompat.Builder mBuilder =
@@ -185,6 +188,23 @@ public class MyAlarmService extends Service {
                 NotificationManager notificationManager =
                         (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                 notificationManager.notify(1, mBuilder.build());
+
+                AlertDialog.Builder dialog=new AlertDialog.Builder(MyAlarmService.this);
+                dialog.setTitle("Notice");
+                dialog.setIcon(android.R.drawable.ic_dialog_info);
+                dialog.setMessage(contentBuilder.toString());
+                dialog.setPositiveButton("Confirm",new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //to MainActivity
+//                        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                        MyAlarmService.this.startActivity(notificationIntent);
+                    }
+                });
+                AlertDialog mDialog=dialog.create();
+                // set to system alert type
+                mDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+                mDialog.show();
             }
             // Stop the service using the startId, so that we don't stop
             // the service in the middle of handling another job

@@ -7,6 +7,7 @@ import android.util.Log;
 import com.huhukun.tickteeforandroid.App_Constants;
 import com.huhukun.utils.BooleanUtils;
 import com.huhukun.utils.FormatHelper;
+import com.huhukun.utils.MyDateUtils;
 import com.huhukun.utils.NumberUtils;
 
 import org.json.JSONException;
@@ -15,7 +16,10 @@ import org.json.JSONObject;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants.*;
 import static com.huhukun.tickteeforandroid.providers.WebApiConstants.*;
@@ -106,7 +110,7 @@ public class Project {
     private Date createdTime;
     private Date lastUpdateTime;
     private boolean isConsumed;
-
+    private int schedule;
     public long getId() {
         return _id;
     }
@@ -235,6 +239,14 @@ public class Project {
         this.lastUpdateTime = lastUpdateTime;
     }
 
+    public int getSchedule() {
+        return schedule;
+    }
+
+    public void setSchedule(int schedule) {
+        this.schedule = schedule;
+    }
+
     private Date transDate;
     private long requestId;
     private int httpResult;
@@ -291,6 +303,7 @@ public class Project {
         this.isDecimalUnit = json.has(PARAM_IS_DECIMAL_UNIT)? json.getBoolean(PARAM_IS_DECIMAL_UNIT):false;
         this.initProgress = json.has(PARAM_INIT_PROGRESS)? new BigDecimal(json.getString(PARAM_INIT_PROGRESS)) : BigDecimal.ZERO;
         this.isConsumed = json.has(PARAM_IS_CONSUMED)? json.getBoolean(PARAM_IS_CONSUMED) : false;
+        this.schedule = json.has(PARAM_SCHEDULE)? json.getInt(PARAM_SCHEDULE) : 127;
         this.syncMode = json.has(PARAM_SYNC_MODE)? SyncMode.valueOf(json.getString(PARAM_SYNC_MODE)) : SyncMode.NA;
     }
 
@@ -314,37 +327,39 @@ public class Project {
         this.isDecimalUnit = BooleanUtils.parse(cursor.getString(cursor.getColumnIndex(COL_IS_DECIMAL)));
         this.initProgress = new BigDecimal(cursor.getString(cursor.getColumnIndex(COL_INIT_PROGRESS)));
         this.isConsumed = BooleanUtils.parse(cursor.getString(cursor.getColumnIndex(COL_IS_CONSUMED)));
+        this.schedule = Integer.parseInt(cursor.getString(cursor.getColumnIndex(COL_SCHEDULE)));
     }
 
     public JSONObject toJson() {
 
         JSONObject json = new JSONObject();
         try{
-        json.put(PARAM_PROJECTS_ID, this.getProjectId());
-        json.put(PARAM_NAME, this.getName());
-        json.put(PARAM_DESCRIPTION, this.getDescription());
-        if (this.getStartDate() != null) {
-            json.put(PARAM_START_AT, FormatHelper.toUTCString(this.getStartDate()));
-        }
-        else{
-            json.put(PARAM_START_AT, "");
-        }
-        if (this.getEndDate() != null) {
-            json.put(PARAM_END_AT, FormatHelper.toUTCString(this.getEndDate()));
-        }
-        else {
-            json.put(PARAM_END_AT, "");
-        }
-        json.put(PARAM_EXPECTED_PROGRESS, this.getExpectedProgress().toString());
-        json.put(PARAM_CURRENT_PROGRESS, this.getCurrentProgress().toString());
-        json.put(PARAM_CREATED_AT, FormatHelper.toUTCString(this.getCreatedTime()));
-        json.put(PARAM_UPDATED_AT, FormatHelper.toUTCString(this.getLastUpdateTime()));
-        json.put(PARAM_TARGET, this.getTarget().toString());
-        json.put(PARAM_UNIT, this.getUnit());
-        json.put(PARAM_ALERT_TYPE, this.getAlertType().toString());
-        json.put(PARAM_IS_DECIMAL_UNIT, this.isDecimalUnit);
-        json.put(PARAM_INIT_PROGRESS, this.getInitProgress().toString());
-        json.put(PARAM_IS_CONSUMED, this.isConsumed);
+            json.put(PARAM_PROJECTS_ID, this.getProjectId());
+            json.put(PARAM_NAME, this.getName());
+            json.put(PARAM_DESCRIPTION, this.getDescription());
+            if (this.getStartDate() != null) {
+                json.put(PARAM_START_AT, FormatHelper.toUTCString(this.getStartDate()));
+            }
+            else{
+                json.put(PARAM_START_AT, "");
+            }
+            if (this.getEndDate() != null) {
+                json.put(PARAM_END_AT, FormatHelper.toUTCString(this.getEndDate()));
+            }
+            else {
+                json.put(PARAM_END_AT, "");
+            }
+            json.put(PARAM_EXPECTED_PROGRESS, this.getExpectedProgress().toString());
+            json.put(PARAM_CURRENT_PROGRESS, this.getCurrentProgress().toString());
+            json.put(PARAM_CREATED_AT, FormatHelper.toUTCString(this.getCreatedTime()));
+            json.put(PARAM_UPDATED_AT, FormatHelper.toUTCString(this.getLastUpdateTime()));
+            json.put(PARAM_TARGET, this.getTarget().toString());
+            json.put(PARAM_UNIT, this.getUnit());
+            json.put(PARAM_ALERT_TYPE, this.getAlertType().toString());
+            json.put(PARAM_IS_DECIMAL_UNIT, this.isDecimalUnit);
+            json.put(PARAM_INIT_PROGRESS, this.getInitProgress().toString());
+            json.put(PARAM_IS_CONSUMED, this.isConsumed);
+            json.put(PARAM_SCHEDULE, this.schedule);
         } catch (JSONException e) {
             Log.e(TAG, "unable to make json");
         }
@@ -363,23 +378,57 @@ public class Project {
     }
 
     public long getRestDay(){
+        if (schedule > 0 && schedule < 127)
+            return getRestDayOnSchedule();
         long diff = 1;
         if (this.getEndDate() == null ) {
             diff = 1;
         }
         else{
-            diff = NumberUtils.diffOfDate(this.getEndDate(), new Date());
+            Date currentDate = new Date();
+            diff = NumberUtils.diffOfDate(this.getEndDate(), currentDate);
+        }
+        return diff == 0? 1 : diff;
+    }
+
+    public long getRestDayOnSchedule(){
+        long diff = 1;
+        if (this.getEndDate() == null ) {
+            diff = 1;
+        }
+        else{
+            Date currentDate = new Date();
+            diff = NumberUtils.diffOfDate(this.getEndDate(), currentDate);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(currentDate);
+            diff = MyDateUtils.getNumberOfDayOfWeekInDays(diff, cal.get(Calendar.DAY_OF_WEEK),parseScheduleDayOfWeekArrayFromValue(schedule));
         }
         return diff == 0? 1 : diff;
     }
 
     public long getLastUpdatePastDay(){
+        if (schedule > 0 && schedule < 127)
+            return getLastUpdatePastDayOnSchedule();
         long diff = 1;
         if (this.getStartDate() == null ) {
             diff = NumberUtils.diffOfDate(this.getCreatedTime(), this.getLastUpdateTime());
         }else{
             diff = NumberUtils.diffOfDate(this.getStartDate(), this.getLastUpdateTime());
         }
+        return diff == 0? 1 : diff;
+    }
+
+    public long getLastUpdatePastDayOnSchedule(){
+        long diff = 1;
+        Calendar cal = Calendar.getInstance();
+        if (this.getStartDate() == null ) {
+            diff = NumberUtils.diffOfDate(this.getCreatedTime(), this.getLastUpdateTime());
+            cal.setTime(this.getCreatedTime());
+        }else{
+            diff = NumberUtils.diffOfDate(this.getStartDate(), this.getLastUpdateTime());
+            cal.setTime(this.getStartDate());
+        }
+        diff = MyDateUtils.getNumberOfDayOfWeekInDays(diff, cal.get(Calendar.DAY_OF_WEEK),parseScheduleDayOfWeekArrayFromValue(schedule));
         return diff == 0? 1 : diff;
     }
 
@@ -409,4 +458,67 @@ public class Project {
         return this.target.subtract(this.currentProgress).divide(new BigDecimal(getRestDay()), new MathContext(2));
     }
 
+    public static int parseScheduleValueFromBoolean(boolean sun, boolean mon, boolean tue, boolean wed, boolean thu, boolean fri, boolean sat)
+    {
+        int result = 0;
+        result += mon? 1 : 0;
+        result += tue? 2 : 0;
+        result += wed? 4 : 0;
+        result += thu? 8 : 0;
+        result += fri? 16 : 0;
+        result += sat? 32 : 0;
+        result += sun? 64 : 0;
+        return result;
+    }
+
+    public static boolean[] parseScheduleBooleanArrayFromValue(int value)
+    {
+        boolean[] array = new boolean[7];
+        array[0] = (value & 1) == 1;
+        array[1] = (value & 2) == 2;
+        array[2] = (value & 4) == 4;
+        array[3] = (value & 8) == 8;
+        array[4] = (value & 16) == 16;
+        array[5] = (value & 32) == 32;
+        array[6] = (value & 64) == 64;
+        return array;
+    }
+
+    public static int[] parseScheduleDayOfWeekArrayFromValue(int value)
+    {
+        boolean[] array = parseScheduleBooleanArrayFromValue(value);
+        List <Integer> resultArray = new ArrayList<Integer>();
+        for (int i = 0 ; i<array.length; i++)
+        {
+            if (array[i])
+            {
+                switch (i) {
+                    case 0:
+                        resultArray.add(Calendar.MONDAY);
+                        break;
+                    case 1:
+                        resultArray.add(Calendar.TUESDAY);
+                        break;
+                    case 2:
+                        resultArray.add(Calendar.WEDNESDAY);
+                        break;
+                    case 3:
+                        resultArray.add(Calendar.THURSDAY);
+                        break;
+                    case 4:
+                        resultArray.add(Calendar.FRIDAY);
+                        break;
+                    case 5:
+                        resultArray.add(Calendar.SATURDAY);
+                        break;
+                    case 6:
+                        resultArray.add(Calendar.SUNDAY);
+                        break;
+                }
+            }
+        }
+        int[] result = new int[resultArray.size()];
+        for(int i = 0; i < resultArray.size(); i++) result[i] = resultArray.get(i);
+        return result;
+    }
 }

@@ -247,12 +247,12 @@ public class ProjectDetailFragment extends Fragment
                 seekArc.setExpectedAngle(expectedAngle);
                 seekArc.setReverse();
                 tvProjectPast.setText(mItem.currentPercentage()+"% gone so far");
-                tvProjectFuture.setText(mItem.restPercentage()+"% left in next "+mItem.getRestDay()+" days");
+                tvProjectFuture.setText(mItem.restPercentage()+"% left in next "+mItem.getRestDay()+" days on schedule");
             }
             else
             {
                 tvProjectPast.setText(mItem.currentPercentage()+"% finished so far");
-                tvProjectFuture.setText(mItem.restPercentage()+"% to be done in next "+mItem.getRestDay()+" days");
+                tvProjectFuture.setText(mItem.restPercentage()+"% to be done in next "+mItem.getRestDay()+" days on schedule");
                 seekArc.setStartAngle(startAngle);
                 seekArc.setExpectedAngle(expectedAngle);
                 tvSeekArcPercentage.setText(NumberUtils.decimalToString(mItem.getCurrentProgress(), mItem.isDecimalUnit()));

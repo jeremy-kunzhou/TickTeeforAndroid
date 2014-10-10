@@ -66,6 +66,13 @@ public class ProjectEditFragment extends Fragment
     private TextView tvEndAt;
     private CheckBox checkBoxIsConsumed;
     private CheckBox checkBoxIsDecimalUnit;
+    private CheckBox checkBoxScheduleSunday;
+    private CheckBox checkBoxScheduleMonday;
+    private CheckBox checkBoxScheduleTuesday;
+    private CheckBox checkBoxScheduleWednesday;
+    private CheckBox checkBoxScheduleThursday;
+    private CheckBox checkBoxScheduleFriday;
+    private CheckBox checkBoxScheduleSaturday;
 
 
 
@@ -126,6 +133,20 @@ public class ProjectEditFragment extends Fragment
         checkBoxIsConsumed.setOnClickListener(this.checkBoxListener);
         checkBoxIsDecimalUnit = (CheckBox) rootView.findViewById(R.id.project_edit_decimal_unit);
         checkBoxIsDecimalUnit.setOnClickListener(this.checkBoxListener);
+        checkBoxScheduleSunday = (CheckBox) rootView.findViewById(R.id.project_edit_schedule_sunday);
+        checkBoxScheduleSunday.setOnClickListener(this.checkBoxListener);
+        checkBoxScheduleMonday = (CheckBox) rootView.findViewById(R.id.project_edit_schedule_monday);
+        checkBoxScheduleMonday.setOnClickListener(this.checkBoxListener);
+        checkBoxScheduleTuesday = (CheckBox) rootView.findViewById(R.id.project_edit_schedule_tuesday);
+        checkBoxScheduleTuesday.setOnClickListener(this.checkBoxListener);
+        checkBoxScheduleWednesday = (CheckBox) rootView.findViewById(R.id.project_edit_schedule_wednesday);
+        checkBoxScheduleWednesday.setOnClickListener(this.checkBoxListener);
+        checkBoxScheduleThursday = (CheckBox) rootView.findViewById(R.id.project_edit_schedule_thursday);
+        checkBoxScheduleThursday.setOnClickListener(this.checkBoxListener);
+        checkBoxScheduleFriday = (CheckBox) rootView.findViewById(R.id.project_edit_schedule_friday);
+        checkBoxScheduleFriday.setOnClickListener(this.checkBoxListener);
+        checkBoxScheduleSaturday = (CheckBox) rootView.findViewById(R.id.project_edit_schedule_saturday);
+        checkBoxScheduleSaturday.setOnClickListener(this.checkBoxListener);
         Calendar cal = Calendar.getInstance();
         tvStartAt.setText(FormatHelper.shortLocalDateFormatter.format(cal.getTime()));
         cal.add(Calendar.DAY_OF_MONTH, 1);
@@ -204,8 +225,14 @@ public class ProjectEditFragment extends Fragment
         etDescription.setText(mItem.getDescription());
         etInitProgress.setEnabled(false);
         checkBoxIsConsumed.setEnabled(false);
-
-
+        boolean[] scheduleArray = Project.parseScheduleBooleanArrayFromValue(project.getSchedule());
+        checkBoxScheduleMonday.setChecked(scheduleArray[0]);
+        checkBoxScheduleTuesday.setChecked(scheduleArray[1]);
+        checkBoxScheduleWednesday.setChecked(scheduleArray[2]);
+        checkBoxScheduleThursday.setChecked(scheduleArray[3]);
+        checkBoxScheduleFriday.setChecked(scheduleArray[4]);
+        checkBoxScheduleSaturday.setChecked(scheduleArray[5]);
+        checkBoxScheduleSunday.setChecked(scheduleArray[6]);
     }
 
     public void saveProject() throws ParseException {
@@ -225,6 +252,8 @@ public class ProjectEditFragment extends Fragment
             mItem.setUnit(tvUnit.getText().toString());
             mItem.setAlertType(Project.AlertType.parse(spinnerAlertType.getSelectedItem().toString()));
             mItem.setDecimalUnit(checkBoxIsDecimalUnit.isChecked());
+            mItem.setSchedule(Project.parseScheduleValueFromBoolean(this.checkBoxScheduleSunday.isChecked(), this.checkBoxScheduleMonday.isChecked(), this.checkBoxScheduleTuesday.isChecked(), this.checkBoxScheduleWednesday.isChecked(), this.checkBoxScheduleThursday.isChecked(), this.checkBoxScheduleFriday.isChecked(), this.checkBoxScheduleSaturday.isChecked()));
+
             Date date = new Date();
             mItem.setLastUpdateTime(date);
             UpdateTask task = new UpdateTask(mItem.getId(), mItem);
@@ -310,6 +339,7 @@ public class ProjectEditFragment extends Fragment
             Date date = new Date();
             project.setCreatedTime(date);
             project.setLastUpdateTime(date);
+            project.setSchedule(Project.parseScheduleValueFromBoolean(this.checkBoxScheduleSunday.isChecked(), this.checkBoxScheduleMonday.isChecked(), this.checkBoxScheduleTuesday.isChecked(), this.checkBoxScheduleWednesday.isChecked(), this.checkBoxScheduleThursday.isChecked(), this.checkBoxScheduleFriday.isChecked(), this.checkBoxScheduleSaturday.isChecked()));
             InsertTask task = new InsertTask(project);
             executorPool.submit(task);
             return 1;

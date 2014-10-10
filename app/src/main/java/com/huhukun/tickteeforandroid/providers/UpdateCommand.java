@@ -38,6 +38,7 @@ import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_IS_C
 import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_IS_DECIMAL_UNIT;
 import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_NAME;
 import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_PROJECT;
+import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_SCHEDULE;
 import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_START_AT;
 import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_TARGET;
 import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_UNIT;
@@ -55,7 +56,7 @@ public class UpdateCommand extends RESTCommand {
     public UpdateCommand(long requestId, long projectsId, String name, String description, String startAt,
                          String endAt, String expectedProgress, String currentProgress,
                          String createdAt, String updatedAt,String target, String unit,
-                         String alert, boolean isDecimal, String initProgress, boolean isConsumed )
+                         String alert, boolean isDecimal, String initProgress, boolean isConsumed, String schedule )
             throws JSONException {
         this.requestId = requestId;
         this.projectId = projectsId;
@@ -74,6 +75,7 @@ public class UpdateCommand extends RESTCommand {
         json.put(PARAM_IS_DECIMAL_UNIT, isDecimal);
         json.put(PARAM_INIT_PROGRESS, initProgress);
         json.put(PARAM_IS_CONSUMED, isConsumed);
+        json.put(PARAM_SCHEDULE, schedule);
         projectJson = new JSONObject();
         projectJson.put(PARAM_PROJECT, json);
         Log.d(TAG, "prepare for update command project "+ projectsId);
