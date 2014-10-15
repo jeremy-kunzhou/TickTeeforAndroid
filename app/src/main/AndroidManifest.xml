@@ -27,7 +27,7 @@
     <application
         android:name=".TickTeeAndroid"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/artwork"
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.Light" >
         <activity

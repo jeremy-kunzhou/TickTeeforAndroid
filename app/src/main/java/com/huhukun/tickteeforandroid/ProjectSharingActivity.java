@@ -16,7 +16,7 @@ public class ProjectSharingActivity extends ActionBarActivity{
     public void onCreate(Bundle bundle){
         super.onCreate(bundle);
         setContentView(R.layout.activity_project_sharing);
-        getSupportActionBar().setIcon(R.drawable.ic_launcher);
+        getSupportActionBar().setIcon(R.drawable.artwork);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         // savedInstanceState is non-null when there is fragment state

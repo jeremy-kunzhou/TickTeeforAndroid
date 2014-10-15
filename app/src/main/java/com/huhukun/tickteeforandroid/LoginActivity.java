@@ -118,7 +118,7 @@ public class LoginActivity extends ActionBarActivity{
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void setupActionBar() {
 
-        getSupportActionBar().setIcon(R.drawable.ic_launcher);
+        getSupportActionBar().setIcon(R.drawable.artwork);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
     }
