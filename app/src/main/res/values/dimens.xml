@@ -3,4 +3,9 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="summary_text_size">31sp</dimen>
+    <dimen name="first_day_margin">10dp</dimen>
+    <dimen name="day_margin">24dp</dimen>
+    <dimen name="text_height_width">30dp</dimen>
+    <dimen name="min_cell_height">40dp</dimen>
+    <dimen name="min_cell_width">40dp</dimen>
 </resources>

@@ -84,5 +84,13 @@
     <string name="sharing_with">Sharing with</string>
     <string name="title_activity_notify_activity_dialog">NotifyActivityDialog</string>
     <string name="schedule">Schedule</string>
+    <string name="monday">MON</string>
+    <string name="tuesday">TUE</string>
+    <string name="wednesday">WED</string>
+    <string name="thursday">THU</string>
+    <string name="friday">FRI</string>
+    <string name="saturday">SAT</string>
+    <string name="sunday">SUN</string>
+    <string name="title_activity_project_calendar_view">ProjectCalendarView</string>
 
 </resources>

@@ -15,7 +15,7 @@
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <uses-feature
         android:name="android.hardware.location"
@@ -138,6 +138,10 @@
         <activity
             android:name=".NotifyActivityDialog"
             android:theme="@android:style/Theme.Dialog" >
+        </activity>
+        <activity
+            android:name=".ProjectCalendarView"
+            android:label="@string/title_activity_project_calendar_view" >
         </activity>
     </application>
 

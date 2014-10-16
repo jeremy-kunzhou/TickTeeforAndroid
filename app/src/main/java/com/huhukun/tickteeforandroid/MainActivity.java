@@ -201,6 +201,12 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         startActivity(intent);
     }
 
+    public void projectCalendarView(View view)
+    {
+        Intent intent = new Intent(this, ProjectCalendarView.class);
+        startActivity(intent);
+    }
+
     private void login() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
