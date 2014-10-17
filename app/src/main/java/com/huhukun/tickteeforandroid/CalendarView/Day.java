@@ -19,17 +19,19 @@ public class Day{
 	int day;
 	int year;
 	int month;
+    int dayOfWeek;
 	Context context;
 	BaseAdapter adapter;
 	ArrayList<Event> events = new ArrayList<Event>();
-	
+	Calendar cal;
 	Day(Context context,int day, int year, int month){
 		this.day = day;
 		this.year = year;
 		this.month = month;
 		this.context = context;
-		Calendar cal = Calendar.getInstance();
+		cal = Calendar.getInstance();
 		cal.set(year, month-1, day);
+        dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
 		int end = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
 		cal.set(year, month, end);
 		TimeZone tz = TimeZone.getDefault();
@@ -43,6 +45,12 @@ public class Day{
 //	public long getEndTime(){
 //		return endTime;
 //	}
+
+    public Calendar getCal() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month-1, day);
+        return cal;
+    }
 	
 	public int getMonth(){
 		return month;
@@ -59,6 +67,8 @@ public class Day{
 	public int getDay(){
 		return day;
 	}
+
+    public int getDayOfWeek () {return this.dayOfWeek;}
 	
 	/**
 	 * Add an event to the day

@@ -58,6 +58,9 @@ public class FormatHelper {
         return converter.parse(dateString);
     }
 
+    public static String fromLocalDateTimeStringToUTCString(String dateString) throws ParseException {
+        return toUTCString(fromLocalDateTimeStringToUTC(dateString));
+    }
 
     public static Date fromLocalDateTimeStringToUTC(String dateString) throws ParseException {
         DateFormat converter = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault());

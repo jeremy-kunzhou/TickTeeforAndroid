@@ -2,7 +2,6 @@ package com.huhukun.tickteeforandroid.providers;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.app.ActionBar;
 import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -52,6 +51,8 @@ public class TickteeProvider extends ContentProvider {
     private static final int PROJECTS_QUERY_COMPLETED_ID = 7;
     private static final int PROJECTS_FILTERED = 8;
     private static final int PROJECTS_STATUS = 9;
+    private static final int PROJECTS_ON_DAY = 10;
+    private static final int PROJECTS_IN_PERIOD = 11;
 
     private static final int PROJECTS_STATUS_IN_PROGRESS = 2;
     private static final int PROJECTS_STATUS_OVERDUE = 3;
@@ -71,6 +72,10 @@ public class TickteeProvider extends ContentProvider {
             + AUTHORITY + "/projects/filtered");
     public static final Uri CONTENT_URI_STATUS = Uri.parse("content://"
             + AUTHORITY + "/projects/status");
+    public static final Uri CONTENT_URI_ON_DAY = Uri.parse("content://"
+            +AUTHORITY + "/projects/on-day");
+    public static final Uri CONTENT_URI_IN_PERIOD = Uri.parse("content://"
+            +AUTHORITY + "/projects/in-period");
 
     @Override
     public boolean onCreate() {
@@ -96,7 +101,10 @@ public class TickteeProvider extends ContentProvider {
                 "projects/filtered/*", PROJECTS_FILTERED);
         uriMatcher.addURI(AUTHORITY,
                 "projects/status/*", PROJECTS_STATUS);
-
+        uriMatcher.addURI(AUTHORITY,
+                "projects/on-day/*/*/*", PROJECTS_ON_DAY);
+        uriMatcher.addURI(AUTHORITY,
+                "projects/in-period/*/*", PROJECTS_IN_PERIOD);
         return true;
     }
 
@@ -191,6 +199,89 @@ public class TickteeProvider extends ContentProvider {
                 }
 
                 break;
+            case PROJECTS_IN_PERIOD:
+                /*
+                  status != 'DELETE'
+                AND
+                 (
+                 start_at is null
+                 or
+                 start_at is not null
+                 and
+                  not(
+                   strftime('%s', '2014-09-01T12:00:00.000Z') > strftime('%s', end_at)
+                  or
+                   strftime('%s', '2014-09-30T00:00:00.000Z') < strftime('%s', start_at)
+                 )
+              )
+                 */
+                String startOfPeriod = uri.getPathSegments().get(2);
+                String endOfPeriod = uri.getPathSegments().get(3);
+                qb.appendWhere(TableConstants.COL_CURRENT_PROGRESS);
+                qb.appendWhere(" != ");
+                qb.appendWhere(TableConstants.COL_TARGET);
+                qb.appendWhere(" AND ");
+                qb.appendWhere( SqlOpenHelper.TableConstants.COL_STATUS );
+                qb.appendWhere( "!=" );
+                qb.appendWhere( "'" );
+                qb.appendWhere( MethodEnum.DELETE.toString() );
+                qb.appendWhere( "' AND (" );
+                qb.appendWhere("");
+                qb.appendWhere(TableConstants.COL_START_AT);
+                qb.appendWhere(" is null  OR") ;
+                qb.appendWhere("");
+                qb.appendWhere(TableConstants.COL_START_AT);
+                qb.appendWhere(" is not null  AND ");
+                qb.appendWhere(" not ( strftime('%s', '"+endOfPeriod+"') < strftime('%s', " +
+                        TableConstants.COL_START_AT +
+                        ")  OR  strftime('%s', '" +
+                        startOfPeriod +
+                        "') > strftime('%s', " +
+                        TableConstants.COL_END_AT +
+                        ") )) ) ");
+                break;
+            case PROJECTS_ON_DAY:
+                /*
+                status != 'DELETE'
+                AND
+                (
+                 start_at is null
+                 OR
+                 (
+                  start_at is not null
+                  and
+                  not(
+                   strftime('%s', '2014-09-01T12:00:00.000Z') > strftime('%s', end_at)
+                  or
+                   strftime('%s', '2014-09-01T23:59:59.999Z') < strftime('%s', start_at)
+                 )
+
+                 )
+                )
+                And schedule & 64 = 64
+                */
+                String startDay = uri.getPathSegments().get(2);
+                String endDay = uri.getPathSegments().get(3);
+                String dayOfWeek = uri.getPathSegments().get(4);
+                qb.appendWhere( SqlOpenHelper.TableConstants.COL_STATUS );
+                qb.appendWhere( "!=" );
+                qb.appendWhere( "'" );
+                qb.appendWhere( MethodEnum.DELETE.toString() );
+                qb.appendWhere( "' AND (" );
+                qb.appendWhere(TableConstants.COL_START_AT);
+                qb.appendWhere(" is null  OR") ;
+                qb.appendWhere("(");
+                qb.appendWhere(TableConstants.COL_START_AT);
+                qb.appendWhere(" is not null  AND ");
+                qb.appendWhere(" not ( strftime('%s', '"+endDay+"') < strftime('%s', " +
+                        TableConstants.COL_START_AT +
+                        ")  OR  strftime('%s', '" +
+                        startDay +
+                        "') > strftime('%s', " +
+                        TableConstants.COL_END_AT +
+                        ") ) )) AND ");
+                qb.appendWhere( TableConstants.COL_SCHEDULE+ " & "+dayOfWeek+" = "+dayOfWeek);
+                break;
             case PROJECTS_STATUS:
                 qb.appendWhere( SqlOpenHelper.TableConstants.COL_STATUS );
                 qb.appendWhere( "!=" );
@@ -277,6 +368,8 @@ public class TickteeProvider extends ContentProvider {
             case PROJECTS_PENDING:
             case PROJECTS_FILTERED:
             case PROJECTS_STATUS:
+            case PROJECTS_ON_DAY:
+            case PROJECTS_IN_PERIOD:
                 return CONTENT_TYPE;
             case PROJECTS_ID:
             case PROJECTS_PENDING_ID:
