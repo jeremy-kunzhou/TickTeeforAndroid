@@ -263,6 +263,10 @@ public class TickteeProvider extends ContentProvider {
                 String startDay = uri.getPathSegments().get(2);
                 String endDay = uri.getPathSegments().get(3);
                 String dayOfWeek = uri.getPathSegments().get(4);
+                qb.appendWhere(TableConstants.COL_CURRENT_PROGRESS);
+                qb.appendWhere(" != ");
+                qb.appendWhere(TableConstants.COL_TARGET);
+                qb.appendWhere(" AND ");
                 qb.appendWhere( SqlOpenHelper.TableConstants.COL_STATUS );
                 qb.appendWhere( "!=" );
                 qb.appendWhere( "'" );

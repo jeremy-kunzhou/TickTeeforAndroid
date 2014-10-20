@@ -1,5 +1,6 @@
 package com.huhukun.tickteeforandroid.CalendarView;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -8,9 +9,18 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v4.content.CursorLoader;
 import android.text.format.Time;
+import android.util.Log;
 import android.widget.BaseAdapter;
+
+import com.huhukun.tickteeforandroid.model.Project;
+import com.huhukun.tickteeforandroid.model.SqlOpenHelper;
+import com.huhukun.tickteeforandroid.providers.TickteeProvider;
+import com.huhukun.utils.FormatHelper;
 
 public class Day{
 	
@@ -22,7 +32,7 @@ public class Day{
     int dayOfWeek;
 	Context context;
 	BaseAdapter adapter;
-	ArrayList<Event> events = new ArrayList<Event>();
+	ArrayList<Project> events = new ArrayList<Project>();
 	Calendar cal;
 	Day(Context context,int day, int year, int month, int dayOfWeek){
 		this.day = day;
@@ -75,9 +85,9 @@ public class Day{
 	 * 
 	 * @param event
 	 */
-	public void addEvent(Event event){
-		events.add(event);
-	}
+//	public void addEvent(Event event){
+//		events.add(event);
+//	}
 	
 	/**
 	 * Set the start day
@@ -104,9 +114,7 @@ public class Day{
 	 */
 	public Set<Integer> getColors(){
 		Set<Integer> colors = new HashSet<Integer>();
-		for(Event event : events){
-			colors.add(event.getColor());
-		}
+		if (events.size() > 0) colors.add(0);
 		
 		return colors;
 	}
@@ -116,9 +124,9 @@ public class Day{
 	 * 
 	 * @return list of events
 	 */
-	public ArrayList<Event> getEvents(){
-		return events;
-	}
+//	public ArrayList<Event> getEvents(){
+//		return events;
+//	}
 	
 	public void setAdapter(BaseAdapter adapter){
 		this.adapter = adapter;
@@ -128,21 +136,50 @@ public class Day{
 
 		@Override
 		protected Void doInBackground(Void... params) {
-//			Cursor c = context.getContentResolver().query(CalendarProvider.CONTENT_URI,new String[] {CalendarProvider.ID,CalendarProvider.EVENT,
-//					CalendarProvider.DESCRIPTION,CalendarProvider.LOCATION,CalendarProvider.START,CalendarProvider.END,CalendarProvider.COLOR},"?>="+CalendarProvider.START_DAY+" AND "+ CalendarProvider.END_DAY+">=?",
-//					new String[] {String.valueOf(startDay),String.valueOf(startDay)}, null);
-//			if(c != null && c.moveToFirst()){
-//				do{
-//					Event event = new Event(c.getLong(0),c.getLong(4),c.getLong(5));
-//					event.setName(c.getString(1));
-//					event.setDescription(c.getString(2));
-//					event.setLocation(c.getString(3));
-//					event.setColor(c.getInt(6));
-//					events.add(event);
-//				}while(c.moveToNext());
-//				c.close();
-//			}
-//
+            String dateString = FormatHelper.shortLocalDateFormatter.format(getCal().getTime());
+            String dayOfWeekString = "";
+                switch (getDayOfWeek())
+                {
+                    case Calendar.MONDAY:
+                        dayOfWeekString = "1";
+                        break;
+                    case Calendar.TUESDAY:
+                        dayOfWeekString = "2";
+                        break;
+                    case Calendar.WEDNESDAY:
+                        dayOfWeekString = "4";
+                        break;
+                    case Calendar.THURSDAY:
+                        dayOfWeekString = "8";
+                        break;
+                    case Calendar.FRIDAY:
+                        dayOfWeekString = "16";
+                        break;
+                    case Calendar.SATURDAY:
+                        dayOfWeekString = "32";
+                        break;
+                    case Calendar.SUNDAY:
+                        dayOfWeekString = "64";
+                        break;
+                }
+            Uri baseUri = null;
+            try {
+                baseUri = Uri.withAppendedPath(TickteeProvider.CONTENT_URI_ON_DAY, FormatHelper.fromLocalDateTimeStringToUTCString(dateString + " 12:00 AM") + "/" + FormatHelper.fromLocalDateTimeStringToUTCString(dateString + " 11:59 PM") + "/" + dayOfWeekString);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            Cursor c = context.getContentResolver().query(baseUri,SqlOpenHelper.LOADER_COLUMNS, null, null, null);
+			if(c != null && c.moveToFirst()){
+				do{
+                    try {
+                        events.add(new Project(c));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }while(c.moveToNext());
+				c.close();
+			}
+
 			return null;
 		}
 		

@@ -191,7 +191,7 @@ public class CalendarAdapter extends BaseAdapter{
         int lastDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH)+7;
         int firstDay = (int)cal.get(Calendar.DAY_OF_WEEK);
         int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH);
+        int month = cal.get(Calendar.MONTH)+1;
         TimeZone tz = TimeZone.getDefault();
 
         // figure size of the array
