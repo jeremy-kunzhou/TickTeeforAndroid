@@ -208,14 +208,15 @@ public class CalendarAdapter extends BaseAdapter{
         if(firstDay>1) {
             for(j=0;j<(firstDay-FIRST_DAY_OF_WEEK)+7;j++) {
                 days[j] = "";
-                Day d = new Day(context,0,0,0);
+                Day d = new Day(context,0,0,0, (dayList.size()) % 7 + 1);
                 dayList.add(d);
+
             }
         }
         else {
             for(j=0;j<(FIRST_DAY_OF_WEEK*6)+7;j++) {
                 days[j] = "";
-                Day d = new Day(context,0,0,0);
+                Day d = new Day(context,0,0,0, (dayList.size()) % 7 + 1);
                 dayList.add(d);
             }
             j=FIRST_DAY_OF_WEEK*6+1; // sunday => 1, monday => 7
@@ -229,7 +230,7 @@ public class CalendarAdapter extends BaseAdapter{
         }
 
         for(int i=j-1;i<days.length;i++) {
-            Day d = new Day(context,dayNumber,year,month);
+            Day d = new Day(context,dayNumber,year,month, (dayList.size()) % 7+1);
 
             Calendar cTemp = Calendar.getInstance();
             cTemp.setTime(cal.getTime());

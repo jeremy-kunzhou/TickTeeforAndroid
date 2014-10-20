@@ -24,14 +24,14 @@ public class Day{
 	BaseAdapter adapter;
 	ArrayList<Event> events = new ArrayList<Event>();
 	Calendar cal;
-	Day(Context context,int day, int year, int month){
+	Day(Context context,int day, int year, int month, int dayOfWeek){
 		this.day = day;
 		this.year = year;
 		this.month = month;
+        this.dayOfWeek = dayOfWeek;
 		this.context = context;
 		cal = Calendar.getInstance();
 		cal.set(year, month-1, day);
-        dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
 		int end = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
 		cal.set(year, month, end);
 		TimeZone tz = TimeZone.getDefault();
