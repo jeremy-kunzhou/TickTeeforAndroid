@@ -2,11 +2,11 @@ package com.huhukun.tickteeforandroid;
 
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v4.widget.CursorAdapter;
-import android.support.v7.app.ActionBarActivity;
+//import android.support.v4.app.LoaderManager;
+//import android.support.v4.content.CursorLoader;
+//import android.support.v4.content.Loader;
+//import android.support.v4.widget.CursorAdapter;
+//import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -14,6 +14,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cursoradapter.widget.CursorAdapter;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
 
 import com.huhukun.tickteeforandroid.CalendarView.Day;
 import com.huhukun.tickteeforandroid.CalendarView.ExtendedCalendarView;
@@ -28,7 +35,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 
-public class ProjectCalendarView extends ActionBarActivity implements ExtendedCalendarView.OnDayClickListener, LoaderManager.LoaderCallbacks<Cursor> {
+public class ProjectCalendarView extends AppCompatActivity implements ExtendedCalendarView.OnDayClickListener, LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG = App_Constants.APP_TAG + "ProjectCalendarView";
 
     private static final String START_OF_DAY = "startOfDay";
@@ -125,8 +132,13 @@ public class ProjectCalendarView extends ActionBarActivity implements ExtendedCa
         return cursorLoader;
     }
 
+//    @Override
+//    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+//
+//    }
+
     @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+    public void onLoadFinished(@NonNull Loader<Cursor> cursorLoader, Cursor cursor) {
         if(cursor!=null) {
             cursorAdapter =
                     new ProjectCursorAdapter(this,cursor, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);

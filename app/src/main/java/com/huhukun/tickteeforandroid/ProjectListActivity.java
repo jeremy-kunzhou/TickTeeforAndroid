@@ -2,12 +2,15 @@ package com.huhukun.tickteeforandroid;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
-import android.view.MenuInflater;
+//import android.support.v4.app.FragmentActivity;
+//import android.support.v4.app.NavUtils;
+//import android.support.v7.app.ActionBarActivity;
+//import android.view.Menu;
+//import android.view.MenuInflater;
 import android.view.MenuItem;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NavUtils;
 
 import com.huhukun.tickteeforandroid.model.Project;
 
@@ -28,7 +31,7 @@ import com.huhukun.tickteeforandroid.model.Project;
  * {@link ProjectListFragment.Callbacks} interface
  * to listen for item selections.
  */
-public class ProjectListActivity extends ActionBarActivity
+public class ProjectListActivity extends AppCompatActivity
 implements ProjectListFragment.Callbacks<Project> {
 
     public static final String PROJECT_STATUS = "projects_status";

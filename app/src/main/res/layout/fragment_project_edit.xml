@@ -23,7 +23,7 @@
                 android:gravity="bottom" />
 
 
-            <org.droidparts.widget.ClearableEditText
+            <EditText
                 android:drawableRight="@android:drawable/presence_offline"
                 android:drawablePadding="12dp"
                 android:layout_width="fill_parent"
@@ -52,7 +52,7 @@
                 android:gravity="bottom"
                 />
 
-            <org.droidparts.widget.ClearableEditText
+            <EditText
                 android:drawableRight="@android:drawable/presence_offline"
                 android:drawablePadding="12dp"
                 android:layout_width="fill_parent"
@@ -75,7 +75,7 @@
                 android:textStyle="bold"
                 android:gravity="bottom"/>
 
-            <org.droidparts.widget.ClearableEditText
+            <EditText
                 android:drawableRight="@android:drawable/presence_offline"
                 android:drawablePadding="12dp"
                 android:layout_width="fill_parent"

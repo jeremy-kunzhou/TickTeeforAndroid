@@ -8,15 +8,21 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v4.widget.CursorAdapter;
+//import android.support.v4.app.ListFragment;
+//import android.support.v4.app.LoaderManager;
+//import android.support.v4.content.CursorLoader;
+//import android.support.v4.content.Loader;
+//import android.support.v4.widget.CursorAdapter;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import androidx.cursoradapter.widget.CursorAdapter;
+import androidx.fragment.app.ListFragment;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
 
 import com.huhukun.tickteeforandroid.model.Project;
 import com.huhukun.tickteeforandroid.model.SqlOpenHelper;

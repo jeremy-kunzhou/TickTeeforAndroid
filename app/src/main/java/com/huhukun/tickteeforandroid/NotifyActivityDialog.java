@@ -1,12 +1,13 @@
 package com.huhukun.tickteeforandroid;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.appcompat.app.AppCompatActivity;
 
-public class NotifyActivityDialog extends ActionBarActivity {
+
+public class NotifyActivityDialog extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

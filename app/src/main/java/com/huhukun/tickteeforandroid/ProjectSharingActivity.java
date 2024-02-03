@@ -1,13 +1,14 @@
 package com.huhukun.tickteeforandroid;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * Created by kun on 8/09/2014.
  */
-public class ProjectSharingActivity extends ActionBarActivity{
+public class ProjectSharingActivity extends AppCompatActivity {
 
     private static final String TAG = App_Constants.APP_TAG + "ProjectSharingActivity";
     ProjectSharingFragment fragment;

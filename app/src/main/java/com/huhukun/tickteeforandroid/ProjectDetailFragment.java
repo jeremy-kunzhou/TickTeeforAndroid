@@ -4,10 +4,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
+//import android.support.v4.app.Fragment;
+//import android.support.v4.app.LoaderManager;
+//import android.support.v4.content.CursorLoader;
+//import android.support.v4.content.Loader;
 import android.text.Layout;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -31,8 +31,9 @@ import com.huhukun.tickteeforandroid.providers.WebApiConstants;
 import com.huhukun.utils.FormatHelper;
 import com.huhukun.utils.NumberUtils;
 
-import org.droidparts.adapter.widget.TextWatcherAdapter;
-import org.droidparts.widget.ClearableEditText;
+//import org.droidparts.adapter.widget.TextWatcherAdapter;
+//import org.droidparts.widget.ClearableEditText;
+import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Text;
 
 import java.math.BigDecimal;
@@ -41,6 +42,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.TableConstants;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
 
 /**
  * A fragment representing a single Project detail screen.
@@ -78,7 +85,7 @@ public class ProjectDetailFragment extends Fragment
     private TextView tvProjectFuture;
     private TextView tvProjectFutureDaily;
     private TextView tvProjectProgress;
-    private org.droidparts.widget.ClearableEditText etNewProgress;
+//    private org.droidparts.widget.ClearableEditText etNewProgress;
     private SeekArc seekArc;
 
     private String sqlId;
@@ -132,24 +139,24 @@ public class ProjectDetailFragment extends Fragment
         tvSeekArcPercentage = (TextView) rootView.findViewById(R.id.seekArcProgress);
         tvSeekArcPercentageUnit = (TextView) rootView.findViewById(R.id.seekArcProgressUnit);
         tvProjectProgress = (TextView) rootView.findViewById(R.id.project_detail_percentage);
-        etNewProgress = (org.droidparts.widget.ClearableEditText) rootView.findViewById(R.id.project_detail_new_progress);
-        etNewProgress.setListener(new ClearableEditText.Listener() {
-            @Override
-            public void didClearText() {
-                updateProgress(null);
-            }
-        });
-        etNewProgress.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    updateProgress(etNewProgress.getText().toString().trim());
-//                    handled = true;
-                }
-                return handled;
-            }
-        });
+//        etNewProgress = (org.droidparts.widget.ClearableEditText) rootView.findViewById(R.id.project_detail_new_progress);
+//        etNewProgress.setListener(new ClearableEditText.Listener() {
+//            @Override
+//            public void didClearText() {
+//                updateProgress(null);
+//            }
+//        });
+//        etNewProgress.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//                boolean handled = false;
+//                if (actionId == EditorInfo.IME_ACTION_DONE) {
+//                    updateProgress(etNewProgress.getText().toString().trim());
+////                    handled = true;
+//                }
+//                return handled;
+//            }
+//        });
         seekArc = (SeekArc) rootView.findViewById(R.id.seekArc);
         seekArc.setOnSeekArcChangeListener(this);
         return rootView;
@@ -198,7 +205,7 @@ public class ProjectDetailFragment extends Fragment
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+    public void onLoadFinished(@NotNull Loader<Cursor> loader, Cursor cursor) {
 
         if (cursor.moveToFirst()) {
 
@@ -213,7 +220,7 @@ public class ProjectDetailFragment extends Fragment
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
 
     }
 
@@ -312,7 +319,7 @@ public class ProjectDetailFragment extends Fragment
             }else {
                 this.tvSeekArcPercentage.setText(NumberUtils.decimalToString(mItem.getCurrentProgress().add(newProgress), mItem.isDecimalUnit()));
             }
-            this.etNewProgress.setText(NumberUtils.decimalToString(newProgress, mItem.isDecimalUnit()));
+//            this.etNewProgress.setText(NumberUtils.decimalToString(newProgress, mItem.isDecimalUnit()));
 
         }
     }
@@ -342,7 +349,7 @@ public class ProjectDetailFragment extends Fragment
         else{
             tvSeekArcPercentage.setText(NumberUtils.decimalToString(mItem.getCurrentProgress().add(currentProgress), mItem.isDecimalUnit()));
         }
-        etNewProgress.setText(progress);
+//        etNewProgress.setText(progress);
     }
 
     public void sharing(){

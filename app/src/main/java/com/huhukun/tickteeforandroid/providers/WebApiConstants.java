@@ -45,7 +45,7 @@ public class WebApiConstants {
     public static final String PROJECTS_URL;
     public static final String PROJECT_URL;
 //    public static final String BASE_URL = "http://192.168.2.3:3000/";
-    public static final String BASE_URL = "http://ticktee.herokuapp.com/";
+    public static final String BASE_URL = "https://ticktee-jeremy-kunzhou.koyeb.app/";
 
     public static final String HEADER_ACCESS_EMAIL_PARAM = "X_API_EMAIL";
     public static final String HEADER_ACCESS_TOKEN_PARAM = "X_API_TOKEN";

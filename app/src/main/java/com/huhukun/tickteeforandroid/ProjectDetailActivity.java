@@ -7,13 +7,14 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBarActivity;
+
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NavUtils;
 import com.huhukun.utils.FormatHelper;
 
 import java.util.List;
@@ -28,7 +29,7 @@ import java.util.List;
  * This activity is mostly just a 'shell' activity containing nothing
  * more than a {@link ProjectDetailFragment}.
  */
-public class ProjectDetailActivity extends ActionBarActivity {
+public class ProjectDetailActivity extends AppCompatActivity {
 
     private String item_id;
     private ProjectDetailFragment fragment;

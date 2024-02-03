@@ -17,7 +17,8 @@
         android:inputType="textMultiLine"
         android:ems="10"
         android:id="@+id/project_sharing_content"
-        android:lines="3" />
+        android:lines="3"
+        android:hint="content"/>
 
     <TextView
         android:layout_width="wrap_content"

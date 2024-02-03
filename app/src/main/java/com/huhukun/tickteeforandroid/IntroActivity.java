@@ -4,13 +4,14 @@ import android.app.Activity;
 import android.app.Notification;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
 
-public class IntroActivity extends ActionBarActivity {
+
+public class IntroActivity extends AppCompatActivity {
 
 
     @Override

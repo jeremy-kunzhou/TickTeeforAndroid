@@ -13,8 +13,8 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.ActionBarActivity;
+//import android.support.v4.app.FragmentActivity;
+//import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -25,6 +25,8 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.huhukun.tickteeforandroid.providers.WebApiConstants;
 import com.huhukun.utils.JSONParser;
@@ -42,7 +44,7 @@ import java.util.List;
  * A login screen that offers login via email/password.
 
  */
-public class LoginActivity extends ActionBarActivity{
+public class LoginActivity extends AppCompatActivity {
 
 
 

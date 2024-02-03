@@ -1,14 +1,16 @@
 package com.huhukun.tickteeforandroid;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
-import android.support.v4.widget.CursorAdapter;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.cursoradapter.widget.CursorAdapter;
 
 import com.huhukun.tickteeforandroid.model.SqlOpenHelper;
 import com.huhukun.utils.BooleanUtils;
@@ -46,6 +48,7 @@ public class ProjectCursorAdapter extends CursorAdapter {
         return mInflater.inflate(R.layout.row_project_list, viewGroup, false);
     }
 
+    @SuppressLint("Range")
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 

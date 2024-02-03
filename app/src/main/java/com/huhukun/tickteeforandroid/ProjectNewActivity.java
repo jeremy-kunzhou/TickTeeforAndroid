@@ -1,7 +1,6 @@
 package com.huhukun.tickteeforandroid;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -9,10 +8,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.text.ParseException;
 
 
-public class ProjectNewActivity extends ActionBarActivity {
+public class ProjectNewActivity extends AppCompatActivity {
 
     private static final String TAG = App_Constants.APP_TAG + "ProjectNewActivity";
     ProjectEditFragment fragment;

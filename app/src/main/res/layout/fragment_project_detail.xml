@@ -142,17 +142,18 @@
                 android:layout_gravity="left"
                 android:orientation="horizontal"
                 >
-                <org.droidparts.widget.ClearableEditText
-                    android:drawableRight="@android:drawable/presence_offline"
-                    android:drawablePadding="12dp"
+
+
+                <EditText
+                    android:id="@+id/project_detail_new_progress"
                     android:layout_width="fill_parent"
                     android:layout_height="40sp"
-                    android:inputType="numberDecimal"
+                    android:drawableRight="@android:drawable/presence_offline"
+                    android:drawablePadding="12dp"
                     android:ems="10"
-                    android:id="@+id/project_detail_new_progress"
+                    android:inputType="numberDecimal"
                     android:lines="1"
                     android:singleLine="true" />
-
 
                 <TextView
                     android:id="@+id/seekArcProgressUnit"

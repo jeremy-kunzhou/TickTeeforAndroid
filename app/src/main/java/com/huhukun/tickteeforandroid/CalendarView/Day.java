@@ -12,7 +12,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v4.content.CursorLoader;
 import android.text.format.Time;
 import android.util.Log;
 import android.widget.BaseAdapter;

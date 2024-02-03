@@ -5,12 +5,12 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.app.NavUtils;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v7.app.ActionBarActivity;
+//import android.support.v4.app.Fragment;
+//import android.support.v4.app.LoaderManager;
+//import android.support.v4.app.NavUtils;
+//import android.support.v4.content.CursorLoader;
+//import android.support.v4.content.Loader;
+//import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,6 +26,8 @@ import com.huhukun.tickteeforandroid.UILibrary.DatePickerFragment;
 import com.huhukun.tickteeforandroid.UILibrary.SeekArc;
 import static com.huhukun.tickteeforandroid.model.SqlOpenHelper.*;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.huhukun.tickteeforandroid.model.Project;
 import com.huhukun.tickteeforandroid.providers.QueryTransactionInfo;
 import com.huhukun.tickteeforandroid.providers.TickteeProvider;
@@ -35,7 +37,7 @@ import java.text.ParseException;
 /**
  * Created by kun on 22/08/2014.
  */
-public class ProjectEditActivity extends ActionBarActivity{
+public class ProjectEditActivity extends AppCompatActivity {
 
     public static final String ARG_ITEM_ID = "item_id";
     private static final String TAG = App_Constants.APP_TAG + "ProjectEditActivity";

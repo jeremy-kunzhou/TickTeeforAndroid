@@ -2,6 +2,7 @@ package com.huhukun.tickteeforandroid;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -12,10 +13,10 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v7.app.ActionBarActivity;
+//import android.support.v4.app.LoaderManager;
+//import android.support.v4.content.CursorLoader;
+//import android.support.v4.content.Loader;
+//import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -23,6 +24,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
 
 import com.huhukun.tickteeforandroid.model.Project;
 import com.huhukun.tickteeforandroid.model.SqlOpenHelper;
@@ -39,7 +46,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 
-public class MainActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
 
 
@@ -84,14 +91,14 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         }
 
         Intent myIntent = new Intent(MainActivity.this, MyReceiver.class);
-        pendingIntent = PendingIntent.getBroadcast(MainActivity.this, App_Constants.ALERT_ID, myIntent, PendingIntent.FLAG_NO_CREATE);
+        pendingIntent = PendingIntent.getBroadcast(MainActivity.this, App_Constants.ALERT_ID, myIntent, PendingIntent.FLAG_NO_CREATE | PendingIntent.FLAG_IMMUTABLE);
 
         if (pendingIntent != null)
         {
             Log.d(TAG, "Alarm is already active");
         }else {
             Log.d(TAG, "Alarm is created");
-            pendingIntent = PendingIntent.getBroadcast(MainActivity.this, App_Constants.ALERT_ID, myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+            pendingIntent = PendingIntent.getBroadcast(MainActivity.this, App_Constants.ALERT_ID, myIntent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeZone(TimeZone.getDefault());
             calendar.set(Calendar.HOUR_OF_DAY, 9);
@@ -281,8 +288,10 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         return cursorLoader;
     }
 
+
+
     @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+    public void onLoadFinished(@NonNull Loader<Cursor> cursorLoader, Cursor cursor) {
         total_count = 0;
         in_progress_count = 0;
         overdue_count = 0;
@@ -290,18 +299,18 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         cursor.moveToFirst();
         while (cursor.isAfterLast() == false) {
             total_count ++;
-            BigDecimal current = new BigDecimal(cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_CURRENT_PROGRESS)));
-            BigDecimal target = new BigDecimal(cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_TARGET)));
+            @SuppressLint("Range") BigDecimal current = new BigDecimal(cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_CURRENT_PROGRESS)));
+            @SuppressLint("Range") BigDecimal target = new BigDecimal(cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_TARGET)));
 
             if(current.compareTo(target) == 0)
             {
                 complete_count ++;
             }
             else {
-                String start_date_string = cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_START_AT));
-                String end_date_string = cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_END_AT));
-                String name = cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_NAME));
-                boolean isConsumed = BooleanUtils.parse(cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_IS_CONSUMED)));
+                @SuppressLint("Range") String start_date_string = cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_START_AT));
+                @SuppressLint("Range") String end_date_string = cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_END_AT));
+                @SuppressLint("Range") String name = cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_NAME));
+                @SuppressLint("Range") boolean isConsumed = BooleanUtils.parse(cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_IS_CONSUMED)));
                 if (start_date_string != null && end_date_string != null && !TextUtils.isEmpty(start_date_string) && !TextUtils.isEmpty(end_date_string))
                 {
                     try {
@@ -334,11 +343,9 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
 
     }
-
-
 
 
 }

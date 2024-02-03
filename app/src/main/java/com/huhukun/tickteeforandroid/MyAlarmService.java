@@ -1,5 +1,6 @@
 package com.huhukun.tickteeforandroid;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -15,12 +16,13 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
-import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 import android.os.Process;
+
+import androidx.core.app.NotificationCompat;
 
 import com.huhukun.tickteeforandroid.model.Project;
 import com.huhukun.tickteeforandroid.model.SqlOpenHelper;
@@ -91,9 +93,9 @@ public class MyAlarmService extends Service {
 
             cursor.moveToFirst();
             while (cursor.isAfterLast() == false) {
-                BigDecimal current = new BigDecimal(cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_CURRENT_PROGRESS)));
-                BigDecimal target = new BigDecimal(cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_TARGET)));
-                Project.AlertType alert = Project.AlertType.valueOf(cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_ALERT_TYPE)));
+                @SuppressLint("Range") BigDecimal current = new BigDecimal(cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_CURRENT_PROGRESS)));
+                @SuppressLint("Range") BigDecimal target = new BigDecimal(cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_TARGET)));
+                @SuppressLint("Range") Project.AlertType alert = Project.AlertType.valueOf(cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_ALERT_TYPE)));
                 Calendar calendar = Calendar.getInstance();
                 int day_of_week = calendar.get(Calendar.DAY_OF_WEEK);
                 Project.AlertType todayAlert = Project.AlertType.OFF;
@@ -121,10 +123,10 @@ public class MyAlarmService extends Service {
                         break;
                 }
                 if(alert == Project.AlertType.EVERY_DAY || alert == todayAlert) {
-                    String start_date_string = cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_START_AT));
-                    String end_date_string = cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_END_AT));
-                    String name = cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_NAME));
-                    boolean isConsumed = BooleanUtils.parse(cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_IS_CONSUMED)));
+                    @SuppressLint("Range") String start_date_string = cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_START_AT));
+                    @SuppressLint("Range") String end_date_string = cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_END_AT));
+                    @SuppressLint("Range") String name = cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_NAME));
+                    @SuppressLint("Range") boolean isConsumed = BooleanUtils.parse(cursor.getString(cursor.getColumnIndex(SqlOpenHelper.TableConstants.COL_IS_CONSUMED)));
                     if (start_date_string != null && end_date_string != null && !TextUtils.isEmpty(start_date_string) && !TextUtils.isEmpty(end_date_string)) {
                         try {
                             Date start = FormatHelper.toLocalDateFromUTCString(start_date_string);
@@ -171,7 +173,7 @@ public class MyAlarmService extends Service {
             }
             else {
                 final Intent notificationIntent = new Intent(MyAlarmService.this.getApplicationContext(), MainActivity.class);
-                PendingIntent pendingIntent = PendingIntent.getActivity(MyAlarmService.this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                PendingIntent pendingIntent = PendingIntent.getActivity(MyAlarmService.this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(MyAlarmService.this.getApplicationContext())

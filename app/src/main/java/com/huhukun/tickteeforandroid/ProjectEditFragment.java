@@ -3,10 +3,10 @@ package com.huhukun.tickteeforandroid;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
+//import android.support.v4.app.Fragment;
+//import android.support.v4.app.LoaderManager;
+//import android.support.v4.content.CursorLoader;
+//import android.support.v4.content.Loader;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +22,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
+
 import com.huhukun.tickteeforandroid.UILibrary.DatePickerFragment;
 
 import com.huhukun.tickteeforandroid.model.Project;
@@ -33,6 +38,7 @@ import com.huhukun.tickteeforandroid.providers.UpdateTask;
 import com.huhukun.utils.FormatHelper;
 import com.huhukun.utils.NumberUtils;
 
+import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Text;
 
 import java.math.BigDecimal;
@@ -182,7 +188,7 @@ public class ProjectEditFragment extends Fragment
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+    public void onLoadFinished(@NotNull Loader<Cursor> cursorLoader, Cursor cursor) {
 
         if (cursor.moveToFirst()) {
 
