@@ -3,15 +3,23 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        release {
+            storeFile file('/home/jeremy/Tools/Android_Tools/ticktee.keystore')
+            storePassword 'android'
+            keyAlias 'ticktee'
+            keyPassword 'android'
+        }
+    }
     namespace "com.huhukun.tickteeforandroid"
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.huhukun.tickteeforandroid"
+        applicationId "v2.com.huhukun.tickteeforandroid"
         minSdk 21
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        versionCode 4
+        versionName "1.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
