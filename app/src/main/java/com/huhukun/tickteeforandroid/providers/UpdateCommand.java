@@ -44,6 +44,10 @@ import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_TARG
 import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_UNIT;
 import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_UPDATED_AT;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 
 public class UpdateCommand extends RESTCommand {
 
@@ -104,22 +108,29 @@ public class UpdateCommand extends RESTCommand {
         httpHeaders.add(new BasicNameValuePair(WebApiConstants.HEADER_ACCESS_TOKEN_PARAM, token));
 
         try {
-            final HttpPut put;
+            final Request put;
 
             put = NetworkUtils.BUILDER(WebApiConstants.PROJECT_URL, projectId)
                     .setHeader(httpHeaders).toPut(projectJson.toString());
 
-            createHttpClient();
+//            createHttpClient();
+            OkHttpClient client = new OkHttpClient();
 
+            try (Response response = client.newCall(put).execute()) {
+                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+                respText = response.body().string();
+                statusCode = response.isSuccessful() ? HttpStatus.SC_OK: 0;
+                System.out.println(respText);
+            }
 
-            resp = mHttpClient.execute(put);
+//            resp = mHttpClient.execute(put);
         } catch (IOException e) {
             String msg = "PUT method failed: Cannot connect to network.";
             Log.i(TAG, msg, e);
             throw new DeviceConnectionException(msg, e);
         }
 
-        statusCode = resp.getStatusLine().getStatusCode();
+//        statusCode = resp.getStatusLine().getStatusCode();
 
         if (Log.isLoggable(TAG, Log.INFO)) {
             Log.i(TAG, "HTTP statusCode[" + statusCode + "]");
@@ -127,13 +138,13 @@ public class UpdateCommand extends RESTCommand {
 
         if (statusCode == HttpStatus.SC_CREATED) {
 
-            try {
-                respText = EntityUtils.toString(resp.getEntity());
-            } catch (IOException e) {
-                String msg = "PUT method failed: Invalid response.";
-                Log.e(TAG, msg, e);
-                throw new WebServiceFailedException(msg, e);
-            }
+//            try {
+//                respText = EntityUtils.toString(resp.getEntity());
+//            } catch (IOException e) {
+//                String msg = "PUT method failed: Invalid response.";
+//                Log.e(TAG, msg, e);
+//                throw new WebServiceFailedException(msg, e);
+//            }
 
             Log.d(TAG, respText);
             try {
@@ -179,7 +190,7 @@ public class UpdateCommand extends RESTCommand {
         final String contentText = res.getString(R.string.song_remote_delete);
         String contentTitle;
 
-        contentTitle = String.format(titleFormat, "update");
+//        contentTitle = String.format(titleFormat, "update");
 
 //        NotificationUtil.errorNotify( contentTitle, contentText );
     }

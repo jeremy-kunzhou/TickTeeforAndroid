@@ -18,8 +18,8 @@ android {
         applicationId "v2.com.huhukun.tickteeforandroid"
         minSdk 21
         targetSdk 33
-        versionCode 4
-        versionName "1.4"
+        versionCode 5
+        versionName "1.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -54,5 +54,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     implementation'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
     implementation "commons-logging:commons-logging-api:1.1"
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+
 
 }

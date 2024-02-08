@@ -5,18 +5,14 @@
 
     <item android:id="@+id/project_detail_done"
         android:title="@string/done"
-        android:icon="@drawable/ic_action_done"
         ticktee:showAsAction="always" />
     <item android:id="@+id/project_detail_share"
         android:title="@string/share"
-        android:icon="@drawable/ic_action_share"
         ticktee:showAsAction="never" />
     <item android:id="@+id/project_detail_edit"
-        android:icon="@drawable/ic_action_edit"
         android:title="@string/edit"
         ticktee:showAsAction="never" />
     <item android:id="@+id/project_detail_remove"
-        android:icon="@drawable/ic_action_delete"
         android:title="@string/remove"
         ticktee:showAsAction="never" />
 </menu>

@@ -41,6 +41,10 @@ import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_TARG
 import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_UNIT;
 import static com.huhukun.tickteeforandroid.providers.WebApiConstants.PARAM_UPDATED_AT;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public class InsertCommand extends RESTCommand {
 
     private static final String TAG = App_Constants.APP_TAG +"InsertCommand";
@@ -101,36 +105,43 @@ public class InsertCommand extends RESTCommand {
         httpHeaders.add(new BasicNameValuePair(WebApiConstants.HEADER_ACCESS_TOKEN_PARAM, token));
 
         try {
-            final HttpPost post;
+            final Request post;
 
             post = NetworkUtils.BUILDER(WebApiConstants.PROJECTS_URL)
                     .setHeader(httpHeaders).toPost(projectJson.toString());
 
 
-            createHttpClient();
+//            createHttpClient();
 
+            OkHttpClient client = new OkHttpClient();
 
-            resp = mHttpClient.execute(post);
+            try (Response response = client.newCall(post).execute()) {
+                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+                respText = response.body().string();
+                statusCode = response.isSuccessful() ? HttpStatus.SC_OK: 0;
+                System.out.println(respText);
+            }
+//            resp = mHttpClient.execute(post);
         } catch (IOException e) {
             String msg = "PUT method failed: Cannot connect to network.";
             Log.i(TAG, msg, e);
             throw new DeviceConnectionException(msg, e);
         }
 
-        statusCode = resp.getStatusLine().getStatusCode();
+//        statusCode = resp.getStatusLine().getStatusCode();
 
         if ( Log.isLoggable( TAG, Log.INFO ) ) {
             Log.i( TAG, "HTTP statusCode[" + statusCode + "]" );
         }
         if ( statusCode == HttpStatus.SC_CREATED ) {
 
-            try {
-                respText = EntityUtils.toString(resp.getEntity());
-            } catch ( IOException e ) {
-                String msg = "POST method failed: Invalid response.";
-                Log.e(TAG, msg, e);
-                throw new WebServiceFailedException(msg, e);
-            }
+//            try {
+//                respText = EntityUtils.toString(resp.getEntity());
+//            } catch ( IOException e ) {
+//                String msg = "POST method failed: Invalid response.";
+//                Log.e(TAG, msg, e);
+//                throw new WebServiceFailedException(msg, e);
+//            }
 
             try {
                 jsonObject = new JSONObject(respText);

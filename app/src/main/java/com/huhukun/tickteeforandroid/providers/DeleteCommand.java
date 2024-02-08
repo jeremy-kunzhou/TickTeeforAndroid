@@ -24,6 +24,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public class DeleteCommand extends RESTCommand {
 
     private static final String TAG = App_Constants.APP_TAG +"DeleteCommand";
@@ -61,23 +65,31 @@ public class DeleteCommand extends RESTCommand {
         httpHeaders.add(new BasicNameValuePair(WebApiConstants.HEADER_ACCESS_TOKEN_PARAM, token));
 
         try {
-            final HttpDelete delete;
+            final Request delete;
 
             delete = NetworkUtils.BUILDER(WebApiConstants.PROJECT_URL, projectId)
                     .setHeader(httpHeaders).toDelete();
 
 
-            createHttpClient();
+//            createHttpClient();
 
+            OkHttpClient client = new OkHttpClient();
 
-            resp = mHttpClient.execute(delete);
+            try (Response response = client.newCall(delete).execute()) {
+                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+                respText = response.body().string();
+                statusCode = response.isSuccessful() ? HttpStatus.SC_OK: 0;
+                System.out.println(respText);
+            }
+
+//            resp = mHttpClient.execute(delete);
         } catch (IOException e) {
             String msg = "DELETE method failed: Cannot connect to network.";
             Log.i(TAG, msg, e);
             throw new DeviceConnectionException(msg, e);
         }
 
-        statusCode = resp.getStatusLine().getStatusCode();
+//        statusCode = resp.getStatusLine().getStatusCode();
 
         if ( Log.isLoggable( TAG, Log.INFO ) ) {
             Log.i( TAG, "HTTP statusCode[" + statusCode + "]" );
@@ -85,13 +97,13 @@ public class DeleteCommand extends RESTCommand {
 
         if ( statusCode == HttpStatus.SC_OK ) {
 
-            try {
-                respText = EntityUtils.toString(resp.getEntity());
-            } catch ( IOException e ) {
-                String msg = "DELETE method failed: Invalid response.";
-                Log.e(TAG, msg, e);
-                throw new WebServiceFailedException(msg, e);
-            }
+//            try {
+//                respText = EntityUtils.toString(resp.getEntity());
+//            } catch ( IOException e ) {
+//                String msg = "DELETE method failed: Invalid response.";
+//                Log.e(TAG, msg, e);
+//                throw new WebServiceFailedException(msg, e);
+//            }
 
 
             try {

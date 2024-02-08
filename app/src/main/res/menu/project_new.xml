@@ -4,7 +4,6 @@
     tools:context="com.huhukun.tickteeforandroid.ProjectNewActivity" >
     <item android:id="@+id/project_new_done"
         android:title="@string/done"
-        android:icon="@drawable/ic_action_done"
         ticktee:showAsAction="always" />
     <item android:id="@+id/project_new_discard"
         android:icon="@drawable/ic_action_edit"

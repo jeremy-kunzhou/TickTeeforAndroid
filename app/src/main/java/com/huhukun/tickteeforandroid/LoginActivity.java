@@ -250,7 +250,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
             try {
-                JSONObject json = new JSONObject(JSONParser.getStringFromUrlViaPost(WebApiConstants.LOGIN_URL, null, loginInfo));
+                JSONObject json = new JSONObject(JSONParser.getStringFromUrlViaPostNew(WebApiConstants.LOGIN_URL, null, loginInfo));
 
                 Log.d(App_Constants.PREF_APP, json.toString());
                 if (!json.has("success")) {

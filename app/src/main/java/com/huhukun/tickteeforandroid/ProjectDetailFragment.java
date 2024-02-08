@@ -8,7 +8,9 @@ import android.os.Bundle;
 //import android.support.v4.app.LoaderManager;
 //import android.support.v4.content.CursorLoader;
 //import android.support.v4.content.Loader;
+import android.text.Editable;
 import android.text.Layout;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -19,7 +21,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.huhukun.tickteeforandroid.UILibrary.ClearableEditText;
 import com.huhukun.tickteeforandroid.UILibrary.SeekArc;
+import com.huhukun.tickteeforandroid.UILibrary.TextWatcherAdapter;
 import com.huhukun.tickteeforandroid.model.Project;
 import com.huhukun.tickteeforandroid.model.SqlOpenHelper;
 import com.huhukun.tickteeforandroid.providers.DeleteTask;
@@ -85,7 +89,7 @@ public class ProjectDetailFragment extends Fragment
     private TextView tvProjectFuture;
     private TextView tvProjectFutureDaily;
     private TextView tvProjectProgress;
-//    private org.droidparts.widget.ClearableEditText etNewProgress;
+    private ClearableEditText etNewProgress;
     private SeekArc seekArc;
 
     private String sqlId;
@@ -139,24 +143,24 @@ public class ProjectDetailFragment extends Fragment
         tvSeekArcPercentage = (TextView) rootView.findViewById(R.id.seekArcProgress);
         tvSeekArcPercentageUnit = (TextView) rootView.findViewById(R.id.seekArcProgressUnit);
         tvProjectProgress = (TextView) rootView.findViewById(R.id.project_detail_percentage);
-//        etNewProgress = (org.droidparts.widget.ClearableEditText) rootView.findViewById(R.id.project_detail_new_progress);
-//        etNewProgress.setListener(new ClearableEditText.Listener() {
-//            @Override
-//            public void didClearText() {
-//                updateProgress(null);
-//            }
-//        });
-//        etNewProgress.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-//            @Override
-//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-//                boolean handled = false;
-//                if (actionId == EditorInfo.IME_ACTION_DONE) {
-//                    updateProgress(etNewProgress.getText().toString().trim());
-////                    handled = true;
-//                }
-//                return handled;
-//            }
-//        });
+        etNewProgress = (ClearableEditText) rootView.findViewById(R.id.project_detail_new_progress);
+        etNewProgress.setListener(new ClearableEditText.Listener() {
+            @Override
+            public void didClearText() {
+                updateProgress(null);
+            }
+        });
+        etNewProgress.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    updateProgress(etNewProgress.getText().toString().trim());
+//                    handled = true;
+                }
+                return handled;
+            }
+        });
         seekArc = (SeekArc) rootView.findViewById(R.id.seekArc);
         seekArc.setOnSeekArcChangeListener(this);
         return rootView;

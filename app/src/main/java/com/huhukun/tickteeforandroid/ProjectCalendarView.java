@@ -51,10 +51,18 @@ public class ProjectCalendarView extends AppCompatActivity implements ExtendedCa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_calendar_view);
+        getSupportActionBar().setTitle("Calendar");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         calendarView = (ExtendedCalendarView)findViewById(R.id.project_calendar_view_calendar);
         calendarView.setOnDayClickListener(this);
 
         listView = (ListView)findViewById(R.id.project_calendar_listView);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
 
@@ -71,9 +79,9 @@ public class ProjectCalendarView extends AppCompatActivity implements ExtendedCa
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
         return super.onOptionsItemSelected(item);
     }
 

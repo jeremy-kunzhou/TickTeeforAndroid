@@ -23,7 +23,7 @@
                 android:gravity="bottom" />
 
 
-            <EditText
+            <com.huhukun.tickteeforandroid.UILibrary.ClearableEditText
                 android:drawableRight="@android:drawable/presence_offline"
                 android:drawablePadding="12dp"
                 android:layout_width="fill_parent"
@@ -52,7 +52,7 @@
                 android:gravity="bottom"
                 />
 
-            <EditText
+            <com.huhukun.tickteeforandroid.UILibrary.ClearableEditText
                 android:drawableRight="@android:drawable/presence_offline"
                 android:drawablePadding="12dp"
                 android:layout_width="fill_parent"
@@ -75,7 +75,7 @@
                 android:textStyle="bold"
                 android:gravity="bottom"/>
 
-            <EditText
+            <com.huhukun.tickteeforandroid.UILibrary.ClearableEditText
                 android:drawableRight="@android:drawable/presence_offline"
                 android:drawablePadding="12dp"
                 android:layout_width="fill_parent"

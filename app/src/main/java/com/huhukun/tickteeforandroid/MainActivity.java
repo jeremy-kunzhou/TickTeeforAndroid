@@ -146,9 +146,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
-            case R.id.menu_settings:
-                settings();
-                return true;
+//            case R.id.menu_settings:
+//                settings();
+//                return true;
             case R.id.menu_login:
                 login();
                 return true;

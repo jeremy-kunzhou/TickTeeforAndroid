@@ -3,15 +3,13 @@ package com.huhukun.tickteeforandroid.providers;
 import com.huhukun.utils.RequestBuilder;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Request;
 
 /**
  * Created by kun on 20/08/2014.
@@ -73,19 +71,19 @@ public class NetworkUtils extends RequestBuilder {
 
     }
 
-    public HttpPost toPost(String raw) throws UnsupportedEncodingException {
-        return this.buildPost(url, header, raw);
+    public Request toPost(String raw) throws UnsupportedEncodingException {
+        return this.buildPostNew(url, header, raw);
     }
 
-    public HttpPut toPut(String raw) throws UnsupportedEncodingException {
-        return this.buildPut(url, header, raw);
+    public Request toPut(String raw) throws UnsupportedEncodingException {
+        return this.buildPutNew(url, header, raw);
     }
 
-    public HttpGet toGet() throws UnsupportedEncodingException {
-        return this.buildGet(url, header, params);
+    public Request toGet() throws UnsupportedEncodingException {
+        return this.buildGetNew(url, header, params);
     }
 
-    public HttpDelete toDelete() throws UnsupportedEncodingException {
-        return this.buildDelete(url, header);
+    public Request toDelete() throws UnsupportedEncodingException {
+        return this.buildDeleteNew(url, header);
     }
 }

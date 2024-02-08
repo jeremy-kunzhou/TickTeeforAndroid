@@ -26,6 +26,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 
 public class RetrieveCommand extends RESTCommand {
 
@@ -78,16 +82,23 @@ public class RetrieveCommand extends RESTCommand {
         httpParams.add(new BasicNameValuePair(WebApiConstants.PARAM_DOWNLOAD_DATE, dlDateParam));
 
         try {
-            final HttpGet get;
+            final Request get;
 
             get = NetworkUtils.BUILDER(WebApiConstants.PROJECTS_URL)
                     .setHeader(httpHeaders).setParams(httpParams).toGet();
 
 
-            createHttpClient();
+//            createHttpClient();
 
+            OkHttpClient client = new OkHttpClient();
 
-            resp = mHttpClient.execute(get);
+            try (Response response = client.newCall(get).execute()) {
+                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+                respText = response.body().string();
+                statusCode = response.isSuccessful() ? HttpStatus.SC_OK: 0;
+            }
+
+//            resp = mHttpClient.execute(get);
         } catch (IOException e) {
             String msg = "GET method failed: Cannot connect to network.";
             Log.i(TAG, msg, e);
@@ -95,7 +106,7 @@ public class RetrieveCommand extends RESTCommand {
         }
 
 
-        statusCode = resp.getStatusLine().getStatusCode();
+//        statusCode = resp.getStatusLine().getStatusCode();
 
         if ( Log.isLoggable( TAG, Log.INFO ) ) {
             Log.i( TAG, "HTTP statusCode[" + statusCode + "]" );
@@ -103,13 +114,13 @@ public class RetrieveCommand extends RESTCommand {
 
         if ( statusCode == HttpStatus.SC_OK ) {
 
-            try {
-                respText = EntityUtils.toString(resp.getEntity());
-            } catch ( IOException e ) {
-                String msg = "GET method failed: Invalid response.";
-                Log.e(TAG, msg, e);
-                throw new WebServiceFailedException(msg, e);
-            }
+//            try {
+//                respText = EntityUtils.toString(resp.getEntity());
+//            } catch ( IOException e ) {
+//                String msg = "GET method failed: Invalid response.";
+//                Log.e(TAG, msg, e);
+//                throw new WebServiceFailedException(msg, e);
+//            }
             Log.i(TAG, respText);
             try {
 //                jsonObject = new JSONObject( respText );
