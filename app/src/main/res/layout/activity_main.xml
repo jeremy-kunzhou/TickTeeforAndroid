@@ -1,23 +1,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
     android:background="@color/background"
-    android:id="@+id/main_activity"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".MainActivity">
-
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="54dp">
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <ProgressBar
         android:id="@+id/loading_progress"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -27,34 +28,33 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/projects_summary"
-            android:layout_marginTop="10dp"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_toLeftOf="@+id/btnAddProject"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="10dp"
             android:layout_toStartOf="@+id/btnAddProject"
+            android:layout_toLeftOf="@+id/btnAddProject"
             android:gravity="start"
+            android:text="@string/projects_summary"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#000000" />
 
         <Button
             android:id="@id/btnAddProject"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="+"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:onClick="newProjectAction"
-            />
+            android:text="+" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="="
             android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@id/btnAddProject"
             android:layout_toStartOf="@id/btnAddProject"
-            android:onClick="projectCalendarView"/>
+            android:layout_toLeftOf="@id/btnAddProject"
+            android:onClick="projectCalendarView"
+            android:text="=" />
     </RelativeLayout>
 
 
@@ -67,145 +67,147 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@color/normal_status"
                 android:id="@+id/total_layout"
-                android:onClick="viewProjects">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/normal_status"
+                android:onClick="viewProjects"
+                android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
+                    android:layout_weight="0.6"
+                    android:gravity="center_vertical|start"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="5dp"
+                    android:paddingBottom="10dp"
                     android:text="@string/total_projects"
-                    android:layout_weight="0.6"
-                    android:textSize="@dimen/summary_text_size"
-                    android:gravity="center_vertical|start"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:textColor="#000000" />
+                    android:textColor="#000000"
+                    android:textSize="@dimen/summary_text_size" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
                     android:id="@+id/tvTotal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
                     android:layout_margin="0dp"
-                    android:textSize="@dimen/summary_text_size"
+                    android:gravity="center_vertical|end"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
                     android:text="333"
-                    android:gravity="center_vertical|end"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:textColor="#000000" />
+                    android:textColor="#000000"
+                    android:textSize="@dimen/summary_text_size" />
 
             </LinearLayout>
 
             <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/in_progress_status"
                 android:id="@+id/in_progress_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5sp"
+                android:background="@color/in_progress_status"
                 android:onClick="viewProjects"
-                android:layout_marginTop="5sp">
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
+                    android:layout_weight="0.6"
+                    android:gravity="center_vertical|start"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="5dp"
+                    android:paddingBottom="10dp"
                     android:text="@string/in_progress"
-                    android:layout_weight="0.6"
-                    android:textSize="@dimen/summary_text_size"
-                    android:gravity="center_vertical|start"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:textColor="#000000" />
+                    android:textColor="#000000"
+                    android:textSize="@dimen/summary_text_size" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:layout_margin="0dp"
-
                     android:id="@+id/tvInProgress"
-                    android:text="200"
-                    android:textSize="@dimen/summary_text_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+
+                    android:layout_margin="0dp"
                     android:gravity="center_vertical|end"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
-                    android:textColor="#000000" />
+                    android:text="200"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/summary_text_size" />
             </LinearLayout>
 
             <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:id="@+id/overdue_layout"
-                android:onClick="viewProjects"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5sp"
                 android:background="@color/overdue_status"
-                android:layout_marginTop="5sp">
+                android:onClick="viewProjects"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
-                    android:text="@string/overdue"
                     android:layout_weight="0.6"
-                    android:textSize="@dimen/summary_text_size"
                     android:gravity="center_vertical|start"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
                     android:paddingLeft="5dp"
+                    android:paddingTop="10dp"
                     android:paddingRight="5dp"
-                    android:textColor="#000000" />
+                    android:paddingBottom="10dp"
+                    android:text="@string/overdue"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/summary_text_size" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-
-                    android:layout_margin="0dp"
                     android:id="@+id/tvOverdue"
-                    android:textSize="@dimen/summary_text_size"
-                    android:text="555"
+                    android:layout_width="wrap_content"
+
+                    android:layout_height="fill_parent"
+                    android:layout_margin="0dp"
                     android:gravity="center_vertical|end"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
-                    android:textColor="#000000" />
+                    android:text="555"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/summary_text_size" />
             </LinearLayout>
 
             <LinearLayout
-                android:orientation="horizontal"
+                android:id="@+id/complete_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/complete_layout"
-                android:onClick="viewProjects"
+                android:layout_marginTop="5sp"
                 android:background="@color/complete_status"
-                android:layout_marginTop="5sp">
+                android:onClick="viewProjects"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
-                    android:text="@string/complete"
                     android:layout_weight="0.6"
-                    android:textSize="@dimen/summary_text_size"
                     android:gravity="center_vertical|start"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
                     android:paddingLeft="5dp"
+                    android:paddingTop="10dp"
                     android:paddingRight="5dp"
-                    android:textColor="#000000" />
+                    android:paddingBottom="10dp"
+                    android:text="@string/complete"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/summary_text_size" />
 
                 <TextView
+                    android:id="@+id/tvComplete"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     android:layout_margin="0dp"
-                    android:id="@+id/tvComplete"
-                    android:text="200"
-                    android:textSize="@dimen/summary_text_size"
                     android:gravity="center_vertical|end"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
-                    android:textColor="#000000" />
+                    android:text="200"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/summary_text_size" />
             </LinearLayout>
 
         </LinearLayout>

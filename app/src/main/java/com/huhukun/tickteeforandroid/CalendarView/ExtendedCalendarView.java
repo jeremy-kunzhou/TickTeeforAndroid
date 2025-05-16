@@ -207,7 +207,7 @@ public class ExtendedCalendarView extends RelativeLayout implements OnItemClickL
             previousMonth();
         }
         else if (v.getId() == nextId){
-                nextMonth();
+            nextMonth();
         }
     }
 

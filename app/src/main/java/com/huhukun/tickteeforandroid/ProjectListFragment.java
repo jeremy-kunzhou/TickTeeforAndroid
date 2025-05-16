@@ -1,5 +1,6 @@
 package com.huhukun.tickteeforandroid;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 //import android.support.v4.app.ListFragment;
 //import android.support.v4.app.LoaderManager;
@@ -32,6 +34,8 @@ import com.huhukun.tickteeforandroid.providers.TickteeProvider;
 import java.text.ParseException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import kotlin.Suppress;
 
 /**
  * A list fragment representing a list of Projects. This fragment
@@ -206,14 +210,18 @@ public class ProjectListFragment extends ListFragment implements LoaderManager.L
         mCallbacks = null;
     }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     @Override
     public void onResume()
     {
         super.onResume();
-
-        TickTeeAndroid.getAppContext().registerReceiver(errorMsgReceiver,
-                new IntentFilter(App_Constants.ERROR_MSG_RECEIVER));
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            TickTeeAndroid.getAppContext().registerReceiver(errorMsgReceiver,
+                    new IntentFilter(App_Constants.ERROR_MSG_RECEIVER), Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            TickTeeAndroid.getAppContext().registerReceiver(errorMsgReceiver,
+                    new IntentFilter(App_Constants.ERROR_MSG_RECEIVER));
+        }
         executorPool = Executors.newSingleThreadExecutor();
     }
 

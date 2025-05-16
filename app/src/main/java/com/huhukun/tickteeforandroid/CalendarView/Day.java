@@ -1,9 +1,12 @@
 package com.huhukun.tickteeforandroid.CalendarView;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -162,10 +165,12 @@ public class Day{
                         break;
                 }
             Uri baseUri = null;
-            try {
-                baseUri = Uri.withAppendedPath(TickteeProvider.CONTENT_URI_ON_DAY, FormatHelper.fromLocalDateTimeStringToUTCString(dateString + " 12:00 AM") + "/" + FormatHelper.fromLocalDateTimeStringToUTCString(dateString + " 11:59 PM") + "/" + dayOfWeekString);
+			try {
+                baseUri = Uri.withAppendedPath(TickteeProvider.CONTENT_URI_ON_DAY,
+						FormatHelper.fromLocalDateTimeStringToUTCString(dateString + " 12:00 AM") + "/" + FormatHelper.fromLocalDateTimeStringToUTCString(dateString + " 11:59 PM") + "/" + dayOfWeekString);
             } catch (ParseException e) {
                 e.printStackTrace();
+				return null;
             }
             Cursor c = context.getContentResolver().query(baseUri,SqlOpenHelper.LOADER_COLUMNS, null, null, null);
 			if(c != null && c.moveToFirst()){

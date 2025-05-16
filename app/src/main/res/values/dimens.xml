@@ -8,4 +8,5 @@
     <dimen name="text_height_width">30dp</dimen>
     <dimen name="min_cell_height">40dp</dimen>
     <dimen name="min_cell_width">40dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

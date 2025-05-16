@@ -11,6 +11,10 @@
     android:background="@color/background"
     tools:context="com.huhukun.tickteeforandroid.LoginActivity">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="54dp">
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <!-- Login progress -->
     <ProgressBar
         android:id="@+id/login_progress"
@@ -19,6 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:visibility="gone"/>
+
 
     <TextView
         android:layout_width="fill_parent"

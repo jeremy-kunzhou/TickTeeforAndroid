@@ -266,25 +266,34 @@ public class TickteeProvider extends ContentProvider {
                 qb.appendWhere(TableConstants.COL_CURRENT_PROGRESS);
                 qb.appendWhere(" != ");
                 qb.appendWhere(TableConstants.COL_TARGET);
+
                 qb.appendWhere(" AND ");
+
                 qb.appendWhere( SqlOpenHelper.TableConstants.COL_STATUS );
                 qb.appendWhere( "!=" );
-                qb.appendWhere( "'" );
-                qb.appendWhere( MethodEnum.DELETE.toString() );
-                qb.appendWhere( "' AND (" );
-                qb.appendWhere(TableConstants.COL_START_AT);
-                qb.appendWhere(" is null  OR") ;
-                qb.appendWhere("(");
-                qb.appendWhere(TableConstants.COL_START_AT);
-                qb.appendWhere(" is not null  AND ");
-                qb.appendWhere(" not ( strftime('%s', '"+endDay+"') < strftime('%s', " +
-                        TableConstants.COL_START_AT +
-                        ")  OR  strftime('%s', '" +
-                        startDay +
-                        "') > strftime('%s', " +
-                        TableConstants.COL_END_AT +
-                        ") ) )) AND ");
+                qb.appendWhere( "'"+MethodEnum.DELETE.toString()+"' " );
+
+                qb.appendWhere(" AND ");
+
                 qb.appendWhere( TableConstants.COL_SCHEDULE+ " & "+dayOfWeek+" = "+dayOfWeek);
+
+                qb.appendWhere(" AND ");
+
+                qb.appendWhere( "(" );
+                qb.appendWhere(TableConstants.COL_START_AT+" is null ");
+                qb.appendWhere(" OR ") ;
+                    qb.appendWhere("(");
+                        qb.appendWhere(TableConstants.COL_START_AT+" is not null ");
+                        qb.appendWhere(" AND ");
+                        qb.appendWhere("  ( strftime('%s', '"+endDay+"') > strftime('%s', "+TableConstants.COL_START_AT + ")" +
+                                                    "  AND  strftime('%s', '" +
+                                                    startDay +
+                                                    "') < strftime('%s', " +
+                                                    TableConstants.COL_END_AT +
+                                                    ") ) ");
+                    qb.appendWhere(")");
+                qb.appendWhere(")");
+
                 break;
             case PROJECTS_STATUS:
                 qb.appendWhere( SqlOpenHelper.TableConstants.COL_STATUS );

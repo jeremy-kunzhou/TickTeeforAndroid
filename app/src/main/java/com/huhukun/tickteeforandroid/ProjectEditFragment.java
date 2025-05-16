@@ -247,8 +247,8 @@ public class ProjectEditFragment extends Fragment
             mItem.setName(etName.getText().toString().trim());
             mItem.setDescription(etDescription.getText().toString().trim());
             if(checkBoxUseStartEndDate.isChecked()) {
-                mItem.setStartDate(FormatHelper.fromLocalDateTimeStringToUTC(tvStartAt.getText().toString()+" 12:00 am"));
-                mItem.setEndDate(FormatHelper.fromLocalDateTimeStringToUTC(tvEndAt.getText().toString() + " 11:59 pm"));
+                mItem.setStartDate(FormatHelper.fromLocalDateTimeStringToUTC(tvStartAt.getText().toString()+" 12:00 am"));
+                mItem.setEndDate(FormatHelper.fromLocalDateTimeStringToUTC(tvEndAt.getText().toString() + " 11:59 pm"));
             }
             else {
                 mItem.setStartDate(null);
@@ -323,10 +323,10 @@ public class ProjectEditFragment extends Fragment
             project.setDescription(etDescription.getText().toString().trim());
             if(checkBoxUseStartEndDate.isChecked()) {
                 if (!tvStartAt.getText().toString().isEmpty()) {
-                    project.setStartDate(FormatHelper.fromLocalDateTimeStringToUTC(tvStartAt.getText().toString()+" 12:00 am"));
+                    project.setStartDate(FormatHelper.fromLocalDateTimeStringToUTC(tvStartAt.getText().toString()+" 12:00 am"));
                 }
                 if (!tvEndAt.getText().toString().isEmpty()) {
-                    project.setEndDate(FormatHelper.fromLocalDateTimeStringToUTC(tvEndAt.getText().toString()+" 11:59 pm"));
+                    project.setEndDate(FormatHelper.fromLocalDateTimeStringToUTC(tvEndAt.getText().toString()+" 11:59 pm"));
                 }
             }
             project.setExpectedProgress(BigDecimal.ZERO);

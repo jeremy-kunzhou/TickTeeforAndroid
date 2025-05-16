@@ -94,8 +94,8 @@ public class ProjectCalendarView extends AppCompatActivity implements ExtendedCa
         String dateString = FormatHelper.shortLocalDateFormatter.format(day.getCal().getTime());
         Log.d(TAG, "select date "+dateString);
         try {
-            bundle.putString(START_OF_DAY, FormatHelper.fromLocalDateTimeStringToUTCString(dateString + " 12:00 AM"));
-            bundle.putString(END_OF_DAY,FormatHelper.fromLocalDateTimeStringToUTCString(dateString + " 11:59 PM"));
+            bundle.putString(START_OF_DAY, FormatHelper.fromLocalDateTimeStringToUTCString(dateString + " 12:00 AM"));
+            bundle.putString(END_OF_DAY,FormatHelper.fromLocalDateTimeStringToUTCString(dateString + " 11:59 PM"));
             switch (day.getDayOfWeek())
             {
                 case Calendar.MONDAY:

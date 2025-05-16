@@ -9,7 +9,10 @@
     android:orientation="vertical"
     tools:context=".ProjectDetailFragment"
     android:background="@color/background">
-
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="54dp">
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
