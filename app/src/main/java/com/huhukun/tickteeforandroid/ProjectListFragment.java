@@ -215,10 +215,12 @@ public class ProjectListFragment extends ListFragment implements LoaderManager.L
     public void onResume()
     {
         super.onResume();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE && getActivity().getApplicationInfo().compileSdkVersion >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            Log.d("ProjectListFragment", "API level is 34 or higher, and target SDK version is 34 or higher.");
             TickTeeAndroid.getAppContext().registerReceiver(errorMsgReceiver,
-                    new IntentFilter(App_Constants.ERROR_MSG_RECEIVER), Context.RECEIVER_NOT_EXPORTED);
+                    new IntentFilter(App_Constants.ERROR_MSG_RECEIVER), Context.RECEIVER_EXPORTED);
         } else {
+            Log.d("ProjectListFragment", "API level or target SDK version is lower than 34.");
             TickTeeAndroid.getAppContext().registerReceiver(errorMsgReceiver,
                     new IntentFilter(App_Constants.ERROR_MSG_RECEIVER));
         }

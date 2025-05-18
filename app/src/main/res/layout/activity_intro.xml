@@ -11,6 +11,10 @@
     android:background="@color/background"
     android:weightSum="1">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="@drawable/blue"></androidx.constraintlayout.widget.ConstraintLayout>
     <TextView
         android:text="@string/intro"
         android:layout_width="fill_parent"

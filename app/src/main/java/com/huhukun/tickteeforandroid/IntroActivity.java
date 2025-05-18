@@ -19,7 +19,7 @@ public class IntroActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        getSupportActionBar().setTitle("Intro");
+        getSupportActionBar().setTitle("Intro V1.9");
     }
 
 
